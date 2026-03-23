@@ -34,9 +34,10 @@
         /* Навігація */
         .nav-header {
             position: fixed; top: 0; left: 0; width: 100%;
-            padding: 20px 8%; background: rgba(var(--bg), 0.8);
+            padding: 20px 8%; background: var(--bg);
             backdrop-filter: blur(20px); z-index: 1000;
             display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid var(--border);
         }
 
         .nav-controls { display: flex; gap: 20px; align-items: center; }
@@ -59,7 +60,7 @@
         }
         .control-btn:hover { background: var(--text); color: var(--bg); }
 
-        h1 { font-family: var(--font-hd); font-size: clamp(2.5rem, 8vw, 5rem); margin: 40px 0; text-transform: uppercase; }
+        h1 { font-family: var(--font-hd); font-size: clamp(2.5rem, 8vw, 5rem); margin: 40px 0; text-transform: uppercase; line-height: 1.1; }
 
         /* Фільтри */
         .filters { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 60px; min-height: 50px; }
@@ -67,6 +68,7 @@
             padding: 14px 28px; border-radius: 100px; border: 1px solid var(--border); 
             background: transparent; color: var(--text-secondary); cursor: pointer; 
             font-weight: 600; text-transform: uppercase; transition: var(--transition);
+            font-size: 0.75rem; letter-spacing: 1px;
         }
         .filter-btn.active { background: var(--text); color: var(--bg); border-color: var(--text); }
 
@@ -85,16 +87,17 @@
         .project-img { height: 260px; width: 100%; background: #111; overflow: hidden; background-size: cover !important; background-position: center !important; }
         .project-content { padding: 40px; flex-grow: 1; display: flex; flex-direction: column; }
         
-        .tag { font-size: 0.65rem; padding: 6px 14px; background: rgba(255,255,255,0.05); color: var(--text-secondary); border-radius: 50px; margin-right: 5px; font-weight: 800; text-transform: uppercase; }
+        .project-tags { margin-bottom: 15px; }
+        .tag { font-size: 0.65rem; padding: 6px 14px; background: var(--accent); color: #fff; border-radius: 50px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
         .project-title { font-family: var(--font-hd); font-size: 1.4rem; margin: 15px 0; }
         .project-desc { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 25px; min-height: 50px; line-height: 1.6; }
 
         .project-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 20px; margin-top: auto; }
-        .like-btn { cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: 800; transition: 0.2s; }
-        .like-btn:hover { transform: scale(1.1); }
+        .like-btn { cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: 800; transition: 0.2s; color: var(--text-secondary); }
+        .like-btn:hover { color: var(--text); transform: scale(1.05); }
         .like-btn.liked { color: #ff3b30; }
 
-        /* FOOTER */
+        /* FOOTER ПОВНІСТЮ З МЕЙНУ */
         footer { padding: 100px 8%; border-top: 1px solid var(--border); margin-top: 100px; margin-left: -8.7%; margin-right: -8.7%; background: var(--bg); }
         .footer-grid { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 40px; }
         .footer-contacts { display: flex; flex-direction: column; gap: 10px; }
@@ -103,7 +106,7 @@
         .footer-email { color: var(--text-secondary); text-decoration: none; font-weight: 600; font-size: 1.1rem; }
         
         .social-icons { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
-        .social-icons a { width: 50px; height: 50px; background: var(--card); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: var(--text); border: 1px solid var(--border); transition: 0.3s; }
+        .social-icons a { width: 50px; height: 50px; background: var(--card); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: var(--text); border: 1px solid var(--border); transition: 0.3s; text-decoration: none; }
         .social-icons a:hover { background: var(--accent); color: #fff; transform: translateY(-5px); border-color: var(--accent); }
 
         @media (max-width: 900px) { 
@@ -129,8 +132,8 @@
     </header>
 
     <main>
-        <h1 class="lang-en">ALL<br>LOGIC</h1>
-        <h1 class="lang-ua" style="display:none;">ВСЯ<br>ЛОГІКА</h1>
+        <h1 class="lang-en">ALL<br>PROJECTS</h1>
+        <h1 class="lang-ua" style="display:none;">ВСІ<br>ПРОЕКТИ</h1>
 
         <div class="filters" id="filtersContainer">
             <button class="filter-btn active" onclick="filterProjects('all', this)">ALL</button>
@@ -146,9 +149,9 @@
                 <a href="tel:+380932097079" id="f-phone-link">+380 93 209 70 79</a>
                 <a href="mailto:Destro729@gmail.com" class="footer-email" id="f-email-link">Destro729@gmail.com</a>
                 <div class="social-icons">
-                    <a href="https://wa.me/380932097079" target="_blank" title="WhatsApp" id="f-wa"><i class="fa-brands fa-whatsapp"></i></a>
-                    <a href="https://t.me/your_tg_username" target="_blank" title="Telegram" id="f-tg"><i class="fa-brands fa-telegram"></i></a>
-                    <a href="https://github.com/beyond-dl" target="_blank" title="GitHub" id="f-gh"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" target="_blank" title="WhatsApp" id="f-wa"><i class="fa-brands fa-whatsapp"></i></a>
+                    <a href="#" target="_blank" title="Telegram" id="f-tg"><i class="fa-brands fa-telegram"></i></a>
+                    <a href="#" target="_blank" title="GitHub" id="f-gh"><i class="fa-brands fa-github"></i></a>
                     <a href="#" title="Discord" id="f-ds"><i class="fa-brands fa-discord"></i></a>
                     <a href="#" title="Behance" id="f-bh"><i class="fa-brands fa-behance"></i></a>
                     <a href="#" title="Fiverr" id="f-fv"><i class="fa-solid fa-f"></i></a>
@@ -166,7 +169,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getDatabase, ref, onValue, update, get } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+        import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
         const firebaseConfig = {
             databaseURL: "https://anor-core-2026-default-rtdb.europe-west1.firebasedatabase.app"
@@ -176,8 +179,11 @@
         const db = getDatabase(app);
 
         let currentLang = 'en';
+        let currentFilter = 'all';
 
-        window.toggleTheme = () => document.body.classList.toggle('light-theme');
+        window.toggleTheme = () => {
+            document.body.classList.toggle('light-theme');
+        };
         
         window.toggleLang = () => {
             currentLang = currentLang === 'en' ? 'ua' : 'en';
@@ -187,19 +193,25 @@
             ens.forEach(el => el.style.display = currentLang === 'en' ? 'block' : 'none');
             uas.forEach(el => el.style.display = currentLang === 'ua' ? 'block' : 'none');
 
-            // Оновлюємо текст фільтра ALL
             const allBtn = document.querySelector('.filter-btn[onclick*="all"]');
-            if(allBtn) allBtn.innerText = currentLang === 'en' ? 'ALL' : 'ВСІ';
+            if (allBtn) {
+                allBtn.innerText = currentLang === 'en' ? 'ALL' : 'ВСІ';
+            }
         };
 
         window.filterProjects = (category, btn) => {
+            currentFilter = category;
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
+            
             const cards = document.querySelectorAll('.project-card');
             cards.forEach(card => {
-                const projectCat = card.dataset.category ? card.dataset.category.toLowerCase() : '';
-                const targetCat = category.toLowerCase();
-                card.style.display = (targetCat === 'all' || projectCat === targetCat) ? 'flex' : 'none';
+                const projectCat = card.getAttribute('data-category');
+                if (category === 'all' || projectCat === category) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
             });
         };
 
@@ -229,30 +241,30 @@
             }
         };
 
-        // 1. Динамічні категорії (ВИПРАВЛЕНО [OBJECT OBJECT])
+        // 1. Динамічні категорії (ВИПРАВЛЕНО [OBJECT OBJECT] ТА LOGIC ТЕГ)
         onValue(ref(db, 'categories'), (snapshot) => {
             const container = document.getElementById('filtersContainer');
             const data = snapshot.val();
-            if(!data) return;
+            if (!data) return;
 
-            container.innerHTML = `<button class="filter-btn active" onclick="filterProjects('all', this)">${currentLang === 'en' ? 'ALL' : 'ВСІ'}</button>`;
+            container.innerHTML = `<button class="filter-btn ${currentFilter === 'all' ? 'active' : ''}" onclick="filterProjects('all', this)">${currentLang === 'en' ? 'ALL' : 'ВСІ'}</button>`;
             
             Object.keys(data).forEach(key => {
                 const cat = data[key];
-                // Перевірка: якщо це об'єкт з полем name, беремо його, інакше саме значення
                 const name = (typeof cat === 'object' && cat.name) ? cat.name : cat;
                 if (typeof name === 'string') {
-                    container.innerHTML += `<button class="filter-btn" onclick="filterProjects('${name}', this)">${name}</button>`;
+                    const isActive = currentFilter === name ? 'active' : '';
+                    container.innerHTML += `<button class="filter-btn ${isActive}" onclick="filterProjects('${name}', this)">${name}</button>`;
                 }
             });
         });
 
-        // 2. Проекти
+        // 2. Проекти (ВИПРАВЛЕНО: ТЕПЕР ТЕГ БЕРЕТЬСЯ З БД, А НЕ ПИШЕ "LOGIC")
         onValue(ref(db, 'projects'), (snapshot) => {
             const grid = document.getElementById('projectsGrid');
             grid.innerHTML = "";
             const data = snapshot.val();
-            if(!data) {
+            if (!data) {
                 grid.innerHTML = "<p style='grid-column: 1/-1; text-align: center; opacity: 0.5;'>The library is empty. Logic is loading...</p>";
                 return;
             }
@@ -267,49 +279,64 @@
             projectsList.forEach(p => {
                 const title = currentLang === 'en' ? (p.titleEn || p.title) : (p.titleUa || p.title);
                 const desc = currentLang === 'en' ? (p.shortDescEn || p.shortDesc || p.desc) : (p.shortDescUa || p.shortDesc || p.desc);
-                // Виправлена логіка картинок
                 const img = p.mainImage || p.image || 'https://via.placeholder.com/600x400/111/fff?text=No+Image';
                 const likes = p.likes || 0;
+                
+                // Отримуємо реальну назву категорії
+                const categoryName = (typeof p.category === 'object' && p.category.name) ? p.category.name : (p.category || 'Other');
 
-                grid.innerHTML += `
-                    <div class="project-card" data-category="${p.category || 'Other'}">
-                        <div class="project-img" style="background: url('${img}')"></div>
-                        <div class="project-content">
-                            <div class="project-tags"><span class="tag">${p.category || 'Logic'}</span></div>
-                            <h3 class="project-title">${title || 'Untitled'}</h3>
-                            <p class="project-desc">${desc || ''}</p>
-                            <div class="project-footer">
-                                <div class="like-btn" onclick="toggleLike(this, '${p.id}')">
-                                    <i class="fa-regular fa-heart"></i> 
-                                    <span class="count">${likes}</span>
-                                </div>
-                                <a href="project-details.html?id=${p.id}" style="color: var(--accent); text-decoration: none; font-weight: 800; font-size: 0.7rem; letter-spacing: 1px;">DETAILS</a>
+                const card = document.createElement('div');
+                card.className = 'project-card';
+                card.setAttribute('data-category', categoryName);
+                
+                // Перевірка фільтру при завантаженні
+                if (currentFilter !== 'all' && categoryName !== currentFilter) {
+                    card.style.display = 'none';
+                }
+
+                card.innerHTML = `
+                    <div class="project-img" style="background: url('${img}')"></div>
+                    <div class="project-content">
+                        <div class="project-tags"><span class="tag">${categoryName}</span></div>
+                        <h3 class="project-title">${title || 'Untitled'}</h3>
+                        <p class="project-desc">${desc || ''}</p>
+                        <div class="project-footer">
+                            <div class="like-btn" onclick="toggleLike(this, '${p.id}')">
+                                <i class="fa-regular fa-heart"></i> 
+                                <span class="count">${likes}</span>
                             </div>
+                            <a href="project-details.html?id=${p.id}" style="color: var(--accent); text-decoration: none; font-weight: 800; font-size: 0.7rem; letter-spacing: 1px;">DETAILS</a>
                         </div>
                     </div>`;
+                grid.appendChild(card);
             });
         });
 
-        // 3. Синхронізація футера (ПОВНА СИНХРОНІЗАЦІЯ)
+        // 3. Синхронізація футера (ПОВНА СИНХРОНІЗАЦІЯ З МЕЙНОМ)
         onValue(ref(db, 'settings/footer'), (snapshot) => {
             const f = snapshot.val();
-            if(!f) return;
-            if(f.phone) {
-                document.getElementById('f-phone-link').innerText = f.phone;
-                document.getElementById('f-phone-link').href = `tel:${f.phone.replace(/\s/g, '')}`;
+            if (!f) return;
+            
+            const phoneEl = document.getElementById('f-phone-link');
+            const emailEl = document.getElementById('f-email-link');
+            
+            if (f.phone) {
+                phoneEl.innerText = f.phone;
+                phoneEl.href = `tel:${f.phone.replace(/\s/g, '')}`;
             }
-            if(f.email) {
-                document.getElementById('f-email-link').innerText = f.email;
-                document.getElementById('f-email-link').href = `mailto:${f.email}`;
+            if (f.email) {
+                emailEl.innerText = f.email;
+                emailEl.href = `mailto:${f.email}`;
             }
-            if(f.roleUa) document.getElementById('f-role-ua').innerText = f.roleUa;
-            if(f.roleEn) document.getElementById('f-role-en').innerText = f.roleEn;
-            if(f.tg) document.getElementById('f-tg').href = f.tg;
-            if(f.wa) document.getElementById('f-wa').href = f.wa;
-            if(f.gh) document.getElementById('f-gh').href = f.gh;
-            if(f.ds) document.getElementById('f-ds').href = f.ds || '#';
-            if(f.bh) document.getElementById('f-bh').href = f.bh || '#';
-            if(f.fv) document.getElementById('f-fv').href = f.fv || '#';
+            if (f.roleUa) document.getElementById('f-role-ua').innerText = f.roleUa;
+            if (f.roleEn) document.getElementById('f-role-en').innerText = f.roleEn;
+            
+            if (f.tg) document.getElementById('f-tg').href = f.tg;
+            if (f.wa) document.getElementById('f-wa').href = f.wa;
+            if (f.gh) document.getElementById('f-gh').href = f.gh;
+            if (f.ds) document.getElementById('f-ds').href = f.ds;
+            if (f.bh) document.getElementById('f-bh').href = f.bh;
+            if (f.fv) document.getElementById('f-fv').href = f.fv;
         });
     </script>
 </body>
