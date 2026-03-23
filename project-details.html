@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Details | Anor Core</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&family=Unbounded:wght@700;900&display=swap" rel="stylesheet">
+    <title>Project Details | Archive of Logic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Unbounded:wght@700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -12,110 +12,89 @@
             --text: #ffffff;
             --text-secondary: #a1a1a6;
             --accent: #0071e3;
-            --border: rgba(255, 255, 255, 0.08);
-            --card: #121212;
+            --border: rgba(255, 255, 255, 0.1);
+            --card: rgba(255, 255, 255, 0.05);
             --font-hd: 'Unbounded', sans-serif;
+            --font-main: 'Inter', sans-serif;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         body.light-theme {
             --bg: #f5f5f7;
             --text: #1d1d1f;
             --text-secondary: #86868b;
+            --card: rgba(0, 0, 0, 0.05);
             --border: rgba(0, 0, 0, 0.1);
-            --card: #ffffff;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; transition: background 0.3s ease, color 0.3s ease; }
-
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'Inter', sans-serif;
-            line-height: 1.6;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background: var(--bg); 
+            color: var(--text); 
+            font-family: var(--font-main); 
+            padding-top: 120px;
+            transition: background 0.5s; 
+            min-height: 100vh;
         }
 
-        /* HEADER */
-        header {
-            padding: 30px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            backdrop-filter: blur(20px);
+        /* SYNCED HEADER */
+        .nav-header {
+            position: fixed; top: 0; left: 0; width: 100%;
+            padding: 20px 8%; background: rgba(var(--bg), 0.8);
+            backdrop-filter: blur(20px); z-index: 1000;
+            display: flex; justify-content: space-between; align-items: center;
             border-bottom: 1px solid var(--border);
         }
 
-        .logo {
-            font-family: var(--font-hd);
-            font-size: 1rem;
-            color: var(--accent);
-            text-decoration: none;
-            letter-spacing: 2px;
+        .nav-controls { display: flex; gap: 20px; align-items: center; }
+
+        .back-link { 
+            color: var(--text); text-decoration: none; font-weight: 800; 
+            font-family: var(--font-hd); font-size: 0.8rem;
+            display: flex; align-items: center; gap: 10px;
+            transition: var(--transition);
+            text-transform: uppercase;
         }
+        .back-link:hover { color: var(--accent); transform: translateX(-5px); }
 
-        .header-controls { display: flex; gap: 20px; align-items: center; }
-        
-        .control-btn {
-            background: none;
-            border: 1px solid var(--border);
-            color: var(--text);
-            padding: 8px 12px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-family: var(--font-hd);
-            font-size: 0.6rem;
+        .control-btn { 
+            background: none; border: 1px solid var(--border); color: var(--text); 
+            padding: 8px 15px; border-radius: 50px; cursor: pointer; 
+            font-family: var(--font-hd); font-size: 0.6rem; transition: 0.3s;
         }
+        .control-btn:hover { background: var(--text); color: var(--bg); }
+        .control-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
 
-        .control-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
+        /* CONTENT */
+        .project-container { max-width: 1200px; margin: 0 auto; padding: 0 8% 100px; }
 
-        /* CONTENT WRAPPER */
-        .wrapper { max-width: 1200px; margin: 0 auto; padding: 150px 40px 100px; }
-
-        .back-btn { 
-            color: var(--text-secondary); 
-            text-decoration: none; 
-            font-size: 0.75rem; 
-            font-weight: 800; 
-            text-transform: uppercase; 
-            letter-spacing: 2px; 
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 50px; 
-            transition: 0.3s; 
-        }
-
-        .back-btn:hover { color: var(--accent); transform: translateX(-5px); }
-
-        .meta-tags { 
+        .project-meta { 
             color: var(--accent); 
             font-family: var(--font-hd); 
-            font-size: 0.75rem; 
+            font-size: 0.7rem; 
             text-transform: uppercase; 
-            margin-bottom: 20px; 
+            margin-bottom: 20px;
+            letter-spacing: 2px;
         }
 
         h1 { 
             font-family: var(--font-hd); 
-            font-size: clamp(2rem, 6vw, 4rem); 
+            font-size: clamp(2rem, 6vw, 4.5rem); 
             line-height: 1.1; 
             text-transform: uppercase; 
             margin-bottom: 60px; 
         }
 
-        .main-img { 
+        .hero-img { 
             width: 100%; 
             border-radius: 40px; 
             margin-bottom: 80px; 
-            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+            border: 1px solid var(--border);
         }
 
-        .details-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 80px; }
+        .project-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 80px; }
 
-        .sidebar-info h3 { 
+        .sidebar h3 { 
             font-size: 0.65rem; 
             text-transform: uppercase; 
             color: var(--text-secondary); 
@@ -124,96 +103,84 @@
             letter-spacing: 1px;
         }
 
-        .sidebar-info p { font-weight: 600; margin-bottom: 40px; font-size: 1.1rem; }
+        .sidebar .info-block { margin-bottom: 45px; }
+        .sidebar p, .sidebar a { font-weight: 600; font-size: 1.1rem; color: var(--text); text-decoration: none; }
         
-        .sidebar-info a { color: var(--text); text-decoration: none; border-bottom: 1px solid var(--accent); }
+        /* ACTIVE TAGS */
+        .tech-tag {
+            display: inline-block;
+            padding: 5px 15px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            font-size: 0.8rem !important;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        .tech-tag:hover { border-color: var(--accent); color: var(--accent) !important; }
 
-        .content-body { 
-            font-size: 1.2rem; 
+        .main-content { 
+            font-size: 1.15rem; 
             line-height: 1.8; 
-            color: var(--text); 
+            color: var(--text-secondary); 
             white-space: pre-wrap; 
         }
 
-        /* FOOTER */
-        footer {
-            padding: 100px 5% 50px;
-            border-top: 1px solid var(--border);
-            margin-top: 100px;
-        }
+        /* GALLERY */
+        .gallery { margin-top: 100px; display: grid; gap: 40px; }
+        .gallery img { width: 100%; border-radius: 30px; border: 1px solid var(--border); }
 
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 50px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .footer-logo { font-family: var(--font-hd); font-size: 1.5rem; margin-bottom: 20px; }
+        /* SYNCED FOOTER */
+        footer { padding: 100px 8%; border-top: 1px solid var(--border); margin-top: 100px; }
+        .footer-grid { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 40px; }
+        .footer-contacts { display: flex; flex-direction: column; gap: 10px; }
+        .footer-contacts a { font-family: var(--font-hd); font-size: clamp(1.2rem, 3vw, 2rem); color: var(--text); text-decoration: none; font-weight: 900; transition: var(--transition); }
+        .footer-contacts a:hover { color: var(--accent); }
         
-        .footer-contacts p { color: var(--text-secondary); margin-bottom: 10px; }
-
-        .social-links { display: flex; gap: 20px; margin-top: 30px; }
-        .social-links a { color: var(--text); font-size: 1.2rem; transition: 0.3s; }
-        .social-links a:hover { color: var(--accent); }
-
-        .loader-wrap {
-            height: 50vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: var(--font-hd);
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-        }
+        .social-icons { display: flex; gap: 12px; margin-top: 20px; }
+        .social-icons a { width: 50px; height: 50px; background: var(--card); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: var(--text); border: 1px solid var(--border); transition: 0.3s; }
+        .social-icons a:hover { background: var(--accent); color: #fff; transform: translateY(-5px); }
 
         @media (max-width: 900px) {
-            .details-grid { grid-template-columns: 1fr; gap: 40px; }
-            .wrapper { padding: 120px 20px 60px; }
-            h1 { font-size: 2.5rem; }
+            .project-grid { grid-template-columns: 1fr; gap: 40px; }
+            .nav-header { padding: 20px 5%; }
+            .footer-grid { flex-direction: column; text-align: center; align-items: center; }
+            .social-icons { justify-content: center; }
         }
     </style>
 </head>
-<body class="dark-theme">
+<body>
 
-    <header>
-        <a href="index.html" class="logo">ANOR CORE</a>
-        <div class="header-controls">
-            <div style="display: flex; gap: 5px; border-right: 1px solid var(--border); padding-right: 15px;">
-                <button class="control-btn" id="lang-ua" onclick="changeLang('ua')">UA</button>
-                <button class="control-btn" id="lang-en" onclick="changeLang('en')">EN</button>
-            </div>
-            <button class="control-btn" id="theme-toggle" onclick="toggleTheme()">
-                <i class="fa-solid fa-moon"></i>
-            </button>
+    <header class="nav-header">
+        <a href="all-projects.html" class="back-link">
+            <i class="fa-solid fa-arrow-left"></i> 
+            <span class="lang-en">BACK TO ARCHIVE</span>
+            <span class="lang-ua" style="display:none;">ДО АРХІВУ</span>
+        </a>
+        <div class="nav-controls">
+            <button class="control-btn" onclick="toggleTheme()"><i class="fa-solid fa-circle-half-stroke"></i></button>
+            <button class="control-btn" onclick="setLang('ua')" id="btn-ua">UA</button>
+            <button class="control-btn" onclick="setLang('en')" id="btn-en">EN</button>
         </div>
     </header>
 
-    <div class="wrapper" id="project-container">
-        <div class="loader-wrap">Gathering data from Spectral...</div>
-    </div>
+    <main class="project-container" id="project-render">
+        </main>
 
-    <footer id="global-footer">
+    <footer>
         <div class="footer-grid">
-            <div>
-                <div class="footer-logo">ANOR</div>
-                <p id="f-role" style="color: var(--text-secondary)"></p>
-            </div>
             <div class="footer-contacts">
-                <h3>Contact</h3>
-                <p id="f-email"></p>
-                <p id="f-phone"></p>
+                <a href="tel:+380932097079" id="f-phone-link">+380 93 209 70 79</a>
+                <a href="mailto:Destro729@gmail.com" class="footer-email" id="f-email-link">Destro729@gmail.com</a>
+                <div class="social-icons" id="f-socials"></div>
             </div>
-            <div>
-                <h3>Social</h3>
-                <div class="social-links" id="f-socials">
-                    </div>
+            <div style="text-align: right;">
+                <p style="font-weight: 800; color: var(--text); font-family: var(--font-hd); text-transform: uppercase;">MAKSYM RIZUN</p>
+                <p id="f-role" style="color: var(--text-secondary); margin-top: 5px;"></p>
+                <p style="color: var(--text-secondary); opacity: 0.5; font-size: 0.8rem; margin-top: 15px;">&copy; 2026 ALL RIGHTS RESERVED.</p>
             </div>
-        </div>
-        <div style="text-align: center; margin-top: 80px; font-size: 0.7rem; color: var(--text-secondary); opacity: 0.5;">
-            &copy; 2026 ANOR CORE SYSTEM. ALL RIGHTS RESERVED.
         </div>
     </footer>
 
@@ -226,102 +193,118 @@
         const db = getDatabase(app);
 
         const urlParams = new URLSearchParams(window.location.search);
-        const id = urlParams.get('id');
+        const projectId = urlParams.get('id');
         let currentLang = localStorage.getItem('anor_lang') || 'ua';
 
-        // --- THEME LOGIC ---
+        // --- THEME ---
         window.toggleTheme = () => {
             const isLight = document.body.classList.toggle('light-theme');
             localStorage.setItem('anor_theme', isLight ? 'light' : 'dark');
-            document.getElementById('theme-toggle').innerHTML = isLight ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
         };
+        if(localStorage.getItem('anor_theme') === 'light') document.body.classList.add('light-theme');
 
-        // Init theme
-        if(localStorage.getItem('anor_theme') === 'light') {
-            document.body.classList.add('light-theme');
-            document.getElementById('theme-toggle').innerHTML = '<i class="fa-solid fa-sun"></i>';
-        }
-
-        // --- LANG LOGIC ---
-        window.changeLang = (lang) => {
+        // --- LANG ---
+        window.setLang = (lang) => {
             currentLang = lang;
             localStorage.setItem('anor_lang', lang);
-            updateLangUI();
-            location.reload(); // Перезавантаження для ШІ-перекладу (або виклику функції перекладу)
+            updateUI();
         };
 
-        function updateLangUI() {
-            document.querySelectorAll('.header-controls .control-btn').forEach(b => b.classList.remove('active'));
-            const btn = document.getElementById('lang-' + currentLang);
-            if(btn) btn.classList.add('active');
+        function updateUI() {
+            // Оновлення кнопок мови
+            document.querySelectorAll('.nav-controls .control-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('btn-' + currentLang).classList.add('active');
+            
+            // Перемикання видимих елементів мови в шапці
+            document.querySelectorAll('.lang-en').forEach(el => el.style.display = currentLang === 'en' ? 'inline' : 'none');
+            document.querySelectorAll('.lang-ua').forEach(el => el.style.display = currentLang === 'ua' ? 'inline' : 'none');
+
+            // Ререндер проекту, якщо дані вже є
+            if(window.lastData) renderProject(window.lastData);
+        }
+
+        // --- RENDER ---
+        function renderProject(data) {
+            window.lastData = data;
+            const container = document.getElementById('project-render');
+            
+            const title = currentLang === 'ua' ? (data.titleUa || data.title) : (data.titleEn || data.title);
+            const desc = currentLang === 'ua' ? (data.descUa || data.desc || data.description) : (data.descEn || data.desc || data.description);
+            const meta = data.customMeta || 'SPECTRAL ARTIFACT';
+            
+            // Автоматичні теги з категорій (дробимо якщо там рядок через кому)
+            const categories = data.category ? data.category.split(',').map(c => c.trim()) : ['LOGIC'];
+
+            container.innerHTML = `
+                <div class="project-meta">${meta} / ${categories.join(' / ')}</div>
+                <h1>${title}</h1>
+                <img src="${data.mainImage || data.image}" class="hero-img">
+                
+                <div class="project-grid">
+                    <div class="sidebar">
+                        <div class="info-block">
+                            <h3>${currentLang === 'ua' ? 'СИСТЕМА ТА РІК' : 'SYSTEM & YEAR'}</h3>
+                            <p>2026 / ANOR CORE v3.8</p>
+                        </div>
+                        
+                        <div class="info-block">
+                            <h3>${currentLang === 'ua' ? 'ТЕХНОЛОГІЇ (КАТЕГОРІЇ)' : 'TECHNOLOGIES'}</h3>
+                            <div>
+                                ${categories.map(cat => `
+                                    <span class="tech-tag" onclick="location.href='all-projects.html?filter=${encodeURIComponent(cat)}'">
+                                        ${cat}
+                                    </span>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        ${data.githubLink || data.link ? `
+                        <div class="info-block">
+                            <h3>${currentLang === 'ua' ? 'РЕСУРСИ' : 'RESOURCES'}</h3>
+                            <a href="${data.githubLink || data.link}" target="_blank" style="color: var(--accent);">
+                                ${currentLang === 'ua' ? 'Переглянути Artifact' : 'View Source Code'} ↗
+                            </a>
+                        </div>` : ''}
+                    </div>
+
+                    <div class="main-content">${desc}</div>
+                </div>
+
+                ${data.gallery ? `
+                <div class="gallery">
+                    ${Object.values(data.gallery).map(img => `<img src="${img}">`).join('')}
+                </div>` : ''}
+            `;
         }
 
         // --- LOAD DATA ---
-        if (id) {
-            onValue(ref(db, `projects/${id}`), (snap) => {
+        if (projectId) {
+            onValue(ref(db, `projects/${projectId}`), (snap) => {
                 const data = snap.val();
-                if (data) {
-                    document.title = `${data.title} | Anor Core`;
-                    
-                    // Обробка категорій (перевірка на масив/рядок)
-                    const cats = Array.isArray(data.categories) ? data.categories.join(', ') : (data.category || 'GENERAL');
-                    
-                    document.getElementById('project-container').innerHTML = `
-                        <a href="all-projects.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Archive</a>
-                        
-                        <div class="meta-tags">${data.customMeta || 'PROJECT'} / ${cats}</div>
-                        
-                        <h1 class="ai-translate">${data.title}</h1>
-                        
-                        <img src="${data.mainImage}" class="main-img" alt="Hero">
-                        
-                        <div class="details-grid">
-                            <div class="sidebar-info">
-                                <h3>Year & System</h3>
-                                <p>2026 / Anor Core 3.7</p>
-                                
-                                ${data.tags ? `<h3>Technologies</h3><p>${data.tags}</p>` : ''}
-                                
-                                ${data.link ? `<h3>Resource</h3><p><a href="${data.link}" target="_blank">View Live / Code</a></p>` : ''}
-                            </div>
-                            
-                            <div class="content-body ai-translate">${data.description}</div>
-                        </div>
-
-                        ${data.gallery && data.gallery.length > 0 ? `
-                            <div style="margin-top: 100px; display: grid; gap: 40px;">
-                                ${data.gallery.map(url => `<img src="${url}" style="width:100%; border-radius:30px;">`).join('')}
-                            </div>
-                        ` : ''}
-                    `;
-                } else {
-                    document.getElementById('project-container').innerHTML = "<h1 style='text-align:center'>Artifact not found in Spectral database.</h1>";
-                }
+                if (data) renderProject(data);
+                else document.getElementById('project-render').innerHTML = "<h1>Artifact lost in space...</h1>";
             });
         }
 
-        // --- FOOTER DATA ---
-        onValue(ref(db, 'settings/global'), (snap) => {
-            const d = snap.val();
-            if(!d) return;
-            document.getElementById('f-email').innerText = d.email || '';
-            document.getElementById('f-phone').innerText = d.phone || '';
-            document.getElementById('f-role').innerText = currentLang === 'ua' ? d.roleUa : d.roleEn;
+        // SYNC FOOTER (як на головній)
+        onValue(ref(db, 'settings/footer'), (snapshot) => {
+            const f = snapshot.val();
+            if(!f) return;
+            document.getElementById('f-phone-link').innerText = f.phone;
+            document.getElementById('f-phone-link').href = `tel:${f.phone.replace(/\s/g, '')}`;
+            document.getElementById('f-email-link').innerText = f.email;
+            document.getElementById('f-email-link').href = `mailto:${f.email}`;
+            document.getElementById('f-role').innerText = currentLang === 'ua' ? f.roleUa : f.roleEn;
             
-            const socContainer = document.getElementById('f-socials');
-            socContainer.innerHTML = '';
-            const icons = { tg: 'fa-telegram', gh: 'fa-github', wa: 'fa-whatsapp', ds: 'fa-discord', be: 'fa-behance', fb: 'fa-facebook' };
-            
-            if(d.socials) {
-                for(let key in d.socials) {
-                    if(d.socials[key]) {
-                        socContainer.innerHTML += `<a href="${d.socials[key]}" target="_blank"><i class="fa-brands ${icons[key]}"></i></a>`;
-                    }
-                }
-            }
+            const soc = document.getElementById('f-socials');
+            soc.innerHTML = `
+                <a href="${f.wa || '#'}" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
+                <a href="${f.tg || '#'}" target="_blank"><i class="fa-brands fa-telegram"></i></a>
+                <a href="${f.gh || '#'}" target="_blank"><i class="fa-brands fa-github"></i></a>
+            `;
         });
 
-        updateLangUI();
+        updateUI();
     </script>
 </body>
 </html>
