@@ -296,7 +296,7 @@
         <h2 class="about-heading lang-ua">Портфоліо</h2>
         
         <div class="portfolio-grid" id="projects-grid">
-            </div>
+             </div>
 
         <div class="more-projects-container">
             <a href="all-projects.html" class="btn-outline lang-en">SEE ALL PROJECTS</a>
@@ -394,7 +394,7 @@
     
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.app";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDwQpDnT4_o1fiVDKuWI7VAYeal9nh6dRQ",
@@ -410,65 +410,87 @@
         const db = getDatabase(app);
         const grid = document.getElementById('projects-grid');
 
-        // --- Вивід проектів ---
+        // --- ВИВІД ПРОЕКТІВ (ПОРТФОЛІО) ---
         onValue(ref(db, 'projects'), (snap) => {
             const data = snap.val();
-            if (!data) return;
             grid.innerHTML = "";
-            const keys = Object.keys(data).reverse().slice(0, 4); 
             
-            keys.forEach(key => {
-                const p = data[key];
-                const card = document.createElement('div');
-                card.className = 'project-card';
-                card.onclick = () => { window.location.href = `project-details.html?id=${key}`; };
-                
-                // Виправлена логіка картинок: перевіряємо mainImage або image
-                const projectImg = p.mainImage || p.image || 'img/default.jpg';
-                
-                card.innerHTML = `
-                    <img src="${projectImg}" alt="${p.title || 'Project'}">
-                    <div class="project-info">
-                        <span class="project-tag">${p.category || 'Logic'}</span>
-                        <h3>${p.title || 'Untitled'}</h3>
-                        <p>${p.shortDesc ? p.shortDesc.substring(0, 60) + '...' : (p.desc ? p.desc.substring(0, 60) + '...' : '')}</p>
-                    </div>
-                `;
-                
-                card.addEventListener('mousemove', (e) => {
-                    const rect = card.getBoundingClientRect();
-                    const x = (e.clientX - rect.left) / rect.width - 0.5;
-                    const y = (e.clientY - rect.top) / rect.height - 0.5;
-                    card.style.transform = `perspective(1000px) rotateY(${x * 12}deg) rotateX(${y * -12}deg) scale3d(1.02, 1.02, 1.02)`;
+            if (data) {
+                // Конвертуємо об'єкт в масив для надійності
+                const projectList = Object.keys(data).map(key => ({
+                    id: key,
+                    ...data[key]
+                })).reverse().slice(0, 4); 
+
+                projectList.forEach(p => {
+                    const card = document.createElement('div');
+                    card.className = 'project-card';
+                    card.onclick = () => { window.location.href = `project-details.html?id=${p.id}`; };
+                    
+                    // Логіка зображення
+                    const projectImg = p.mainImage || p.image || 'img/default.jpg';
+                    
+                    // Логіка категорії (якщо прийшов об'єкт, беремо перший ключ або текст)
+                    let displayCat = "Artifact";
+                    if (p.category) {
+                        displayCat = typeof p.category === 'object' ? Object.values(p.category)[0] : p.category;
+                    }
+
+                    card.innerHTML = `
+                        <img src="${projectImg}" alt="${p.title || 'Project'}">
+                        <div class="project-info">
+                            <span class="project-tag">${displayCat}</span>
+                            <h3>${p.title || 'Untitled'}</h3>
+                            <p>${p.shortDesc ? p.shortDesc.substring(0, 60) + '...' : (p.desc ? p.desc.substring(0, 60) + '...' : '')}</p>
+                        </div>
+                    `;
+                    
+                    card.addEventListener('mousemove', (e) => {
+                        const rect = card.getBoundingClientRect();
+                        const x = (e.clientX - rect.left) / rect.width - 0.5;
+                        const y = (e.clientY - rect.top) / rect.height - 0.5;
+                        card.style.transform = `perspective(1000px) rotateY(${x * 12}deg) rotateX(${y * -12}deg) scale3d(1.02, 1.02, 1.02)`;
+                    });
+                    
+                    card.addEventListener('mouseleave', () => {
+                        card.style.transform = `perspective(1000px) rotateY(0) rotateX(0) scale3d(1, 1, 1)`;
+                    });
+                    
+                    grid.appendChild(card);
                 });
-                card.addEventListener('mouseleave', () => {
-                    card.style.transform = `perspective(1000px) rotateY(0) rotateX(0) scale3d(1, 1, 1)`;
-                });
-                
-                grid.appendChild(card);
-            });
+            } else {
+                grid.innerHTML = "<p style='grid-column: 1/-1; text-align: center; opacity: 0.5;'>No projects found in the database.</p>";
+            }
         });
 
-        // --- Динамічний футер ---
+        // --- ПОВНІСТЮ ДИНАМІЧНИЙ ФУТЕР ---
         onValue(ref(db, 'settings/footer'), (snap) => {
             const f = snap.val();
-            if(!f) return;
-            if(f.phone) {
-                document.getElementById('f-phone-link').innerText = f.phone;
-                document.getElementById('f-phone-link').href = `tel:${f.phone.replace(/\s/g, '')}`;
+            if (f) {
+                // Телефони та пошта
+                if (f.phone) {
+                    const phoneEl = document.getElementById('f-phone-link');
+                    phoneEl.innerText = f.phone;
+                    phoneEl.href = `tel:${f.phone.replace(/\s/g, '')}`;
+                }
+                if (f.email) {
+                    const emailEl = document.getElementById('f-email-link');
+                    emailEl.innerText = f.email;
+                    emailEl.href = `mailto:${f.email}`;
+                }
+                
+                // Ролі
+                if (f.roleUa) document.getElementById('f-role-ua').innerText = f.roleUa;
+                if (f.roleEn) document.getElementById('f-role-en').innerText = f.roleEn;
+                
+                // Соціальні мережі
+                if (f.tg) document.getElementById('f-tg').href = f.tg;
+                if (f.wa) document.getElementById('f-wa').href = f.wa;
+                if (f.gh) document.getElementById('f-gh').href = f.gh;
+                if (f.ds) document.getElementById('f-ds').href = f.ds;
+                if (f.bh) document.getElementById('f-bh').href = f.bh;
+                if (f.fv) document.getElementById('f-fv').href = f.fv;
             }
-            if(f.email) {
-                document.getElementById('f-email-link').innerText = f.email;
-                document.getElementById('f-email-link').href = `mailto:${f.email}`;
-            }
-            if(f.roleUa) document.getElementById('f-role-ua').innerText = f.roleUa;
-            if(f.roleEn) document.getElementById('f-role-en').innerText = f.roleEn;
-            if(f.tg) document.getElementById('f-tg').href = f.tg;
-            if(f.wa) document.getElementById('f-wa').href = f.wa;
-            if(f.gh) document.getElementById('f-gh').href = f.gh;
-            if(f.ds) document.getElementById('f-ds').href = f.ds;
-            if(f.bh) document.getElementById('f-bh').href = f.bh;
-            if(f.fv) document.getElementById('f-fv').href = f.fv;
         });
     </script>
 
