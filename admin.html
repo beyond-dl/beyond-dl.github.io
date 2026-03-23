@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anor Core | Versailles Admin 3.0</title>
+    <title>Anor Core | Versailles Admin 3.5</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&family=Unbounded:wght@700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -37,7 +37,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            transition: background 0.3s ease, border 0.3s ease;
+            transition: background 0.2s ease;
         }
 
         body {
@@ -49,7 +49,6 @@
             overflow-x: hidden;
         }
 
-        /* SIDEBAR */
         .sidebar {
             width: 280px;
             background: var(--sidebar);
@@ -71,10 +70,7 @@
             text-transform: uppercase;
         }
 
-        .nav-group {
-            margin-bottom: 30px;
-        }
-
+        .nav-group { margin-bottom: 30px; }
         .nav-label {
             font-size: 0.65rem;
             color: var(--text-secondary);
@@ -103,27 +99,19 @@
             text-align: left;
         }
 
-        .nav-item:hover {
+        .nav-item:hover, .nav-item.active {
             color: var(--text);
             background: rgba(255, 255, 255, 0.05);
         }
 
-        body.light-theme .nav-item:hover {
-            background: rgba(0, 0, 0, 0.03);
-        }
+        body.light-theme .nav-item:hover { background: rgba(0, 0, 0, 0.03); }
 
-        .nav-item.active {
-            background: var(--card);
-            color: var(--text);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-        }
-
-        /* MAIN CONTENT */
         .main-content {
             margin-left: 280px;
             flex-grow: 1;
-            padding: 60px 8%;
-            max-width: 1400px;
+            padding: 60px 4%; /* Зменшено відступ для ширшої зони */
+            max-width: 1600px; /* Розширено */
+            width: 100%;
         }
 
         h1 {
@@ -131,17 +119,14 @@
             font-size: 1.8rem;
             margin-bottom: 40px;
             font-weight: 900;
-            letter-spacing: -1px;
         }
 
-        /* CARDS & FORMS */
         .card {
             background: var(--card);
             border: 1px solid var(--border);
             border-radius: 30px;
             padding: 40px;
             margin-bottom: 40px;
-            position: relative;
         }
 
         .form-grid {
@@ -150,13 +135,8 @@
             gap: 25px;
         }
 
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        .full-width {
-            grid-column: span 2;
-        }
+        .form-group { margin-bottom: 25px; }
+        .full-width { grid-column: span 2; }
 
         label {
             display: block;
@@ -165,7 +145,6 @@
             color: var(--text-secondary);
             font-weight: 800;
             margin-bottom: 10px;
-            letter-spacing: 0.5px;
         }
 
         input, select, textarea {
@@ -175,20 +154,11 @@
             padding: 16px 20px;
             border-radius: 15px;
             color: var(--text);
-            font-family: var(--font-main);
-            font-size: 0.95rem;
             outline: none;
         }
 
-        input:focus, textarea:focus {
-            border-color: var(--accent);
-        }
+        input:focus { border-color: var(--accent); }
 
-        textarea {
-            resize: vertical;
-        }
-
-        /* BUTTONS */
         .btn {
             background: var(--accent);
             color: white;
@@ -203,24 +173,8 @@
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            letter-spacing: 1px;
         }
 
-        .btn:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
-        }
-
-        .btn-delete {
-            background: none;
-            border: none;
-            color: var(--danger);
-            cursor: pointer;
-            font-size: 1.1rem;
-            padding: 10px;
-        }
-
-        /* PROJECT LIST */
         .project-item {
             display: flex;
             justify-content: space-between;
@@ -232,27 +186,17 @@
             border: 1px solid var(--border);
         }
 
-        .project-info h4 {
-            font-family: var(--font-hd);
-            font-size: 0.8rem;
-            margin-bottom: 4px;
+        .project-actions { display: flex; gap: 10px; }
+        .btn-icon {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 8px;
         }
+        .btn-edit { color: var(--accent); }
+        .btn-delete { color: var(--danger); }
 
-        .project-info span {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-        }
-
-        /* FOOTER SETTINGS SPECIFIC */
-        .social-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-        }
-
-        .hidden { display: none; }
-
-        /* TOGGLES */
         .admin-controls {
             margin-top: auto;
             padding-top: 20px;
@@ -266,37 +210,48 @@
             padding: 10px;
             border-radius: 10px;
             cursor: pointer;
-            font-size: 0.8rem;
-            margin-right: 5px;
         }
 
         .control-btn.active {
             background: var(--accent);
             color: white;
-            border-color: var(--accent);
         }
 
+        .hidden { display: none; }
+        
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .social-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
     </style>
 </head>
 <body class="dark-theme">
 
     <aside class="sidebar">
-        <div class="logo">ANOR CORE SYSTEM 3.0</div>
+        <div class="logo">ANOR CORE SYSTEM 3.5</div>
         
         <div class="nav-group">
-            <span class="nav-label">Контент</span>
+            <span class="nav-label" data-t="group_content">Контент</span>
             <button class="nav-item active" id="btn-projects" onclick="showSection('projects')">
-                <i class="fa-solid fa-rocket"></i> Проєкти
+                <i class="fa-solid fa-rocket"></i> <span data-t="nav_projects">Проєкти</span>
             </button>
             <button class="nav-item" id="btn-categories" onclick="showSection('categories')">
-                <i class="fa-solid fa-tags"></i> Категорії
+                <i class="fa-solid fa-tags"></i> <span data-t="nav_cats">Категорії</span>
             </button>
         </div>
 
         <div class="nav-group">
-            <span class="nav-label">Конфігурація</span>
+            <span class="nav-label" data-t="group_config">Конфігурація</span>
             <button class="nav-item" id="btn-footer" onclick="showSection('footer')">
-                <i class="fa-solid fa-sliders"></i> Глобальні & Футер
+                <i class="fa-solid fa-sliders"></i> <span data-t="nav_global">Глобальні & Футер</span>
             </button>
         </div>
 
@@ -305,12 +260,12 @@
                 <button class="control-btn active" id="theme-dark" onclick="setTheme('dark')"><i class="fa-solid fa-moon"></i></button>
                 <button class="control-btn" id="theme-light" onclick="setTheme('light')"><i class="fa-solid fa-sun"></i></button>
                 <div style="margin-left: auto;">
-                    <button class="control-btn active">UA</button>
-                    <button class="control-btn">EN</button>
+                    <button class="control-btn lang-btn" id="lang-ua" onclick="setLang('ua')">UA</button>
+                    <button class="control-btn lang-btn" id="lang-en" onclick="setLang('en')">EN</button>
                 </div>
             </div>
-            <a href="index.html" class="nav-item" style="background: rgba(0,113,227,0.1); color: var(--accent);">
-                <i class="fa-solid fa-arrow-up-right-from-square"></i> На сайт
+            <a href="index.html" target="_blank" class="nav-item" style="background: rgba(0,113,227,0.1); color: var(--accent);">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> <span data-t="to_site">На сайт</span>
             </a>
         </div>
     </aside>
@@ -318,182 +273,184 @@
     <main class="main-content">
         
         <section id="sec-projects">
-            <h1>Управління Артефактами</h1>
+            <h1 data-t="h_projects">Управління Артефактами</h1>
             <div class="card">
                 <div class="form-grid">
                     <div class="form-group full-width">
-                        <label>Назва проєкту (UA)</label>
-                        <input type="text" id="p-title" placeholder="Наприклад: TikTok Stealth Bot">
+                        <label data-t="l_title">Назва проєкту (UA/EN)</label>
+                        <input type="text" id="p-title" placeholder="TikTok Stealth Bot">
                     </div>
                     
                     <div class="form-group">
-                        <label>Мета-тег (над назвою)</label>
+                        <label data-t="l_meta">Мета-тег (над назвою)</label>
                         <input type="text" id="p-meta" placeholder="AUTOMATION, 2026">
                     </div>
 
                     <div class="form-group">
-                        <label>Категорія (Фільтр)</label>
-                        <select id="p-cat">
-                            </select>
+                        <label data-t="l_cat">Категорія (Фільтр)</label>
+                        <select id="p-cat"></select>
                     </div>
 
                     <div class="form-group full-width">
-                        <label>Теги (через кому для фільтрації: UI/UX, CSS, Python)</label>
+                        <label data-t="l_tags">Теги (UI/UX, Python...)</label>
                         <input type="text" id="p-tags" placeholder="AI, Scraper, Python">
                     </div>
 
                     <div class="form-group full-width">
-                        <label>Короткий опис (UA)</label>
-                        <input type="text" id="p-short" placeholder="Короткий рядок для картки в архіві">
+                        <label data-t="l_short">Короткий опис</label>
+                        <input type="text" id="p-short" placeholder="Короткий рядок для картки">
                     </div>
 
                     <div class="form-group full-width">
-                        <label>Повний опис (Логіка Артефакту)</label>
-                        <textarea id="p-desc" rows="6" placeholder="Опишіть магію цього коду..."></textarea>
+                        <label data-t="l_desc">Повний опис (Логіка)</label>
+                        <textarea id="p-desc" rows="5"></textarea>
                     </div>
 
                     <div class="form-group">
-                        <label>Головне зображення (URL)</label>
-                        <input type="text" id="p-img" placeholder="https://imgur.com/...">
+                        <label data-t="l_img">Головне зображення (URL)</label>
+                        <input type="text" id="p-img">
                     </div>
 
                     <div class="form-group">
-                        <label>Посилання на результат (GitHub/Demo URL)</label>
-                        <input type="text" id="p-link" placeholder="https://github.com/...">
+                        <label data-t="l_link">GitHub / Demo URL</label>
+                        <input type="text" id="p-link">
                     </div>
 
                     <div class="form-group full-width">
-                        <label>Галерея (URL-адреси через кому)</label>
-                        <textarea id="p-gallery" rows="2" placeholder="url1, url2, url3"></textarea>
+                        <label data-t="l_gallery">Галерея (через кому)</label>
+                        <textarea id="p-gallery" rows="2"></textarea>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <div class="toggle-container">
+                             <input type="checkbox" id="p-on-main" style="width: 20px; height: 20px;">
+                             <label style="margin-bottom: 0;" data-t="l_main">Відображати на головній сторінці</label>
+                        </div>
                     </div>
                 </div>
                 
-                <button class="btn" onclick="saveProject()">
-                    <i class="fa-solid fa-sparkles"></i> Зберегти в Спектраль
+                <button class="btn" id="btn-save-project" onclick="saveProject()">
+                    <i class="fa-solid fa-sparkles"></i> <span id="btn-text" data-t="btn_save">Зберегти в Спектраль</span>
+                </button>
+                <button class="btn hidden" id="btn-cancel-edit" onclick="cancelEdit()" style="background: var(--danger); margin-left: 10px;">
+                    <span data-t="btn_cancel">Скасувати</span>
                 </button>
             </div>
 
             <div id="project-list-container">
-                <label>Існуючі Проєкти</label>
+                <label data-t="l_existing">Існуючі Проєкти</label>
                 <div id="project-list"></div>
             </div>
         </section>
 
         <section id="sec-categories" class="hidden">
-            <h1>Матриця Категорій</h1>
+            <h1 data-t="h_cats">Матриця Категорій</h1>
             <div class="card">
                 <div class="form-group">
-                    <label>Нова Категорія</label>
-                    <input type="text" id="new-cat-name" placeholder="Наприклад: UI/UX">
+                    <label data-t="l_new_cat">Нова Категорія</label>
+                    <input type="text" id="new-cat-name">
                 </div>
-                <button class="btn" onclick="addCategory()">Додати Категорію</button>
+                <button class="btn" onclick="addCategory()" data-t="btn_add_cat">Додати Категорію</button>
             </div>
-            <div id="cat-list" class="card">
-                </div>
+            <div id="cat-list" class="card"></div>
         </section>
 
         <section id="sec-footer" class="hidden">
-            <h1>Налаштування Футера & Контактів</h1>
+            <h1 data-t="h_global">Налаштування Футера</h1>
             <div class="card">
                 <div class="form-grid">
-                    <div class="form-group">
-                        <label>Контактний Телефон (Жирний текст)</label>
-                        <input type="text" id="f-phone" placeholder="+380 93 ...">
-                    </div>
-                    <div class="form-group">
-                        <label>Контактний Email</label>
-                        <input type="text" id="f-email" placeholder="example@gmail.com">
-                    </div>
-                    <div class="form-group">
-                        <label>Роль (UA)</label>
-                        <input type="text" id="f-role-ua" placeholder="Дизайнер та AI Інженер">
-                    </div>
-                    <div class="form-group">
-                        <label>Роль (EN)</label>
-                        <input type="text" id="f-role-en" placeholder="Designer & AI Engineer">
-                    </div>
-
+                    <div class="form-group"><label>Телефон</label><input type="text" id="f-phone"></div>
+                    <div class="form-group"><label>Email</label><input type="text" id="f-email"></div>
+                    <div class="form-group"><label>Роль (UA)</label><input type="text" id="f-role-ua"></div>
+                    <div class="form-group"><label>Роль (EN)</label><input type="text" id="f-role-en"></div>
                     <div class="form-group full-width">
-                        <label>Соціальні мережі (URL)</label>
+                        <label>Social Links</label>
                         <div class="social-grid">
-                            <input type="text" id="s-tg" placeholder="Telegram URL">
-                            <input type="text" id="s-gh" placeholder="GitHub URL">
-                            <input type="text" id="s-wa" placeholder="WhatsApp URL">
-                            <input type="text" id="s-ds" placeholder="Discord URL">
-                            <input type="text" id="s-be" placeholder="Behance URL">
-                            <input type="text" id="s-fb" placeholder="Facebook URL">
+                            <input type="text" id="s-tg" placeholder="Telegram"><input type="text" id="s-gh" placeholder="GitHub">
+                            <input type="text" id="s-wa" placeholder="WhatsApp"><input type="text" id="s-ds" placeholder="Discord">
+                            <input type="text" id="s-be" placeholder="Behance"><input type="text" id="s-fb" placeholder="Facebook">
                         </div>
                     </div>
                 </div>
-                <button class="btn" onclick="saveFooter()">
-                    <i class="fa-solid fa-floppy-disk"></i> Оновити Систему
-                </button>
+                <button class="btn" onclick="saveFooter()" data-t="btn_update">Оновити Систему</button>
             </div>
         </section>
     </main>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getDatabase, ref, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+        import { getDatabase, ref, set, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
-        const firebaseConfig = {
-            databaseURL: "https://anor-core-2026-default-rtdb.europe-west1.firebasedatabase.app"
-        };
-
+        const firebaseConfig = { databaseURL: "https://anor-core-2026-default-rtdb.europe-west1.firebasedatabase.app" };
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // --- UI LOGIC ---
+        let editingProjectId = null;
+        let currentLang = 'ua';
+
+        const translations = {
+            ua: {
+                group_content: "Контент", nav_projects: "Проєкти", nav_cats: "Категорії",
+                group_config: "Конфігурація", nav_global: "Глобальні & Футер", to_site: "На сайт",
+                h_projects: "Управління Артефактами", l_title: "Назва проєкту", l_meta: "Мета-тег",
+                l_cat: "Категорія", l_tags: "Теги", l_short: "Короткий опис", l_desc: "Повний опис",
+                l_img: "Зображення URL", l_link: "GitHub Link", l_gallery: "Галерея URL",
+                l_main: "На головну", btn_save: "Зберегти в Спектраль", l_existing: "Існуючі Проєкти",
+                h_cats: "Матриця Категорій", btn_add_cat: "Додати", btn_cancel: "Скасувати", btn_update: "Оновити"
+            },
+            en: {
+                group_content: "Content", nav_projects: "Projects", nav_cats: "Categories",
+                group_config: "Config", nav_global: "Global & Footer", to_site: "To Site",
+                h_projects: "Artifact Management", l_title: "Project Title", l_meta: "Meta-tag",
+                l_cat: "Category", l_tags: "Tags", l_short: "Short Desc", l_desc: "Full Logic",
+                l_img: "Image URL", l_link: "GitHub Link", l_gallery: "Gallery URLs",
+                l_main: "Show on Main", btn_save: "Save to Spectral", l_existing: "Existing Projects",
+                h_cats: "Category Matrix", btn_add_cat: "Add", btn_cancel: "Cancel", btn_update: "Update"
+            }
+        };
+
+        window.setLang = (lang) => {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('lang-' + lang).classList.add('active');
+            document.querySelectorAll('[data-t]').forEach(el => {
+                const key = el.getAttribute('data-t');
+                el.innerText = translations[lang][key] || el.innerText;
+            });
+        };
+
         window.showSection = (name) => {
-            document.getElementById('sec-projects').classList.add('hidden');
-            document.getElementById('sec-categories').classList.add('hidden');
-            document.getElementById('sec-footer').classList.add('hidden');
-            
+            ['projects', 'categories', 'footer'].forEach(s => document.getElementById('sec-' + s).classList.add('hidden'));
             document.getElementById('sec-' + name).classList.remove('hidden');
-            
             document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
             document.getElementById('btn-' + name).classList.add('active');
         };
 
         window.setTheme = (theme) => {
-            if(theme === 'light') {
-                document.body.classList.add('light-theme');
-                document.getElementById('theme-light').classList.add('active');
-                document.getElementById('theme-dark').classList.remove('active');
-            } else {
-                document.body.classList.remove('light-theme');
-                document.getElementById('theme-dark').classList.add('active');
-                document.getElementById('theme-light').classList.remove('active');
-            }
+            document.body.classList.toggle('light-theme', theme === 'light');
+            document.getElementById('theme-light').classList.toggle('active', theme === 'light');
+            document.getElementById('theme-dark').classList.toggle('active', theme === 'dark');
         };
 
-        // --- CATEGORIES LOGIC ---
+        // --- CATEGORIES ---
         window.addCategory = () => {
             const name = document.getElementById('new-cat-name').value;
-            if(!name) return;
-            push(ref(db, 'categories'), { name: name.toUpperCase() });
+            if(name) push(ref(db, 'categories'), { name: name.toUpperCase() });
             document.getElementById('new-cat-name').value = "";
         };
 
         onValue(ref(db, 'categories'), (snap) => {
-            const list = document.getElementById('cat-list');
-            const select = document.getElementById('p-cat');
-            list.innerHTML = "";
-            select.innerHTML = "";
+            const list = document.getElementById('cat-list'), select = document.getElementById('p-cat');
+            list.innerHTML = ""; select.innerHTML = "";
             const data = snap.val();
             for(let id in data) {
-                list.innerHTML += `
-                    <div class="project-item">
-                        <span>${data[id].name}</span>
-                        <button class="btn-delete" onclick="deleteItem('categories/${id}')"><i class="fa-solid fa-trash"></i></button>
-                    </div>`;
+                list.innerHTML += `<div class="project-item"><span>${data[id].name}</span><button class="btn-delete" onclick="deleteItem('categories/${id}')"><i class="fa-solid fa-trash"></i></button></div>`;
                 select.innerHTML += `<option value="${data[id].name}">${data[id].name}</option>`;
             }
         });
 
         // --- PROJECTS LOGIC ---
         window.saveProject = () => {
-            const galleryVal = document.getElementById('p-gallery').value;
             const data = {
                 title: document.getElementById('p-title').value,
                 customMeta: document.getElementById('p-meta').value,
@@ -502,22 +459,60 @@
                 shortDesc: document.getElementById('p-short').value,
                 description: document.getElementById('p-desc').value,
                 mainImage: document.getElementById('p-img').value,
-                gallery: galleryVal ? galleryVal.split(',').map(s => s.trim()) : [],
+                gallery: document.getElementById('p-gallery').value.split(',').map(s => s.trim()).filter(s => s),
                 link: document.getElementById('p-link').value,
+                onMain: document.getElementById('p-on-main').checked,
                 time: Date.now()
             };
 
-            if(!data.title) {
-                alert("Назва проєкту обов'язкова!");
-                return;
-            }
+            if(!data.title) return alert("Title is required!");
 
-            push(ref(db, 'projects'), data).then(() => {
-                alert("Артефакт збережено!");
-                // Очистка
-                document.querySelectorAll('#sec-projects input, #sec-projects textarea').forEach(i => i.value = "");
-            });
+            if(editingProjectId) {
+                update(ref(db, `projects/${editingProjectId}`), data).then(() => {
+                    alert("Артефакт оновлено!");
+                    cancelEdit();
+                });
+            } else {
+                push(ref(db, 'projects'), data).then(() => {
+                    alert("Артефакт створено!");
+                    clearForm();
+                });
+            }
         };
+
+        window.editProject = (id) => {
+            onValue(ref(db, `projects/${id}`), (snap) => {
+                const d = snap.val();
+                if(!d) return;
+                editingProjectId = id;
+                document.getElementById('p-title').value = d.title || "";
+                document.getElementById('p-meta').value = d.customMeta || "";
+                document.getElementById('p-cat').value = d.category || "";
+                document.getElementById('p-tags').value = d.tags || "";
+                document.getElementById('p-short').value = d.shortDesc || "";
+                document.getElementById('p-desc').value = d.description || "";
+                document.getElementById('p-img').value = d.mainImage || "";
+                document.getElementById('p-link').value = d.link || "";
+                document.getElementById('p-gallery').value = d.gallery ? d.gallery.join(', ') : "";
+                document.getElementById('p-on-main').checked = d.onMain || false;
+                
+                document.getElementById('btn-text').innerText = "Оновити Артефакт";
+                document.getElementById('btn-cancel-edit').classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, { onlyOnce: true });
+        };
+
+        window.cancelEdit = () => {
+            editingProjectId = null;
+            clearForm();
+            document.getElementById('btn-text').innerText = translations[currentLang].btn_save;
+            document.getElementById('btn-cancel-edit').classList.add('hidden');
+        };
+
+        function clearForm() {
+            document.querySelectorAll('#sec-projects input, #sec-projects textarea').forEach(i => i.value = "");
+            document.getElementById('p-on-main').checked = false;
+        }
 
         onValue(ref(db, 'projects'), (snap) => {
             const list = document.getElementById('project-list');
@@ -528,14 +523,17 @@
                     <div class="project-item">
                         <div class="project-info">
                             <h4>${data[id].title}</h4>
-                            <span>${data[id].category} • ${data[id].tags}</span>
+                            <span>${data[id].category} ${data[id].onMain ? '• [MAIN]' : ''}</span>
                         </div>
-                        <button class="btn-delete" onclick="deleteItem('projects/${id}')"><i class="fa-solid fa-trash"></i></button>
+                        <div class="project-actions">
+                            <button class="btn-icon btn-edit" onclick="editProject('${id}')"><i class="fa-solid fa-pen"></i></button>
+                            <button class="btn-icon btn-delete" onclick="deleteItem('projects/${id}')"><i class="fa-solid fa-trash"></i></button>
+                        </div>
                     </div>`;
             }
         });
 
-        // --- FOOTER LOGIC ---
+        // --- FOOTER & GLOBAL ---
         window.saveFooter = () => {
             const data = {
                 phone: document.getElementById('f-phone').value,
@@ -549,37 +547,31 @@
                     ds: document.getElementById('s-ds').value,
                     be: document.getElementById('s-be').value,
                     fb: document.getElementById('s-fb').value
-                },
-                lastUpdate: Date.now()
+                }
             };
-            set(ref(db, 'settings/global'), data).then(() => alert("Глобальні налаштування оновлено!"));
+            set(ref(db, 'settings/global'), data).then(() => alert("Оновлено!"));
         };
 
-        // Завантаження даних футера при старті
         onValue(ref(db, 'settings/global'), (snap) => {
-            const data = snap.val();
-            if(data) {
-                document.getElementById('f-phone').value = data.phone || "";
-                document.getElementById('f-email').value = data.email || "";
-                document.getElementById('f-role-ua').value = data.roleUa || "";
-                document.getElementById('f-role-en').value = data.roleEn || "";
-                if(data.socials) {
-                    document.getElementById('s-tg').value = data.socials.tg || "";
-                    document.getElementById('s-gh').value = data.socials.gh || "";
-                    document.getElementById('s-wa').value = data.socials.wa || "";
-                    document.getElementById('s-ds').value = data.socials.ds || "";
-                    document.getElementById('s-be').value = data.socials.be || "";
-                    document.getElementById('s-fb').value = data.socials.fb || "";
+            const d = snap.val();
+            if(!d) return;
+            document.getElementById('f-phone').value = d.phone || "";
+            document.getElementById('f-email').value = d.email || "";
+            document.getElementById('f-role-ua').value = d.roleUa || "";
+            document.getElementById('f-role-en').value = d.roleEn || "";
+            if(d.socials) {
+                for(let s in d.socials) {
+                    const el = document.getElementById('s-' + s);
+                    if(el) el.value = d.socials[s];
                 }
             }
         });
 
         window.deleteItem = (path) => {
-            if(confirm("Ви впевнені, що хочете видалити цей елемент з історії?")) {
-                remove(ref(db, path));
-            }
+            if(confirm("Видалити назавжди?")) remove(ref(db, path));
         };
-
+        
+        setLang('ua');
     </script>
 </body>
 </html>
