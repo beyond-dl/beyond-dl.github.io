@@ -251,7 +251,6 @@
             });
         });
 
-        // --- ГЕНЕРАЦІЯ КАРТОК З ВИПРАВЛЕНИМИ ТЕГАМИ ---
         onValue(ref(db, 'projects'), (snapshot) => {
             const grid = document.getElementById('projectsGrid');
             grid.innerHTML = "";
@@ -270,7 +269,6 @@
                 const img = p.mainImage || p.image || 'https://via.placeholder.com/600x400/111/fff?text=No+Image';
                 const likes = p.likes || 0;
                 
-                // ОБРОБКА КАТЕГОРІЙ: Тільки те, що в базі
                 let catsArray = [];
                 if (p.category) {
                     if (Array.isArray(p.category)) {
@@ -278,7 +276,6 @@
                     } else if (typeof p.category === 'object' && p.category.name) {
                         catsArray = [p.category.name];
                     } else if (typeof p.category === 'string') {
-                        // Якщо введено "AI, Bot", розділяємо на масив
                         catsArray = p.category.split(',').map(c => c.trim()).filter(c => c !== "");
                     }
                 }
@@ -288,7 +285,6 @@
                 const card = document.createElement('a');
                 card.className = 'project-card';
                 card.href = `project-details.html?id=${p.id}`;
-                // Зберігаємо всі категорії для фільтрації
                 card.setAttribute('data-categories', catsArray.join(','));
                 
                 if (currentFilter !== 'all' && !catsArray.includes(currentFilter)) {
