@@ -1,1 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anor Core | Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Unbounded:wght@700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #050505; --sidebar: #0f0f0f; --text: #ffffff;
+            --text-secondary: #a1a1a6; --accent: #0071e3;
+            --border: rgba(255, 255, 255, 0.1); --card: #161617;
+            --font-hd: 'Unbounded', sans-serif; --font-main: 'Inter', sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--bg); color: var(--text); font-family: var(--font-main); display: flex; min-height: 100vh; }
+        
+        /* Layout */
+        .sidebar { width: 280px; background: var(--sidebar); border-right: 1px solid var(--border); padding: 40px 20px; position: fixed; height: 100vh; display: flex; flex-direction: column; }
+        .main-content { margin-left: 280px; flex-grow: 1; padding: 60px 5%; }
+        
+        .logo { font-family: var(--font-hd); font-size: 1rem; color: var(--accent); margin-bottom: 40px; text-transform: uppercase; }
+        .nav-item { padding: 15px 20px; border-radius: 12px; color: var(--text-secondary); text-decoration: none; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 12px; margin-bottom: 5px; }
+        .nav-item:hover, .nav-item.active { background: var(--card); color: var(--text); }
+        
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 24px; padding: 30px; margin-bottom: 30px; }
+        h1 { font-family: var(--font-hd); font-size: 1.5rem; margin-bottom: 30px; text-transform: uppercase; }
+        
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-size: 0.7rem; text-transform: uppercase; color: var(--text-secondary); font-weight: 800; margin-bottom: 8px; }
+        input, select, textarea { width: 100%; background: #000; border: 1px solid var(--border); padding: 14px; border-radius: 12px; color: #fff; font-family: var(--font-main); outline: none; }
+        input:focus { border-color: var(--accent); }
+        
+        .btn { background: var(--accent); color: white; border: none; padding: 15px 30px; border-radius: 50px; font-family: var(--font-hd); font-size: 0.65rem; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,113,227,0.3); }
 
+        .project-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid var(--border); }
+        .project-item:last-child { border-bottom: none; }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="logo">ANOR CORE ADMIN</div>
+        <div class="nav-item active" onclick="showTab('projects')"><i class="fa-solid fa-rocket"></i> Projects</div>
+        <div class="nav-item" onclick="showTab('settings')"><i class="fa-solid fa-gear"></i> Settings</div>
+        <div style="margin-top: auto;">
+            <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i> View Site</a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <section id="tab-projects">
+            <h1>Add New Project</h1>
+            <div class="card">
+                <div class="form-group">
+                    <label>Project Title (EN)</label>
+                    <input type="text" id="p-title-en" placeholder="TikTok Stealth Bot">
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="p-category">
+                        <option value="python">PYTHON / AI</option>
+                        <option value="uiux">UI/UX DESIGN</option>
+                        <option value="automation">AUTOMATION</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Description (EN)</label>
+                    <textarea id="p-desc-en" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Project Image URL</label>
+                    <input type="text" id="p-img" placeholder="https://...">
+                </div>
+                <button class="btn" onclick="saveProject()">Publish Project</button>
+            </div>
+
+            <h1>Existing Projects</h1>
+            <div class="card" id="project-list">
+                </div>
+        </section>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getDatabase, ref, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+        // ТВОЯ КОНФІГУРАЦІЯ
+        const firebaseConfig = {
+            apiKey: "AIzaSyDwQpDnT4_o1fiVDKuWI7VAYeal9nh6dRQ",
+            authDomain: "anor-core-2026.firebaseapp.com",
+            databaseURL: "https://anor-core-2026-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "anor-core-2026",
+            storageBucket: "anor-core-2026.firebasestorage.app",
+            messagingSenderId: "787691904559",
+            appId: "1:787691904559:web:845da19d72ceb9ec50b0da",
+            measurementId: "G-HFLPX1HNZ9"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // ФУНКЦІЯ ЗБЕРЕЖЕННЯ
+        window.saveProject = function() {
+            const titleEn = document.getElementById('p-title-en').value;
+            const category = document.getElementById('p-category').value;
+            const descEn = document.getElementById('p-desc-en').value;
+            const img = document.getElementById('p-img').value;
+
+            if(!titleEn) return alert("Title is required!");
+
+            const projectRef = ref(db, 'projects');
+            const newProjectRef = push(projectRef);
+            
+            set(newProjectRef, {
+                titleEn: titleEn,
+                category: category,
+                descEn: descEn,
+                image: img,
+                timestamp: Date.now()
+            }).then(() => {
+                alert("Success! Project added to Anor Database.");
+                location.reload();
+            });
+        }
+
+        // ЗАВАНТАЖЕННЯ СПИСКУ
+        const projectList = document.getElementById('project-list');
+        onValue(ref(db, 'projects'), (snapshot) => {
+            projectList.innerHTML = "";
+            const data = snapshot.val();
+            for (let id in data) {
+                const item = data[id];
+                projectList.innerHTML += `
+                    <div class="project-item">
+                        <div><strong>${item.titleEn}</strong> <small>(${item.category})</small></div>
+                        <button onclick="deleteProject('${id}')" style="background:none; border:none; color:#ff3b30; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+            }
+        });
+
+        window.deleteProject = function(id) {
+            if(confirm("Are you sure?")) {
+                remove(ref(db, 'projects/' + id));
+            }
+        }
+    </script>
+</body>
+</html>
