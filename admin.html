@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anor Core | Versailles Admin 3.7 (Restored)</title>
+    <title>Anor Core | Versailles Admin 3.8 (Elite Edition)</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&family=Unbounded:wght@700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -155,9 +155,8 @@
             font-family: inherit;
         }
 
-        input:focus { border-color: var(--accent); }
+        input:focus, textarea:focus { border-color: var(--accent); }
 
-        /* НОВІ СТИЛІ ДЛЯ ТЕГІВ */
         .tags-custom-container {
             display: flex;
             flex-wrap: wrap;
@@ -213,9 +212,6 @@
 
         .tag-option:hover { background: rgba(255,255,255,0.05); }
 
-        .tag-option i.fa-plus { color: var(--success); }
-        .tag-option i.fa-xmark { color: var(--danger); }
-
         .btn {
             background: var(--accent);
             color: white;
@@ -248,11 +244,14 @@
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 1.1rem;
             padding: 8px;
+            transition: transform 0.2s, color 0.2s;
         }
         .btn-edit { color: var(--accent); }
-        .btn-delete { color: var(--danger); }
+        .btn-edit:hover { transform: scale(1.1); }
+        .btn-delete { color: var(--text-secondary); }
+        .btn-delete:hover { color: var(--danger); transform: scale(1.1); }
 
         .admin-controls {
             margin-top: auto;
@@ -285,7 +284,7 @@
 
         .social-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
         }
 
@@ -304,7 +303,7 @@
 <body class="dark-theme">
 
     <aside class="sidebar">
-        <div class="logo">ANOR CORE 3.7</div>
+        <div class="logo">ANOR CORE 3.8</div>
         
         <div class="nav-group">
             <span class="nav-label" data-t="group_content">Контент</span>
@@ -345,58 +344,52 @@
             <div class="card">
                 <div class="form-grid">
                     <div class="form-group full-width">
-                        <label data-t="l_title">Назва проєкту (UA/EN)</label>
-                        <input type="text" id="p-title" placeholder="TikTok Stealth Bot">
+                        <label data-t="l_title">Назва проєкту</label>
+                        <input type="text" id="p-title" placeholder="Приклад: TikTok Stealth Bot / Stealth Bot EN">
                     </div>
                     
                     <div class="form-group">
-                        <label data-t="l_meta">Мета-тег (над назвою)</label>
-                        <input type="text" id="p-meta" placeholder="AUTOMATION, 2026">
+                        <label data-t="l_meta">Мета-тег (Над назвою)</label>
+                        <input type="text" id="p-meta" placeholder="Приклад: AUTOMATION, 2026">
                     </div>
 
                     <div class="form-group">
-                        <label data-t="l_cat">Категорії (Фільтри)</label>
+                        <label data-t="l_cat">Категорії та Технології</label>
                         <div class="tags-custom-container" id="tags-display" onclick="toggleTagsDropdown(event)">
-                            <span style="color: var(--text-secondary); font-size: 0.9rem;">Оберіть категорії...</span>
+                            <span style="color: var(--text-secondary); font-size: 0.9rem;">Оберіть зі списку...</span>
                         </div>
-                        <div class="tags-dropdown" id="tags-dropdown">
-                            </div>
+                        <div class="tags-dropdown" id="tags-dropdown"></div>
                     </div>
 
                     <div class="form-group full-width">
-                        <label data-t="l_tags">Теги (UI/UX, Python...)</label>
-                        <input type="text" id="p-tags" placeholder="AI, Scraper, Python">
+                        <label data-t="l_short">Короткий опис (UA/EN)</label>
+                        <input type="text" id="p-short" placeholder="Короткий рядок для картки на головній (двома мовами через /)">
                     </div>
 
                     <div class="form-group full-width">
-                        <label data-t="l_short">Короткий опис</label>
-                        <input type="text" id="p-short" placeholder="Короткий рядок для картки">
-                    </div>
-
-                    <div class="form-group full-width">
-                        <label data-t="l_desc">Повний опис (Логіка)</label>
-                        <textarea id="p-desc" rows="5"></textarea>
+                        <label data-t="l_desc">Повний опис (Логіка та деталі)</label>
+                        <textarea id="p-desc" rows="5" placeholder="Розгорнутий текст для сторінки проекту. Використовуйте <br> для переносів."></textarea>
                     </div>
 
                     <div class="form-group">
-                        <label data-t="l_img">Головне зображення (URL)</label>
-                        <input type="text" id="p-img">
+                        <label data-t="l_img">Головне зображення (Прямий URL)</label>
+                        <input type="text" id="p-img" placeholder="https://example.com/image.jpg">
                     </div>
 
                     <div class="form-group">
-                        <label data-t="l_link">GitHub / Demo URL</label>
-                        <input type="text" id="p-link">
+                        <label data-t="l_link">GitHub або Demo Посилання</label>
+                        <input type="text" id="p-link" placeholder="https://github.com/user/repo">
                     </div>
 
                     <div class="form-group full-width">
-                        <label data-t="l_gallery">Галерея (через кому)</label>
-                        <textarea id="p-gallery" rows="2"></textarea>
+                        <label data-t="l_gallery">Додаткові зображення (URL через кому)</label>
+                        <textarea id="p-gallery" rows="2" placeholder="url1.jpg, url2.jpg, url3.jpg"></textarea>
                     </div>
 
                     <div class="form-group full-width">
                         <div class="toggle-container">
                              <input type="checkbox" id="p-on-main" style="width: 20px; height: 20px;">
-                             <label style="margin-bottom: 0;" data-t="l_main">Відображати на головній сторінці</label>
+                             <label style="margin-bottom: 0;" data-t="l_main">Відображати у блоці 'Selected Works'</label>
                         </div>
                     </div>
                 </div>
@@ -410,7 +403,7 @@
             </div>
 
             <div id="project-list-container">
-                <label data-t="l_existing">Існуючі Проєкти</label>
+                <label data-t="l_existing" style="margin-bottom: 20px;">Існуючі Проєкти в базі</label>
                 <div id="project-list"></div>
             </div>
         </section>
@@ -419,35 +412,46 @@
             <h1 data-t="h_cats">Матриця Категорій</h1>
             <div class="card">
                 <div class="form-group">
-                    <label data-t="l_new_cat">Нова Категорія</label>
-                    <input type="text" id="new-cat-name">
+                    <label data-t="l_new_cat">Назва нової категорії/тегу</label>
+                    <input type="text" id="new-cat-name" placeholder="Приклад: UI/UX, PYTHON, AI">
                 </div>
-                <button class="btn" onclick="addCategory()" data-t="btn_add_cat">Додати Категорію</button>
+                <button class="btn" onclick="addCategory()" data-t="btn_add_cat">Додати до Матриці</button>
             </div>
             <div id="cat-list" class="card"></div>
         </section>
 
         <section id="sec-footer" class="hidden">
-            <h1 data-t="h_global">Налаштування Футера</h1>
+            <h1 data-t="h_global">Налаштування Футера & Системи</h1>
             <div class="card">
                 <div class="form-grid">
-                    <div class="form-group"><label>Телефон</label><input type="text" id="f-phone"></div>
-                    <div class="form-group"><label>Email</label><input type="text" id="f-email"></div>
-                    <div class="form-group"><label>Роль (UA)</label><input type="text" id="f-role-ua"></div>
-                    <div class="form-group"><label>Роль (EN)</label><input type="text" id="f-role-en"></div>
+                    <div class="form-group"><label>Текст Логотипу</label><input type="text" id="f-logo" placeholder="ANOR"></div>
+                    <div class="form-group"><label>Копірайт</label><input type="text" id="f-copy" placeholder="© 2026 ANOR CORE SYSTEM"></div>
+                    
                     <div class="form-group full-width">
-                        <label>Social Links</label>
+                        <label>Опис під лого (UA)</label>
+                        <input type="text" id="f-role-ua" placeholder="UI\UX Веб Дизайнер та ШІ Python розробник.">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Опис під лого (EN)</label>
+                        <input type="text" id="f-role-en" placeholder="UI\UX Web Designer & AI Python Developer.">
+                    </div>
+
+                    <div class="form-group"><label>Контактний Телефон</label><input type="text" id="f-phone" placeholder="+380..."></div>
+                    <div class="form-group"><label>Контактний Email</label><input type="text" id="f-email" placeholder="example@gmail.com"></div>
+                    
+                    <div class="form-group full-width">
+                        <label>Соціальні мережі (Повні посилання)</label>
                         <div class="social-grid">
-                            <input type="text" id="s-tg" placeholder="Telegram">
-                            <input type="text" id="s-gh" placeholder="GitHub">
-                            <input type="text" id="s-wa" placeholder="WhatsApp">
-                            <input type="text" id="s-ds" placeholder="Discord">
-                            <input type="text" id="s-be" placeholder="Behance">
-                            <input type="text" id="s-fb" placeholder="Facebook">
+                            <input type="text" id="s-tg" placeholder="Telegram URL">
+                            <input type="text" id="s-gh" placeholder="GitHub URL">
+                            <input type="text" id="s-wa" placeholder="WhatsApp URL">
+                            <input type="text" id="s-ds" placeholder="Discord URL">
+                            <input type="text" id="s-be" placeholder="Behance URL">
+                            <input type="text" id="s-fb" placeholder="Facebook URL">
                         </div>
                     </div>
                 </div>
-                <button class="btn" onclick="saveFooter()" data-t="btn_update">Оновити Систему</button>
+                <button class="btn" onclick="saveFooter()" data-t="btn_update">Оновити Глобальні Налаштування</button>
             </div>
         </section>
     </main>
@@ -470,7 +474,7 @@
                 group_content: "Контент", nav_projects: "Проєкти", nav_cats: "Категорії",
                 group_config: "Конфігурація", nav_global: "Глобальні & Футер", to_site: "На сайт",
                 h_projects: "Управління Артефактами", l_title: "Назва проєкту", l_meta: "Мета-тег",
-                l_cat: "Категорія", l_tags: "Теги", l_short: "Короткий опис", l_desc: "Повний опис",
+                l_cat: "Категорії", l_short: "Короткий опис", l_desc: "Повний опис",
                 l_img: "Зображення URL", l_link: "GitHub Link", l_gallery: "Галерея URL",
                 l_main: "На головну", btn_save: "Зберегти в Спектраль", l_existing: "Існуючі Проєкти",
                 h_cats: "Матриця Категорій", btn_add_cat: "Додати", btn_cancel: "Скасувати", btn_update: "Оновити"
@@ -479,7 +483,7 @@
                 group_content: "Content", nav_projects: "Projects", nav_cats: "Categories",
                 group_config: "Config", nav_global: "Global & Footer", to_site: "To Site",
                 h_projects: "Artifact Management", l_title: "Project Title", l_meta: "Meta-tag",
-                l_cat: "Category", l_tags: "Tags", l_short: "Short Desc", l_desc: "Full Logic",
+                l_cat: "Categories", l_short: "Short Desc", l_desc: "Full Logic",
                 l_img: "Image URL", l_link: "GitHub Link", l_gallery: "Gallery URLs",
                 l_main: "Show on Main", btn_save: "Save to Spectral", l_existing: "Existing Projects",
                 h_cats: "Category Matrix", btn_add_cat: "Add", btn_cancel: "Cancel", btn_update: "Update"
@@ -523,9 +527,8 @@
             const display = document.getElementById('tags-display');
             const dropdown = document.getElementById('tags-dropdown');
             
-            // Render Selected
             if (selectedCategories.length === 0) {
-                display.innerHTML = '<span style="color: var(--text-secondary); font-size: 0.9rem;">Оберіть категорії...</span>';
+                display.innerHTML = '<span style="color: var(--text-secondary); font-size: 0.9rem;">Оберіть зі списку...</span>';
             } else {
                 display.innerHTML = selectedCategories.map(cat => `
                     <span class="tag-pill">
@@ -535,7 +538,6 @@
                 `).join('');
             }
 
-            // Render Dropdown
             dropdown.innerHTML = allCategories.map(cat => {
                 const isSelected = selectedCategories.includes(cat.name);
                 return `
@@ -575,7 +577,7 @@
             allCategories = [];
             for(let id in data) {
                 allCategories.push({id, name: data[id].name});
-                list.innerHTML += `<div class="project-item"><span>${data[id].name}</span><button class="btn-delete" onclick="deleteItem('categories/${id}')"><i class="fa-solid fa-trash"></i></button></div>`;
+                list.innerHTML += `<div class="project-item"><span>${data[id].name}</span><button class="btn-icon btn-delete" onclick="deleteItem('categories/${id}')"><i class="fa-solid fa-trash-can"></i></button></div>`;
             }
             renderTagsUI();
         });
@@ -586,7 +588,6 @@
                 title: document.getElementById('p-title').value,
                 customMeta: document.getElementById('p-meta').value,
                 categories: selectedCategories, 
-                tags: document.getElementById('p-tags').value,
                 shortDesc: document.getElementById('p-short').value,
                 description: document.getElementById('p-desc').value,
                 mainImage: document.getElementById('p-img').value,
@@ -622,7 +623,6 @@
                 selectedCategories = d.categories || (d.category ? [d.category] : []);
                 renderTagsUI();
 
-                document.getElementById('p-tags').value = d.tags || "";
                 document.getElementById('p-short').value = d.shortDesc || "";
                 document.getElementById('p-desc').value = d.description || "";
                 document.getElementById('p-img').value = d.mainImage || "";
@@ -659,12 +659,12 @@
                 list.innerHTML += `
                     <div class="project-item">
                         <div class="project-info">
-                            <h4>${data[id].title}</h4>
-                            <span style="font-size:0.8rem; color:var(--text-secondary)">${catsLabel} ${data[id].onMain ? '• [MAIN]' : ''}</span>
+                            <h4 style="font-family: var(--font-hd); font-size: 0.9rem;">${data[id].title}</h4>
+                            <span style="font-size:0.75rem; color:var(--text-secondary)">${catsLabel} ${data[id].onMain ? ' • [SELECTED]' : ''}</span>
                         </div>
                         <div class="project-actions">
-                            <button class="btn-icon btn-edit" onclick="editProject('${id}')"><i class="fa-solid fa-pen"></i></button>
-                            <button class="btn-icon btn-delete" onclick="deleteItem('projects/${id}')"><i class="fa-solid fa-trash"></i></button>
+                            <button class="btn-icon btn-edit" onclick="editProject('${id}')"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button class="btn-icon btn-delete" onclick="deleteItem('projects/${id}')"><i class="fa-solid fa-trash-can"></i></button>
                         </div>
                     </div>`;
             }
@@ -673,6 +673,8 @@
         // --- FOOTER & GLOBAL ---
         window.saveFooter = () => {
             const data = {
+                logoText: document.getElementById('f-logo').value,
+                copyright: document.getElementById('f-copy').value,
                 phone: document.getElementById('f-phone').value,
                 email: document.getElementById('f-email').value,
                 roleUa: document.getElementById('f-role-ua').value,
@@ -686,12 +688,14 @@
                     fb: document.getElementById('s-fb').value
                 }
             };
-            set(ref(db, 'settings/global'), data).then(() => alert("Оновлено!"));
+            set(ref(db, 'settings/global'), data).then(() => alert("Систему оновлено успішно!"));
         };
 
         onValue(ref(db, 'settings/global'), (snap) => {
             const d = snap.val();
             if(!d) return;
+            document.getElementById('f-logo').value = d.logoText || "ANOR";
+            document.getElementById('f-copy').value = d.copyright || "© 2026 ANOR CORE SYSTEM";
             document.getElementById('f-phone').value = d.phone || "";
             document.getElementById('f-email').value = d.email || "";
             document.getElementById('f-role-ua').value = d.roleUa || "";
@@ -705,7 +709,7 @@
         });
 
         window.deleteItem = (path) => {
-            if(confirm("Видалити назавжди?")) remove(ref(db, path));
+            if(confirm("Видалити цей елемент з бази Спектраля назавжди?")) remove(ref(db, path));
         };
         
         setLang('ua');
