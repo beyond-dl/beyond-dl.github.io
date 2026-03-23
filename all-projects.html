@@ -70,14 +70,22 @@
             font-weight: 600; text-transform: uppercase; transition: var(--transition);
             font-size: 0.75rem; letter-spacing: 1px;
         }
+        /* ВИПРАВЛЕНО: Додано ховер ефект для фільтрів */
+        .filter-btn:hover { border-color: var(--text); color: var(--text); background: rgba(255,255,255,0.05); }
         .filter-btn.active { background: var(--text); color: var(--bg); border-color: var(--text); }
 
         /* Сітка */
         .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 40px; flex-grow: 1; }
+        
+        /* ВИПРАВЛЕНО: Картка тепер pointer і має чіткий ховер */
         .project-card { 
             background: var(--card); border: 1px solid var(--border); border-radius: 40px; 
             overflow: hidden; transition: var(--transition); display: flex; flex-direction: column;
             animation: fadeIn 0.6s ease forwards;
+            cursor: pointer;
+            position: relative;
+            text-decoration: none;
+            color: inherit;
         }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
@@ -93,7 +101,7 @@
         .project-desc { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 25px; min-height: 50px; line-height: 1.6; }
 
         .project-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 20px; margin-top: auto; }
-        .like-btn { cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: 800; transition: 0.2s; color: var(--text-secondary); }
+        .like-btn { cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: 800; transition: 0.2s; color: var(--text-secondary); position: relative; z-index: 10; }
         .like-btn:hover { color: var(--text); transform: scale(1.05); }
         .like-btn.liked { color: #ff3b30; }
 
@@ -215,7 +223,11 @@
             });
         };
 
-        window.toggleLike = async (btn, projectId) => {
+        // Лайки винесено окремо, щоб клік по ним не викликав перехід на сторінку
+        window.toggleLike = async (event, btn, projectId) => {
+            event.preventDefault();
+            event.stopPropagation();
+            
             const icon = btn.querySelector('i');
             const countSpan = btn.querySelector('.count');
             let count = parseInt(countSpan.innerText);
@@ -241,7 +253,7 @@
             }
         };
 
-        // 1. Динамічні категорії (ВИПРАВЛЕНО [OBJECT OBJECT] ТА LOGIC ТЕГ)
+        // 1. Динамічні категорії
         onValue(ref(db, 'categories'), (snapshot) => {
             const container = document.getElementById('filtersContainer');
             const data = snapshot.val();
@@ -259,7 +271,7 @@
             });
         });
 
-        // 2. Проекти (ВИПРАВЛЕНО: ТЕПЕР ТЕГ БЕРЕТЬСЯ З БД, А НЕ ПИШЕ "LOGIC")
+        // 2. Проекти (ВИПРАВЛЕНО: ТЕПЕР ТЕГ БЕРЕТЬСЯ ТІЛЬКИ З ПОЛЯ КАТЕГОРІЯ)
         onValue(ref(db, 'projects'), (snapshot) => {
             const grid = document.getElementById('projectsGrid');
             grid.innerHTML = "";
@@ -282,14 +294,22 @@
                 const img = p.mainImage || p.image || 'https://via.placeholder.com/600x400/111/fff?text=No+Image';
                 const likes = p.likes || 0;
                 
-                // Отримуємо реальну назву категорії
-                const categoryName = (typeof p.category === 'object' && p.category.name) ? p.category.name : (p.category || 'Other');
+                // ХІРУРГІЧНЕ ВИПРАВЛЕННЯ: беремо значення як воно є в адмінці
+                let categoryName = "Logic"; 
+                if (p.category) {
+                    if (typeof p.category === 'object' && p.category.name) {
+                        categoryName = p.category.name;
+                    } else {
+                        categoryName = p.category;
+                    }
+                }
 
-                const card = document.createElement('div');
+                // Створюємо картку як посилання (a tag)
+                const card = document.createElement('a');
                 card.className = 'project-card';
+                card.href = `project-details.html?id=${p.id}`;
                 card.setAttribute('data-category', categoryName);
                 
-                // Перевірка фільтру при завантаженні
                 if (currentFilter !== 'all' && categoryName !== currentFilter) {
                     card.style.display = 'none';
                 }
@@ -301,18 +321,18 @@
                         <h3 class="project-title">${title || 'Untitled'}</h3>
                         <p class="project-desc">${desc || ''}</p>
                         <div class="project-footer">
-                            <div class="like-btn" onclick="toggleLike(this, '${p.id}')">
+                            <div class="like-btn" onclick="toggleLike(event, this, '${p.id}')">
                                 <i class="fa-regular fa-heart"></i> 
                                 <span class="count">${likes}</span>
                             </div>
-                            <a href="project-details.html?id=${p.id}" style="color: var(--accent); text-decoration: none; font-weight: 800; font-size: 0.7rem; letter-spacing: 1px;">DETAILS</a>
+                            <span style="color: var(--accent); font-weight: 800; font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase;">Details</span>
                         </div>
                     </div>`;
                 grid.appendChild(card);
             });
         });
 
-        // 3. Синхронізація футера (ПОВНА СИНХРОНІЗАЦІЯ З МЕЙНОМ)
+        // 3. Синхронізація футера
         onValue(ref(db, 'settings/footer'), (snapshot) => {
             const f = snapshot.val();
             if (!f) return;
