@@ -23,8 +23,8 @@
             --bg: #f5f5f7;
             --text: #1d1d1f;
             --text-secondary: #86868b;
-            --card: rgba(0, 0, 0, 0.05);
-            --border: rgba(0, 0, 0, 0.1);
+            --card: rgba(0, 0, 0, 0.03);
+            --border: rgba(0, 0, 0, 0.08);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -98,13 +98,14 @@
         /* --- PROJECT CONTENT --- */
         .project-container { max-width: 1200px; margin: 0 auto; padding: 40px 8% 0; }
 
-        .project-meta { 
+        .project-short-desc { 
             color: var(--accent); 
             font-family: var(--font-hd); 
-            font-size: 0.7rem; 
+            font-size: 0.75rem; 
             text-transform: uppercase; 
-            margin-bottom: 20px;
-            letter-spacing: 2px;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+            font-weight: 700;
         }
 
         h1 { 
@@ -112,24 +113,28 @@
             font-size: clamp(2rem, 6vw, 4.5rem); 
             line-height: 1.1; 
             text-transform: uppercase; 
-            margin-bottom: 60px; 
+            margin-bottom: 80px; 
         }
 
-        /* ХІРУРГІЧНЕ ЗБІЛЬШЕННЯ ЛИШЕ ПЕРШОГО ФОТО (+20%) */
+        /* --- INCREASED HERO IMAGE (+20% VISUAL) --- */
         .hero-img-box {
             width: 100%;
             border-radius: 40px;
-            margin-bottom: 80px;
+            margin-bottom: 120px;
             border: 1px solid var(--border);
-            overflow: hidden;
+            overflow: visible; /* Дозволяємо вихід за межі */
+            display: flex;
+            justify-content: center;
         }
 
         .hero-img { 
             width: 100%; 
             display: block;
             object-fit: cover;
-            transform: scale(1.2); 
+            border-radius: 40px;
+            transform: scale(1.2); /* Збільшення на 20% */
             transition: var(--transition);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
         }
 
         .project-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 80px; }
@@ -170,41 +175,48 @@
         .gallery { margin-top: 100px; display: grid; gap: 40px; }
         .gallery img { width: 100%; border-radius: 30px; border: 1px solid var(--border); }
 
-        /* --- COOPERATION BANNER --- */
+        /* --- COOPERATION BANNER (REFINED) --- */
         .cooperation-banner {
             max-width: 1200px;
-            margin: 100px auto 0;
-            padding: 60px 8%;
-            background: var(--card);
-            border-radius: 40px;
+            margin: 150px auto 0;
+            padding: 80px 8%;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 60px;
             text-align: center;
             border: 1px solid var(--border);
         }
 
         .cooperation-banner p {
-            font-family: var(--font-hd);
-            font-size: clamp(1rem, 2.5vw, 1.5rem);
-            line-height: 1.4;
-            color: var(--text);
-            max-width: 800px;
+            font-family: var(--font-main);
+            font-size: clamp(1.1rem, 2vw, 1.4rem);
+            line-height: 1.6;
+            color: var(--text-secondary);
+            max-width: 850px;
             margin: 0 auto;
+            font-weight: 400;
         }
 
-        .cooperation-banner .cta-link {
-            display: inline-block;
-            margin-top: 30px;
+        .cooperation-banner b {
             color: var(--accent);
-            text-decoration: none;
-            font-family: var(--font-hd);
-            font-weight: 900;
-            font-size: 0.9rem;
+            font-weight: 800;
             text-transform: uppercase;
-            border-bottom: 2px solid var(--accent);
+            font-family: var(--font-hd);
+            font-size: 0.9em;
+        }
+
+        .cooperation-banner .email-trigger {
+            display: block;
+            margin-top: 25px;
+            font-family: var(--font-hd);
+            font-size: 1.8rem;
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 900;
             transition: var(--transition);
         }
-        .cooperation-banner .cta-link:hover {
-            letter-spacing: 2px;
-            opacity: 0.8;
+        .cooperation-banner .email-trigger:hover {
+            color: var(--accent);
+            transform: translateY(-3px);
         }
 
         /* --- SYNCED FOOTER --- */
@@ -303,7 +315,7 @@
             .footer-right { text-align: left; }
             .footer-contacts a { font-size: 1.8rem; }
             .hero-img { transform: scale(1.1); }
-            .cooperation-banner { margin: 60px 5% 0; padding: 40px 20px; }
+            .cooperation-banner { margin: 80px 5% 0; padding: 60px 20px; }
         }
     </style>
 </head>
@@ -326,14 +338,12 @@
         </div>
     </header>
 
-    <main class="project-container" id="project-render">
-        </main>
+    <main class="project-container" id="project-render"></main>
 
     <section class="cooperation-banner">
-        <p class="lang-ua">Цікавить співпраця зі мною? Заповнюй та відправляй бриф або подзвони/напиши мені.</p>
-        <p class="lang-en" style="display:none;">Interested in working together? Fill out the brief or call/write to me.</p>
-        <a href="mailto:Destro729@gmail.com" class="cta-link lang-ua">ПОЧАТИ ПРОЕКТ</a>
-        <a href="mailto:Destro729@gmail.com" class="cta-link lang-en" style="display:none;">START PROJECT</a>
+        <p class="lang-ua">Цікавить співпраця зі мною? <b>Заповнюй та відправляй бриф</b> або подзвони/напиши мені.</p>
+        <p class="lang-en" style="display:none;">Interested in working together? <b>Fill out the brief</b> or call/write to me.</p>
+        <a href="mailto:Destro729@gmail.com" class="email-trigger">Destro729@gmail.com</a>
     </section>
 
     <footer>
@@ -343,8 +353,7 @@
                     <a href="tel:+380932097079" id="f-phone-link">+380 93 209 70 79</a>
                     <a href="mailto:Destro729@gmail.com" id="f-email-link">Destro729@gmail.com</a>
                 </div>
-                <div class="social-links" id="f-socials">
-                </div>
+                <div class="social-links" id="f-socials"></div>
             </div>
             
             <div class="footer-right">
@@ -390,9 +399,11 @@
             
             document.querySelectorAll('.lang-en').forEach(el => el.style.display = currentLang === 'en' ? 'block' : 'none');
             document.querySelectorAll('.lang-ua').forEach(el => el.style.display = currentLang === 'ua' ? 'block' : 'none');
-            // Special handling for inline back-link spans
-            document.querySelector('.back-link .lang-en').style.display = currentLang === 'en' ? 'inline' : 'none';
-            document.querySelector('.back-link .lang-ua').style.display = currentLang === 'ua' ? 'inline' : 'none';
+            
+            const backEn = document.querySelector('.back-link .lang-en');
+            const backUa = document.querySelector('.back-link .lang-ua');
+            if(backEn) backEn.style.display = currentLang === 'en' ? 'inline' : 'none';
+            if(backUa) backUa.style.display = currentLang === 'ua' ? 'inline' : 'none';
 
             if(window.lastData) renderProject(window.lastData);
             
@@ -408,12 +419,13 @@
             
             const title = currentLang === 'ua' ? (data.titleUa || data.title) : (data.titleEn || data.title);
             const desc = currentLang === 'ua' ? (data.descUa || data.desc || data.description) : (data.descEn || data.desc || data.description);
+            const shortDesc = currentLang === 'ua' ? (data.shortDescUa || data.shortDesc || "") : (data.shortDescEn || data.shortDesc || "");
             const meta = data.customMeta || 'SPECTRAL ARTIFACT';
             
             const categories = data.category ? data.category.split(',').map(c => c.trim()) : ['LOGIC'];
 
             container.innerHTML = `
-                <div class="project-meta">${meta} / ${categories.join(' / ')}</div>
+                <div class="project-short-desc">${shortDesc}</div>
                 <h1>${title}</h1>
                 <div class="hero-img-box">
                     <img src="${data.mainImage || data.image}" class="hero-img">
@@ -422,12 +434,12 @@
                 <div class="project-grid">
                     <div class="sidebar">
                         <div class="info-block">
-                            <h3>${currentLang === 'ua' ? 'СИСТЕМА ТА РІК' : 'SYSTEM & YEAR'}</h3>
-                            <p>2026 / ANOR CORE v3.8</p>
+                            <h3>${currentLang === 'ua' ? 'МЕТА-ДАНІ' : 'META DATA'}</h3>
+                            <p>${meta}</p>
                         </div>
                         
                         <div class="info-block">
-                            <h3>${currentLang === 'ua' ? 'ТЕХНОЛОГІЇ (КАТЕГОРІЇ)' : 'TECHNOLOGIES'}</h3>
+                            <h3>${currentLang === 'ua' ? 'ТЕХНОЛОГІЇ' : 'TECHNOLOGIES'}</h3>
                             <div>
                                 ${categories.map(cat => `
                                     <span class="tech-tag" onclick="location.href='all-projects.html?filter=${encodeURIComponent(cat)}'">
