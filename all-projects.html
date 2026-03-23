@@ -55,6 +55,7 @@
             background: none; border: 1px solid var(--border); color: var(--text); 
             padding: 8px 15px; border-radius: 50px; cursor: pointer; 
             font-family: var(--font-hd); font-size: 0.6rem; transition: 0.3s;
+            min-width: 40px;
         }
         .control-btn:hover { background: var(--text); color: var(--bg); }
 
@@ -123,7 +124,7 @@
         </a>
         <div class="nav-controls">
             <button class="control-btn" onclick="toggleTheme()"><i class="fa-solid fa-circle-half-stroke"></i></button>
-            <button class="control-btn" onclick="toggleLang()">UA / EN</button>
+            <button class="control-btn" onclick="toggleLang()" style="min-width: 80px;">UA / EN</button>
         </div>
     </header>
 
@@ -145,12 +146,12 @@
                 <a href="tel:+380932097079" id="f-phone-link">+380 93 209 70 79</a>
                 <a href="mailto:Destro729@gmail.com" class="footer-email" id="f-email-link">Destro729@gmail.com</a>
                 <div class="social-icons">
-                    <a href="https://wa.me/380932097079" target="_blank" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
-                    <a href="https://t.me/your_tg_username" target="_blank" title="Telegram"><i class="fa-brands fa-telegram"></i></a>
-                    <a href="https://github.com/beyond-dl" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i></a>
-                    <a href="#" title="Discord"><i class="fa-brands fa-discord"></i></a>
-                    <a href="#" title="Behance"><i class="fa-brands fa-behance"></i></a>
-                    <a href="#" title="Fiverr"><i class="fa-solid fa-f"></i></a>
+                    <a href="https://wa.me/380932097079" target="_blank" title="WhatsApp" id="f-wa"><i class="fa-brands fa-whatsapp"></i></a>
+                    <a href="https://t.me/your_tg_username" target="_blank" title="Telegram" id="f-tg"><i class="fa-brands fa-telegram"></i></a>
+                    <a href="https://github.com/beyond-dl" target="_blank" title="GitHub" id="f-gh"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" title="Discord" id="f-ds"><i class="fa-brands fa-discord"></i></a>
+                    <a href="#" title="Behance" id="f-bh"><i class="fa-brands fa-behance"></i></a>
+                    <a href="#" title="Fiverr" id="f-fv"><i class="fa-solid fa-f"></i></a>
                 </div>
             </div>
             <div style="text-align: right;">
@@ -174,10 +175,8 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // --- Глобальні змінні ---
         let currentLang = 'en';
 
-        // --- Глобальні функції інтерфейсу ---
         window.toggleTheme = () => document.body.classList.toggle('light-theme');
         
         window.toggleLang = () => {
@@ -187,6 +186,10 @@
             
             ens.forEach(el => el.style.display = currentLang === 'en' ? 'block' : 'none');
             uas.forEach(el => el.style.display = currentLang === 'ua' ? 'block' : 'none');
+
+            // Оновлюємо текст фільтра ALL
+            const allBtn = document.querySelector('.filter-btn[onclick*="all"]');
+            if(allBtn) allBtn.innerText = currentLang === 'en' ? 'ALL' : 'ВСІ';
         };
 
         window.filterProjects = (category, btn) => {
@@ -208,7 +211,6 @@
             const isLiked = icon.classList.contains('fa-solid');
             const newCount = isLiked ? Math.max(0, count - 1) : count + 1;
 
-            // Оновлення в UI
             if (isLiked) {
                 icon.classList.replace('fa-solid', 'fa-regular');
                 btn.classList.remove('liked');
@@ -218,7 +220,6 @@
             }
             countSpan.innerText = newCount;
 
-            // Оновлення в Firebase
             try {
                 await update(ref(db, `projects/${projectId}`), {
                     likes: newCount
@@ -228,20 +229,21 @@
             }
         };
 
-        // --- Завантаження даних з Firebase ---
-
-        // 1. Динамічні категорії
+        // 1. Динамічні категорії (ВИПРАВЛЕНО [OBJECT OBJECT])
         onValue(ref(db, 'categories'), (snapshot) => {
             const container = document.getElementById('filtersContainer');
             const data = snapshot.val();
             if(!data) return;
 
-            // Очищуємо, крім кнопки ALL
             container.innerHTML = `<button class="filter-btn active" onclick="filterProjects('all', this)">${currentLang === 'en' ? 'ALL' : 'ВСІ'}</button>`;
             
-            const categories = typeof data === 'object' ? Object.values(data) : [];
-            categories.forEach(catName => {
-                container.innerHTML += `<button class="filter-btn" onclick="filterProjects('${catName}', this)">${catName}</button>`;
+            Object.keys(data).forEach(key => {
+                const cat = data[key];
+                // Перевірка: якщо це об'єкт з полем name, беремо його, інакше саме значення
+                const name = (typeof cat === 'object' && cat.name) ? cat.name : cat;
+                if (typeof name === 'string') {
+                    container.innerHTML += `<button class="filter-btn" onclick="filterProjects('${name}', this)">${name}</button>`;
+                }
             });
         });
 
@@ -255,18 +257,17 @@
                 return;
             }
 
-            // Перетворюємо в масив для сортування
             const projectsList = Object.keys(data).map(key => ({
                 id: key,
                 ...data[key]
             }));
 
-            // Сортування за часом (найновіші спочатку)
             projectsList.sort((a, b) => (b.time || 0) - (a.time || 0));
 
             projectsList.forEach(p => {
                 const title = currentLang === 'en' ? (p.titleEn || p.title) : (p.titleUa || p.title);
                 const desc = currentLang === 'en' ? (p.shortDescEn || p.shortDesc || p.desc) : (p.shortDescUa || p.shortDesc || p.desc);
+                // Виправлена логіка картинок
                 const img = p.mainImage || p.image || 'https://via.placeholder.com/600x400/111/fff?text=No+Image';
                 const likes = p.likes || 0;
 
@@ -289,7 +290,7 @@
             });
         });
 
-        // 3. Синхронізація футера
+        // 3. Синхронізація футера (ПОВНА СИНХРОНІЗАЦІЯ)
         onValue(ref(db, 'settings/footer'), (snapshot) => {
             const f = snapshot.val();
             if(!f) return;
@@ -303,6 +304,12 @@
             }
             if(f.roleUa) document.getElementById('f-role-ua').innerText = f.roleUa;
             if(f.roleEn) document.getElementById('f-role-en').innerText = f.roleEn;
+            if(f.tg) document.getElementById('f-tg').href = f.tg;
+            if(f.wa) document.getElementById('f-wa').href = f.wa;
+            if(f.gh) document.getElementById('f-gh').href = f.gh;
+            if(f.ds) document.getElementById('f-ds').href = f.ds || '#';
+            if(f.bh) document.getElementById('f-bh').href = f.bh || '#';
+            if(f.fv) document.getElementById('f-fv').href = f.fv || '#';
         });
     </script>
 </body>
