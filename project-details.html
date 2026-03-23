@@ -1,1 +1,71 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details | Anor Core</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Unbounded:wght@900&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #050505; --text: #ffffff; --accent: #0071e3; --font-hd: 'Unbounded', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; }
+        .wrapper { max-width: 1200px; margin: 0 auto; padding: 100px 40px; }
+        .back-btn { color: #a1a1a6; text-decoration: none; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; display: inline-block; margin-bottom: 50px; transition: 0.3s; }
+        .back-btn:hover { color: var(--text); }
+        .meta-tags { color: var(--accent); font-family: var(--font-hd); font-size: 0.75rem; text-transform: uppercase; margin-bottom: 20px; }
+        h1 { font-family: var(--font-hd); font-size: clamp(2.5rem, 8vw, 5rem); line-height: 1; text-transform: uppercase; margin-bottom: 60px; }
+        .main-img { width: 100%; border-radius: 30px; margin-bottom: 80px; }
+        .details-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 60px; }
+        .sidebar-info h3 { font-size: 0.7rem; text-transform: uppercase; color: #a1a1a6; margin-bottom: 15px; }
+        .sidebar-info p { font-weight: 600; margin-bottom: 30px; }
+        .content-body { font-size: 1.25rem; line-height: 1.6; color: #d2d2d7; white-space: pre-wrap; }
+        @media (max-width: 900px) {
+            .details-grid { grid-template-columns: 1fr; }
+            .wrapper { padding: 60px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper" id="project-container">
+        <a href="index.html" class="back-btn">← Back to Archive</a>
+        <div id="loader">Gathering data from Spectral...</div>
+    </div>
 
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+        const firebaseConfig = { databaseURL: "https://anor-core-2026-default-rtdb.europe-west1.firebasedatabase.app" };
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
+
+        if (id) {
+            onValue(ref(db, `projects/${id}`), (snap) => {
+                const data = snap.val();
+                if (data) {
+                    document.title = `${data.title} | Anor Core`;
+                    document.getElementById('project-container').innerHTML = `
+                        <a href="index.html" class="back-btn">← Back to Archive</a>
+                        <div class="meta-tags">${data.customMeta || 'PROJECT'} / ${(data.categories || []).join(', ')}</div>
+                        <h1>${data.title}</h1>
+                        <img src="${data.mainImage}" class="main-img" alt="Hero">
+                        <div class="details-grid">
+                            <div class="sidebar-info">
+                                <h3>Year & Client</h3>
+                                <p>2026 / Anor Core System</p>
+                                ${data.link ? `<h3>Repository</h3><p><a href="${data.link}" style="color:var(--text)">View Source</a></p>` : ''}
+                            </div>
+                            <div class="content-body">${data.description}</div>
+                        </div>
+                    `;
+                } else {
+                    document.getElementById('project-container').innerHTML = "<h1>Project not found.</h1>";
+                }
+            });
+        }
+    </script>
+</body>
+</html>
