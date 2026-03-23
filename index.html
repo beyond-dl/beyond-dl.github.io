@@ -66,7 +66,6 @@
         .hero { padding-top: 260px; min-height: 95vh; }
         .hero h1 { font-family: var(--font-hd); font-size: clamp(3rem, 10vw, 8.5rem); line-height: 0.9; margin-bottom: 40px; text-transform: uppercase; font-weight: 900; }
         
-        /* Виправлення міжрядкового інтервалу для української версії */
         body.ua .hero h1.lang-ua { 
             font-size: clamp(2.5rem, 8.5vw, 6.5rem); 
             line-height: 1.1; 
@@ -96,13 +95,21 @@
         .project-info { position: absolute; bottom: 0; padding: 40px; background: linear-gradient(transparent, rgba(0,0,0,0.9)); width: 100%; color: #fff; }
         .project-info h3 { font-family: var(--font-hd); font-size: 1.5rem; font-weight: 700; }
 
+        .more-projects-container { text-align: center; margin-top: 60px; }
+        .btn-outline {
+            padding: 20px 50px; border: 2px solid var(--accent); color: var(--accent);
+            border-radius: 100px; font-family: var(--font-hd); font-weight: 700;
+            text-decoration: none; display: inline-block; transition: var(--transition);
+        }
+        .btn-outline:hover { background: var(--accent); color: #fff; transform: scale(1.05); }
+
         .faq-list { width: 100%; margin-top: 40px; }
         .faq-item { border-bottom: 1px solid var(--border); padding: 35px 0; cursor: pointer; }
         .faq-question { font-family: var(--font-hd); font-size: 1.8rem; display: flex; justify-content: space-between; font-weight: 700; }
         .faq-answer { max-height: 0; overflow: hidden; transition: 0.4s; color: var(--text-secondary); margin-top: 15px; font-size: 1.2rem; }
         .faq-item.active .faq-answer { max-height: 300px; }
-        .faq-cta { margin-top: 50px; font-size: 1.3rem; font-family: var(--font-main); }
         
+        .faq-cta { margin-top: 50px; font-size: 1.3rem; font-family: var(--font-main); }
         .link-btn { 
             background: none; border: none; color: var(--accent); font-weight: 800; 
             text-decoration: none; cursor: pointer; padding: 0; font-size: inherit; 
@@ -178,22 +185,36 @@
         }
         form button:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0, 113, 227, 0.3); }
 
-        #toast { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: #fff; color: #000; padding: 18px 40px; border-radius: 100px; font-weight: 800; z-index: 4000; transition: 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28); font-family: var(--font-main); }
+        /* FIX TOAST MOBILE: hide behind screen correctly */
+        #toast { position: fixed; top: -150px; left: 50%; transform: translateX(-50%); background: #fff; color: #000; padding: 18px 40px; border-radius: 100px; font-weight: 800; z-index: 4000; transition: 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28); font-family: var(--font-main); white-space: nowrap; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         #toast.show { top: 40px; }
 
         footer { padding: 100px 8%; border-top: 1px solid var(--border); }
         .footer-grid { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 40px; }
-        .footer-contacts a { font-family: var(--font-hd); font-size: clamp(1.5rem, 5vw, 2.5rem); color: var(--text); text-decoration: none; font-weight: 900; transition: var(--transition); }
+        .footer-contacts { display: flex; flex-direction: column; gap: 10px; }
+        .footer-contacts a { font-family: var(--font-hd); font-size: clamp(1.2rem, 3vw, 2rem); color: var(--text); text-decoration: none; font-weight: 900; transition: var(--transition); }
         .footer-contacts a:hover { color: var(--accent); }
-        .social-icons { display: flex; gap: 15px; margin-top: 25px; }
-        .social-icons a { width: 55px; height: 55px; background: var(--card); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: var(--text); border: 1px solid var(--border); transition: 0.3s; }
+        .footer-email { color: var(--text-secondary); text-decoration: none; font-weight: 600; font-size: 1.1rem; }
+        
+        .social-icons { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
+        .social-icons a { width: 50px; height: 50px; background: var(--card); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: var(--text); border: 1px solid var(--border); transition: 0.3s; }
         .social-icons a:hover { background: var(--accent); color: #fff; transform: translateY(-5px); border-color: var(--accent); }
 
         .lang-ua { display: none; }
         body.ua .lang-en { display: none; }
         body.ua .lang-ua { display: block; }
 
-        @media (max-width: 900px) { .bento, .portfolio-grid { grid-template-columns: 1fr; } .wide { grid-column: span 1; } .hero { padding-top: 200px; } }
+        @media (max-width: 900px) { 
+            .bento, .portfolio-grid { grid-template-columns: 1fr; } 
+            .wide { grid-column: span 1; } 
+            .hero { padding-top: 200px; } 
+            /* FIX MOBILE FOOTER */
+            .footer-grid { flex-direction: column; text-align: center; align-items: center; }
+            .footer-grid div { text-align: center !important; }
+            .social-icons { justify-content: center; }
+            .hero h1 { font-size: 3.5rem; }
+            .about-heading { font-size: 2.2rem; }
+        }
     </style>
 </head>
 <body data-theme="dark">
@@ -262,6 +283,49 @@
         </div>
     </section>
 
+    <section id="portfolio">
+        <h2 class="about-heading lang-en">Portfolio</h2>
+        <h2 class="about-heading lang-ua">Портфоліо</h2>
+        <div class="portfolio-grid">
+            <div class="project-card" onclick="window.location.href='projects/tiktok-bot.html'">
+                <div style="background: linear-gradient(45deg, #0071e3, #000); height: 100%;"></div>
+                <div class="project-info">
+                    <h3>TikTok Stealth Bot</h3>
+                    <p class="lang-en">Python AI Logic</p>
+                    <p class="lang-ua">AI Логіка на Python</p>
+                </div>
+            </div>
+            <div class="project-card" onclick="window.location.href='projects/vision-os.html'">
+                <div style="background: linear-gradient(45deg, #333, #050505); height: 100%;"></div>
+                <div class="project-info">
+                    <h3>Vision OS UI</h3>
+                    <p class="lang-en">System Design</p>
+                    <p class="lang-ua">Системний Дизайн</p>
+                </div>
+            </div>
+            <div class="project-card" onclick="window.location.href='projects/fintech-app.html'">
+                <div style="background: linear-gradient(45deg, #f2994a, #f2c94c); height: 100%;"></div>
+                <div class="project-info">
+                    <h3>FinTech App</h3>
+                    <p class="lang-en">Mobile Interface</p>
+                    <p class="lang-ua">Мобільний Інтерфейс</p>
+                </div>
+            </div>
+            <div class="project-card" onclick="window.location.href='projects/ai-dashboard.html'">
+                <div style="background: linear-gradient(45deg, #444, #111); height: 100%;"></div>
+                <div class="project-info">
+                    <h3>AI Data Dashboard</h3>
+                    <p class="lang-en">Internal Tooling</p>
+                    <p class="lang-ua">Внутрішній інструментарій</p>
+                </div>
+            </div>
+        </div>
+        <div class="more-projects-container">
+            <a href="all-projects.html" class="btn-outline lang-en">SEE ALL PROJECTS</a>
+            <a href="all-projects.html" class="btn-outline lang-ua">БІЛЬШЕ ПРОЕКТІВ</a>
+        </div>
+    </section>
+
     <section id="faq">
         <h2 class="about-heading lang-en">FAQ</h2>
         <h2 class="about-heading lang-ua">Питання та відповіді</h2>
@@ -293,53 +357,18 @@
         </div>
     </section>
 
-    <section id="portfolio">
-        <h2 class="about-heading lang-en">Portfolio</h2>
-        <h2 class="about-heading lang-ua">Портфоліо</h2>
-        <div class="portfolio-grid">
-            <div class="project-card" onclick="window.open('https://behance.net', '_blank')">
-                <div style="background: linear-gradient(45deg, #0071e3, #000); height: 100%;"></div>
-                <div class="project-info">
-                    <h3>TikTok Stealth Bot</h3>
-                    <p class="lang-en">Python AI Logic</p>
-                    <p class="lang-ua">AI Логіка на Python</p>
-                </div>
-            </div>
-            <div class="project-card" onclick="window.open('https://behance.net', '_blank')">
-                <div style="background: linear-gradient(45deg, #333, #050505); height: 100%;"></div>
-                <div class="project-info">
-                    <h3>Vision OS UI</h3>
-                    <p class="lang-en">System Design</p>
-                    <p class="lang-ua">Системний Дизайн</p>
-                </div>
-            </div>
-            <div class="project-card" onclick="window.open('https://behance.net', '_blank')">
-                <div style="background: linear-gradient(45deg, #f2994a, #f2c94c); height: 100%;"></div>
-                <div class="project-info">
-                    <h3>FinTech App</h3>
-                    <p class="lang-en">Mobile Interface</p>
-                    <p class="lang-ua">Мобільний Інтерфейс</p>
-                </div>
-            </div>
-            <div class="project-card" onclick="window.open('https://behance.net', '_blank')">
-                <div style="background: linear-gradient(45deg, #444, #111); height: 100%;"></div>
-                <div class="project-info">
-                    <h3>AI Data Dashboard</h3>
-                    <p class="lang-en">Internal Tooling</p>
-                    <p class="lang-ua">Внутрішній інструментарій</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <footer id="footer">
         <div class="footer-grid">
             <div class="footer-contacts">
-                <a href="tel:0930000000">093 000 00 00</a>
+                <a href="tel:+380932097079">+380 93 209 70 79</a>
+                <a href="mailto:Destro729@gmail.com" class="footer-email">Destro729@gmail.com</a>
                 <div class="social-icons">
-                    <a href="#" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
-                    <a href="#" title="Telegram"><i class="fa-brands fa-telegram"></i></a>
-                    <a href="#" title="GitHub"><i class="fa-brands fa-github"></i></a>
+                    <a href="https://wa.me/380932097079" target="_blank" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+                    <a href="https://t.me/your_tg_username" target="_blank" title="Telegram"><i class="fa-brands fa-telegram"></i></a>
+                    <a href="https://github.com/beyond-dl" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" title="Discord"><i class="fa-brands fa-discord"></i></a>
+                    <a href="#" title="Behance"><i class="fa-brands fa-behance"></i></a>
+                    <a href="#" title="Fiverr"><i class="fa-solid fa-f"></i></a>
                 </div>
             </div>
             <div style="text-align: right;">
@@ -364,9 +393,9 @@
             <h2 class="lang-en">PROJECT BRIEF</h2>
             <h2 class="lang-ua">БРИФ ПРОЕКТУ</h2>
             <form id="briefForm">
-                <input type="text" id="nameInput" placeholder="Your Name" required>
-                <input type="text" id="contactInput" placeholder="Contact Details (TG / Email)" required>
-                <textarea id="descInput" placeholder="Describe your task (max 300 symbols)..." maxlength="300" rows="5" required></textarea>
+                <input type="text" id="nameInput" placeholder="Your Name" required name="from_name">
+                <input type="text" id="contactInput" placeholder="Contact Details (TG / Email)" required name="contact_info">
+                <textarea id="descInput" placeholder="Describe your task (max 300 symbols)..." maxlength="300" rows="5" required name="message"></textarea>
                 
                 <div class="file-upload">
                     <i class="fa-solid fa-paperclip"></i>
@@ -383,7 +412,12 @@
         </div>
     </div>
 
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script>
+        (function() {
+            emailjs.init("YOUR_PUBLIC_KEY"); // Твій Public Key від EmailJS
+        })();
+
         const glow = document.getElementById('glow');
         document.addEventListener('mousemove', (e) => {
             glow.style.left = e.clientX + 'px';
@@ -436,6 +470,11 @@
 
         document.getElementById('briefForm').onsubmit = (e) => {
             e.preventDefault();
+            
+            // Логіка відправки через EmailJS (підключи свій сервіс та шаблон)
+            // emailjs.sendForm('service_id', 'template_id', e.target)
+            //     .then(() => { console.log('SUCCESS!'); }, (error) => { console.log('FAILED...', error); });
+
             closeModal();
             const toast = document.getElementById('toast');
             toast.classList.add('show');
