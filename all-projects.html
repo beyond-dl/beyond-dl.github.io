@@ -133,8 +133,8 @@
     </header>
 
     <main>
-        <h1 class="lang-en">ALL<br>PROJECTS</h1>
-        <h1 class="lang-ua" style="display:none;">ВСІ<br>ПРОЄКТИ</h1>
+        <h1 class="lang-en">ALL<br>ARTIFACTS</h1>
+        <h1 class="lang-ua" style="display:none;">ВСІ<br>АРТЕФАКТИ</h1>
 
         <div class="filters" id="filtersContainer">
             <button class="filter-btn active" onclick="filterProjects('ALL', this)">ALL</button>
@@ -277,8 +277,8 @@
 
                 const card = document.createElement('a');
                 card.className = 'project-card';
-                // Переконуємося, що посилання веде на сторінку проекту з правильним ID
-                card.href = `project.html?id=${p.id}`;
+                // ВИПРАВЛЕНО: Шлях змінено на project-details.html для відповідності вашому файлу
+                card.href = `project-details.html?id=${p.id}`;
                 
                 card.innerHTML = `
                     <div class="project-img" style="background: url('${img}')"></div>
@@ -301,7 +301,7 @@
             });
             
             if (grid.innerHTML === "") {
-                grid.innerHTML = `<p style='grid-column: 1/-1; text-align: center; opacity: 0.5;'>${currentLang === 'en' ? 'The library is empty.' : 'Бібліотека порожня.'}</p>`;
+                grid.innerHTML = "<p style='grid-column: 1/-1; text-align: center; opacity: 0.5;'>The library is empty.</p>";
             }
         }
 
@@ -318,7 +318,7 @@
             if (!f) return;
             if (f.phone) {
                 document.getElementById('f-phone-link').innerText = f.phone;
-                document.getElementById('f-phone-link').href = `tel:${f.phone.replace(/\s/g, '')}`;
+                document.getElementById('f-phone-link').href = `tel:${f.phone.replace(/\\s/g, '')}`;
             }
             if (f.email) {
                 document.getElementById('f-email-link').innerText = f.email;
