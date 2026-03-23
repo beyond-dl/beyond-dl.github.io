@@ -12,9 +12,8 @@
             --text: #ffffff;
             --text-secondary: #a1a1a6;
             --accent: #0071e3;
-            --accent-hover: #005bbd;
-            --card: rgba(255, 255, 255, 0.05);
             --border: rgba(255, 255, 255, 0.1);
+            --card: rgba(255, 255, 255, 0.05);
             --font-hd: 'Unbounded', sans-serif;
             --font-main: 'Inter', sans-serif;
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -34,43 +33,70 @@
             background: var(--bg); 
             color: var(--text); 
             font-family: var(--font-main); 
-            padding: 120px 8% 0 8%;
+            padding-top: 100px;
             transition: background 0.5s; 
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+            overflow-x: hidden;
         }
 
-        /* --- SYNCED HEADER (FROM ALL-PROJECTS) --- */
-        .nav-header {
-            position: fixed; top: 0; left: 0; width: 100%;
-            padding: 20px 8%; background: var(--bg);
-            backdrop-filter: blur(20px); z-index: 1000;
-            display: flex; justify-content: space-between; align-items: center;
+        /* --- SYNCED HEADER (EXACTLY AS ARCHIVE) --- */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 8%;
+            background: var(--bg);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             border-bottom: 1px solid var(--border);
         }
 
-        .nav-controls { display: flex; gap: 20px; align-items: center; }
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
 
         .back-link { 
-            color: var(--text); text-decoration: none; font-weight: 800; 
-            font-family: var(--font-hd); font-size: 0.8rem;
-            display: flex; align-items: center; gap: 10px;
+            color: var(--text); 
+            text-decoration: none; 
+            font-weight: 800; 
+            font-family: var(--font-hd); 
+            font-size: 0.8rem;
+            display: flex; 
+            align-items: center; 
+            gap: 10px;
             transition: var(--transition);
             text-transform: uppercase;
         }
         .back-link:hover { color: var(--accent); transform: translateX(-5px); }
 
+        .nav-controls { 
+            display: flex; 
+            gap: 15px; 
+            align-items: center; 
+        }
+
         .control-btn { 
-            background: none; border: 1px solid var(--border); color: var(--text); 
-            padding: 8px 15px; border-radius: 50px; cursor: pointer; 
-            font-family: var(--font-hd); font-size: 0.6rem; transition: 0.3s;
-            min-width: 40px;
+            background: none; 
+            border: 1px solid var(--border); 
+            color: var(--text); 
+            padding: 8px 15px; 
+            border-radius: 50px; 
+            cursor: pointer; 
+            font-family: var(--font-hd); 
+            font-size: 0.6rem; 
+            transition: 0.3s;
         }
         .control-btn:hover { background: var(--text); color: var(--bg); }
+        .control-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
 
         /* --- PROJECT CONTENT --- */
-        .project-container { max-width: 1400px; margin: 0 auto; width: 100%; flex-grow: 1; }
+        .project-container { max-width: 1200px; margin: 0 auto; padding: 40px 8% 100px; }
 
         .project-meta { 
             color: var(--accent); 
@@ -83,25 +109,26 @@
 
         h1 { 
             font-family: var(--font-hd); 
-            font-size: clamp(2.5rem, 8vw, 5rem); 
+            font-size: clamp(2rem, 6vw, 4.5rem); 
             line-height: 1.1; 
             text-transform: uppercase; 
             margin-bottom: 60px; 
         }
 
-        /* ВИПРАВЛЕНО: Збільшено на 20% (scale 1.2) та додано контейнер для збереження відступів */
-        .hero-img-wrapper {
+        /* ХІРУРГІЧНЕ ЗБІЛЬШЕННЯ ЛИШЕ ПЕРШОГО ФОТО */
+        .hero-img-box {
             width: 100%;
-            overflow: hidden;
             border-radius: 40px;
-            margin-bottom: 100px;
+            margin-bottom: 80px;
             border: 1px solid var(--border);
+            overflow: hidden; /* Щоб фото не вилазило за краї при scale */
         }
+
         .hero-img { 
             width: 100%; 
             display: block;
             object-fit: cover;
-            transform: scale(1.2);
+            transform: scale(1.2); /* Тільки фото +20% */
             transition: var(--transition);
         }
 
@@ -143,65 +170,144 @@
         .gallery { margin-top: 100px; display: grid; gap: 40px; }
         .gallery img { width: 100%; border-radius: 30px; border: 1px solid var(--border); }
 
-        /* --- SYNCED FOOTER (FROM ALL-PROJECTS) --- */
-        footer { padding: 100px 8%; border-top: 1px solid var(--border); margin-top: 100px; margin-left: -8.7%; margin-right: -8.7%; background: var(--bg); }
-        .footer-grid { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 40px; }
-        .footer-contacts { display: flex; flex-direction: column; gap: 10px; }
-        .footer-contacts a { font-family: var(--font-hd); font-size: clamp(1.2rem, 3vw, 2rem); color: var(--text); text-decoration: none; font-weight: 900; transition: var(--transition); }
-        .footer-contacts a:hover { color: var(--accent); }
-        .footer-email { color: var(--text-secondary); text-decoration: none; font-weight: 600; font-size: 1.1rem; }
-        
-        .social-icons { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
-        .social-icons a { width: 50px; height: 50px; background: var(--card); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: var(--text); border: 1px solid var(--border); transition: 0.3s; text-decoration: none; }
-        .social-icons a:hover { background: var(--accent); color: #fff; transform: translateY(-5px); border-color: var(--accent); }
+        /* --- SYNCED FOOTER (EXACTLY AS ARCHIVE) --- */
+        footer {
+            padding: 100px 8%;
+            border-top: 1px solid var(--border);
+            margin-top: 100px;
+            background: var(--bg);
+        }
+
+        .footer-grid {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 60px;
+        }
+
+        .footer-left {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .footer-contacts {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .footer-contacts a {
+            font-family: var(--font-hd);
+            font-size: clamp(1.2rem, 3vw, 2.5rem);
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 900;
+            transition: var(--transition);
+            line-height: 1.1;
+        }
+
+        .footer-contacts a:hover {
+            color: var(--accent);
+            transform: translateX(10px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text);
+            text-decoration: none;
+            transition: 0.3s;
+            background: var(--card);
+        }
+
+        .social-btn:hover {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            transform: translateY(-5px);
+        }
+
+        .footer-right {
+            text-align: right;
+        }
+
+        .footer-brand {
+            font-family: var(--font-hd);
+            font-weight: 900;
+            font-size: 1.2rem;
+            letter-spacing: -1px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .footer-status {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
 
         @media (max-width: 900px) {
             .project-grid { grid-template-columns: 1fr; gap: 40px; }
-            .nav-header { padding: 20px 5%; }
-            .footer-grid { flex-direction: column; text-align: center; align-items: center; }
-            .footer-grid div { text-align: center !important; }
-            .social-icons { justify-content: center; }
-            .hero-img { transform: scale(1.1); } /* Трохи менше збільшення для мобільних */
+            header { padding: 20px 5%; }
+            .footer-grid { flex-direction: column; text-align: left; }
+            .footer-right { text-align: left; }
+            .footer-contacts a { font-size: 1.8rem; }
+            .hero-img { transform: scale(1.1); }
         }
     </style>
 </head>
-<body data-theme="dark">
+<body>
 
-    <header class="nav-header">
-        <a href="all-projects.html" class="back-link">
-            <i class="fa-solid fa-arrow-left"></i> 
-            <span class="lang-en">BACK TO ARCHIVE</span>
-            <span class="lang-ua" style="display:none;">ДО АРХІВУ</span>
-        </a>
+    <header>
+        <div class="nav-left">
+            <a href="all-projects.html" class="back-link">
+                <i class="fa-solid fa-arrow-left"></i> 
+                <span class="lang-en">BACK TO ARCHIVE</span>
+                <span class="lang-ua" style="display:none;">ДО АРХІВУ</span>
+            </a>
+        </div>
         <div class="nav-controls">
-            <button class="control-btn" onclick="toggleTheme()"><i class="fa-solid fa-circle-half-stroke"></i></button>
-            <button class="control-btn" onclick="toggleLang()" style="min-width: 80px;">UA / EN</button>
+            <button class="control-btn" onclick="toggleTheme()">
+                <i class="fa-solid fa-circle-half-stroke"></i>
+            </button>
+            <button class="control-btn" onclick="setLang('ua')" id="btn-ua">UA</button>
+            <button class="control-btn" onclick="setLang('en')" id="btn-en">EN</button>
         </div>
     </header>
 
     <main class="project-container" id="project-render">
         </main>
 
-    <footer id="footer">
+    <footer>
         <div class="footer-grid">
-            <div class="footer-contacts">
-                <a href="tel:+380932097079" id="f-phone-link">+380 93 209 70 79</a>
-                <a href="mailto:Destro729@gmail.com" class="footer-email" id="f-email-link">Destro729@gmail.com</a>
-                <div class="social-icons" id="f-socials">
-                    <a href="#" target="_blank" title="WhatsApp" id="f-wa"><i class="fa-brands fa-whatsapp"></i></a>
-                    <a href="#" target="_blank" title="Telegram" id="f-tg"><i class="fa-brands fa-telegram"></i></a>
-                    <a href="#" target="_blank" title="GitHub" id="f-gh"><i class="fa-brands fa-github"></i></a>
-                    <a href="#" title="Discord" id="f-ds"><i class="fa-brands fa-discord"></i></a>
-                    <a href="#" title="Behance" id="f-bh"><i class="fa-brands fa-behance"></i></a>
-                    <a href="#" title="Fiverr" id="f-fv"><i class="fa-solid fa-f"></i></a>
+            <div class="footer-left">
+                <div class="footer-contacts">
+                    <a href="tel:+380932097079" id="f-phone-link">+380 93 209 70 79</a>
+                    <a href="mailto:Destro729@gmail.com" id="f-email-link">Destro729@gmail.com</a>
+                </div>
+                <div class="social-links" id="f-socials">
                 </div>
             </div>
-            <div style="text-align: right;">
-                <p style="font-weight: 800; color: var(--text); font-family: var(--font-hd); text-transform: uppercase;">MAKSYM RIZUN</p>
-                <p style="color: var(--text-secondary); margin-top: 5px;" class="lang-en" id="f-role-en">Designer & AI Engineer 2026</p>
-                <p style="color: var(--text-secondary); margin-top: 5px; display:none;" class="lang-ua" id="f-role-ua">Дизайнер та AI Інженер 2026</p>
-                <p style="color: var(--text-secondary); opacity: 0.5; font-size: 0.8rem; margin-top: 15px;" class="lang-en">&copy; All Rights Reserved.</p>
-                <p style="color: var(--text-secondary); opacity: 0.5; font-size: 0.8rem; margin-top: 15px; display:none;" class="lang-ua">&copy; Всі права захищено.</p>
+            
+            <div class="footer-right">
+                <div class="footer-brand">MAKSYM RIZUN</div>
+                <div class="footer-status" id="f-role"></div>
+                <div style="color: var(--text-secondary); opacity: 0.4; font-size: 0.7rem; font-family: var(--font-hd);">
+                    © 2026 ANOR CORE / ARCHIVE OF LOGIC
+                </div>
             </div>
         </div>
     </footer>
@@ -216,7 +322,7 @@
 
         const urlParams = new URLSearchParams(window.location.search);
         const projectId = urlParams.get('id');
-        let currentLang = localStorage.getItem('anor_lang') || 'en';
+        let currentLang = localStorage.getItem('anor_lang') || 'ua';
 
         // --- THEME ENGINE ---
         window.toggleTheme = () => {
@@ -226,27 +332,24 @@
         if(localStorage.getItem('anor_theme') === 'light') document.body.classList.add('light-theme');
 
         // --- LANGUAGE ENGINE ---
-        window.toggleLang = () => {
-            currentLang = currentLang === 'en' ? 'ua' : 'en';
-            localStorage.setItem('anor_lang', currentLang);
+        window.setLang = (lang) => {
+            currentLang = lang;
+            localStorage.setItem('anor_lang', lang);
             updateUI();
         };
 
         function updateUI() {
-            const ens = document.querySelectorAll('.lang-en');
-            const uas = document.querySelectorAll('.lang-ua');
+            document.querySelectorAll('.nav-controls .control-btn').forEach(b => b.classList.remove('active'));
+            const activeBtn = document.getElementById('btn-' + currentLang);
+            if(activeBtn) activeBtn.classList.add('active');
             
-            ens.forEach(el => el.style.display = currentLang === 'en' ? 'block' : 'none');
-            uas.forEach(el => el.style.display = currentLang === 'ua' ? 'block' : 'none');
+            document.querySelectorAll('.lang-en').forEach(el => el.style.display = currentLang === 'en' ? 'inline' : 'none');
+            document.querySelectorAll('.lang-ua').forEach(el => el.style.display = currentLang === 'ua' ? 'inline' : 'none');
 
             if(window.lastData) renderProject(window.lastData);
             
-            // Sync footer role
             if(window.lastFooter) {
-                const roleUa = document.getElementById('f-role-ua');
-                const roleEn = document.getElementById('f-role-en');
-                if(roleUa) roleUa.innerText = window.lastFooter.roleUa || '';
-                if(roleEn) roleEn.innerText = window.lastFooter.roleEn || '';
+                document.getElementById('f-role').innerText = currentLang === 'ua' ? window.lastFooter.roleUa : window.lastFooter.roleEn;
             }
         }
 
@@ -259,24 +362,12 @@
             const desc = currentLang === 'ua' ? (data.descUa || data.desc || data.description) : (data.descEn || data.desc || data.description);
             const meta = data.customMeta || 'SPECTRAL ARTIFACT';
             
-            // Категорії можуть бути або рядком з комами, або просто значенням
-            let categories = [];
-            if (data.category) {
-                if (typeof data.category === 'string') {
-                    categories = data.category.split(',').map(c => c.trim());
-                } else if (typeof data.category === 'object' && data.category.name) {
-                    categories = [data.category.name];
-                } else {
-                    categories = [data.category];
-                }
-            } else {
-                categories = ['LOGIC'];
-            }
+            const categories = data.category ? data.category.split(',').map(c => c.trim()) : ['LOGIC'];
 
             container.innerHTML = `
                 <div class="project-meta">${meta} / ${categories.join(' / ')}</div>
                 <h1>${title}</h1>
-                <div class="hero-img-wrapper">
+                <div class="hero-img-box">
                     <img src="${data.mainImage || data.image}" class="hero-img">
                 </div>
                 
@@ -332,30 +423,21 @@
             if(!f) return;
             window.lastFooter = f;
             
-            const phoneEl = document.getElementById('f-phone-link');
-            const emailEl = document.getElementById('f-email-link');
+            document.getElementById('f-phone-link').innerText = f.phone;
+            document.getElementById('f-phone-link').href = `tel:${f.phone.replace(/\s/g, '')}`;
+            document.getElementById('f-email-link').innerText = f.email;
+            document.getElementById('f-email-link').href = `mailto:${f.email}`;
+            document.getElementById('f-role').innerText = currentLang === 'ua' ? f.roleUa : f.roleEn;
             
-            if (f.phone) {
-                phoneEl.innerText = f.phone;
-                phoneEl.href = `tel:${f.phone.replace(/\s/g, '')}`;
-            }
-            if (f.email) {
-                emailEl.innerText = f.email;
-                emailEl.href = `mailto:${f.email}`;
-            }
-            
-            if (f.roleUa) document.getElementById('f-role-ua').innerText = f.roleUa;
-            if (f.roleEn) document.getElementById('f-role-en').innerText = f.roleEn;
-            
-            if (f.tg) document.getElementById('f-tg').href = f.tg;
-            if (f.wa) document.getElementById('f-wa').href = f.wa;
-            if (f.gh) document.getElementById('f-gh').href = f.gh;
-            if (f.ds) document.getElementById('f-ds').href = f.ds;
-            if (f.bh) document.getElementById('f-bh').href = f.bh;
-            if (f.fv) document.getElementById('f-fv').href = f.fv;
-            
-            updateUI();
+            const soc = document.getElementById('f-socials');
+            soc.innerHTML = `
+                <a href="${f.wa || '#'}" target="_blank" class="social-btn"><i class="fa-brands fa-whatsapp"></i></a>
+                <a href="${f.tg || '#'}" target="_blank" class="social-btn"><i class="fa-brands fa-telegram"></i></a>
+                <a href="${f.gh || '#'}" target="_blank" class="social-btn"><i class="fa-brands fa-github"></i></a>
+            `;
         });
+
+        updateUI();
     </script>
 </body>
 </html>
