@@ -61,7 +61,7 @@
         h1 { font-family: var(--font-hd); font-size: clamp(2.5rem, 8vw, 5rem); margin: 40px 0; text-transform: uppercase; }
 
         /* Фільтри */
-        .filters { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 60px; }
+        .filters { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 60px; min-height: 50px; }
         .filter-btn { 
             padding: 14px 28px; border-radius: 100px; border: 1px solid var(--border); 
             background: transparent; color: var(--text-secondary); cursor: pointer; 
@@ -74,21 +74,27 @@
         .project-card { 
             background: var(--card); border: 1px solid var(--border); border-radius: 40px; 
             overflow: hidden; transition: var(--transition); display: flex; flex-direction: column;
+            animation: fadeIn 0.6s ease forwards;
         }
-        .project-card:hover { transform: translateY(-10px); border-color: var(--accent); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .project-card:hover { transform: translateY(-10px); border-color: var(--accent); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
         .project-img { height: 260px; width: 100%; background: #111; overflow: hidden; background-size: cover !important; background-position: center !important; }
-        .project-content { padding: 40px; }
+        .project-content { padding: 40px; flex-grow: 1; display: flex; flex-direction: column; }
         
-        .tag { font-size: 0.65rem; padding: 6px 14px; background: rgba(255,255,255,0.05); color: var(--text-secondary); border-radius: 50px; margin-right: 5px; font-weight: 800; }
+        .tag { font-size: 0.65rem; padding: 6px 14px; background: rgba(255,255,255,0.05); color: var(--text-secondary); border-radius: 50px; margin-right: 5px; font-weight: 800; text-transform: uppercase; }
         .project-title { font-family: var(--font-hd); font-size: 1.4rem; margin: 15px 0; }
-        .project-desc { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 25px; min-height: 50px; }
+        .project-desc { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 25px; min-height: 50px; line-height: 1.6; }
 
-        .project-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 20px; }
-        .like-btn { cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: 800; }
+        .project-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 20px; margin-top: auto; }
+        .like-btn { cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: 800; transition: 0.2s; }
+        .like-btn:hover { transform: scale(1.1); }
         .like-btn.liked { color: #ff3b30; }
 
-        /* FOOTER SYNCED WITH INDEX */
-        footer { padding: 100px 8%; border-top: 1px solid var(--border); margin-top: 100px; margin-left: -8.7%; margin-right: -8.7%; }
+        /* FOOTER */
+        footer { padding: 100px 8%; border-top: 1px solid var(--border); margin-top: 100px; margin-left: -8.7%; margin-right: -8.7%; background: var(--bg); }
         .footer-grid { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 40px; }
         .footer-contacts { display: flex; flex-direction: column; gap: 10px; }
         .footer-contacts a { font-family: var(--font-hd); font-size: clamp(1.2rem, 3vw, 2rem); color: var(--text); text-decoration: none; font-weight: 900; transition: var(--transition); }
@@ -127,7 +133,7 @@
 
         <div class="filters" id="filtersContainer">
             <button class="filter-btn active" onclick="filterProjects('all', this)">ALL</button>
-            </div>
+        </div>
 
         <div class="projects-grid" id="projectsGrid">
             </div>
@@ -150,16 +156,16 @@
             <div style="text-align: right;">
                 <p style="font-weight: 800; color: var(--text); font-family: var(--font-hd); text-transform: uppercase;">MAKSYM RIZUN</p>
                 <p style="color: var(--text-secondary); margin-top: 5px;" class="lang-en" id="f-role-en">Designer & AI Engineer 2026</p>
-                <p style="color: var(--text-secondary); margin-top: 5px;" class="lang-ua" id="f-role-ua" style="display:none;">Дизайнер та AI Інженер 2026</p>
+                <p style="color: var(--text-secondary); margin-top: 5px; display:none;" class="lang-ua" id="f-role-ua">Дизайнер та AI Інженер 2026</p>
                 <p style="color: var(--text-secondary); opacity: 0.5; font-size: 0.8rem; margin-top: 15px;" class="lang-en">&copy; All Rights Reserved.</p>
-                <p style="color: var(--text-secondary); opacity: 0.5; font-size: 0.8rem; margin-top: 15px;" class="lang-ua" style="display:none;">&copy; Всі права захищено.</p>
+                <p style="color: var(--text-secondary); opacity: 0.5; font-size: 0.8rem; margin-top: 15px; display:none;" class="lang-ua">&copy; Всі права захищено.</p>
             </div>
         </div>
     </footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+        import { getDatabase, ref, onValue, update, get } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
         const firebaseConfig = {
             databaseURL: "https://anor-core-2026-default-rtdb.europe-west1.firebasedatabase.app"
@@ -168,16 +174,19 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
+        // --- Глобальні змінні ---
+        let currentLang = 'en';
+
         // --- Глобальні функції інтерфейсу ---
         window.toggleTheme = () => document.body.classList.toggle('light-theme');
         
         window.toggleLang = () => {
+            currentLang = currentLang === 'en' ? 'ua' : 'en';
             const ens = document.querySelectorAll('.lang-en');
             const uas = document.querySelectorAll('.lang-ua');
-            const isUaVisible = uas[0].style.display === 'block';
             
-            ens.forEach(el => el.style.display = isUaVisible ? 'block' : 'none');
-            uas.forEach(el => el.style.display = isUaVisible ? 'none' : 'block');
+            ens.forEach(el => el.style.display = currentLang === 'en' ? 'block' : 'none');
+            uas.forEach(el => el.style.display = currentLang === 'ua' ? 'block' : 'none');
         };
 
         window.filterProjects = (category, btn) => {
@@ -185,37 +194,55 @@
             btn.classList.add('active');
             const cards = document.querySelectorAll('.project-card');
             cards.forEach(card => {
-                card.style.display = (category === 'all' || card.dataset.category.toLowerCase() === category.toLowerCase()) ? 'flex' : 'none';
+                const projectCat = card.dataset.category ? card.dataset.category.toLowerCase() : '';
+                const targetCat = category.toLowerCase();
+                card.style.display = (targetCat === 'all' || projectCat === targetCat) ? 'flex' : 'none';
             });
         };
 
-        window.toggleLike = (btn) => {
+        window.toggleLike = async (btn, projectId) => {
             const icon = btn.querySelector('i');
             const countSpan = btn.querySelector('.count');
             let count = parseInt(countSpan.innerText);
-            if (icon.classList.contains('fa-regular')) {
-                icon.classList.replace('fa-regular', 'fa-solid');
-                btn.classList.add('liked');
-                countSpan.innerText = count + 1;
-            } else {
+            
+            const isLiked = icon.classList.contains('fa-solid');
+            const newCount = isLiked ? Math.max(0, count - 1) : count + 1;
+
+            // Оновлення в UI
+            if (isLiked) {
                 icon.classList.replace('fa-solid', 'fa-regular');
                 btn.classList.remove('liked');
-                countSpan.innerText = count - 1;
+            } else {
+                icon.classList.replace('fa-regular', 'fa-solid');
+                btn.classList.add('liked');
+            }
+            countSpan.innerText = newCount;
+
+            // Оновлення в Firebase
+            try {
+                await update(ref(db, `projects/${projectId}`), {
+                    likes: newCount
+                });
+            } catch (e) {
+                console.error("Помилка при оновленні лайків:", e);
             }
         };
 
         // --- Завантаження даних з Firebase ---
 
-        // 1. Категорії для фільтрів
+        // 1. Динамічні категорії
         onValue(ref(db, 'categories'), (snapshot) => {
             const container = document.getElementById('filtersContainer');
             const data = snapshot.val();
+            if(!data) return;
+
             // Очищуємо, крім кнопки ALL
-            container.innerHTML = '<button class="filter-btn active" onclick="filterProjects(\'all\', this)">ALL</button>';
-            for(let id in data) {
-                const catName = data[id];
+            container.innerHTML = `<button class="filter-btn active" onclick="filterProjects('all', this)">${currentLang === 'en' ? 'ALL' : 'ВСІ'}</button>`;
+            
+            const categories = typeof data === 'object' ? Object.values(data) : [];
+            categories.forEach(catName => {
                 container.innerHTML += `<button class="filter-btn" onclick="filterProjects('${catName}', this)">${catName}</button>`;
-            }
+            });
         });
 
         // 2. Проекти
@@ -223,23 +250,39 @@
             const grid = document.getElementById('projectsGrid');
             grid.innerHTML = "";
             const data = snapshot.val();
-            if(!data) return;
+            if(!data) {
+                grid.innerHTML = "<p style='grid-column: 1/-1; text-align: center; opacity: 0.5;'>The library is empty. Logic is loading...</p>";
+                return;
+            }
 
-            // Сортування за часом (нові зверху)
-            const sortedIds = Object.keys(data).sort((a, b) => data[b].time - data[a].time);
+            // Перетворюємо в масив для сортування
+            const projectsList = Object.keys(data).map(key => ({
+                id: key,
+                ...data[key]
+            }));
 
-            sortedIds.forEach(id => {
-                const p = data[id];
+            // Сортування за часом (найновіші спочатку)
+            projectsList.sort((a, b) => (b.time || 0) - (a.time || 0));
+
+            projectsList.forEach(p => {
+                const title = currentLang === 'en' ? (p.titleEn || p.title) : (p.titleUa || p.title);
+                const desc = currentLang === 'en' ? (p.shortDescEn || p.shortDesc || p.desc) : (p.shortDescUa || p.shortDesc || p.desc);
+                const img = p.mainImage || p.image || 'https://via.placeholder.com/600x400/111/fff?text=No+Image';
+                const likes = p.likes || 0;
+
                 grid.innerHTML += `
-                    <div class="project-card" data-category="${p.category}">
-                        <div class="project-img" style="background: url('${p.mainImage || p.image}')"></div>
+                    <div class="project-card" data-category="${p.category || 'Other'}">
+                        <div class="project-img" style="background: url('${img}')"></div>
                         <div class="project-content">
-                            <div class="project-tags"><span class="tag">${p.category}</span></div>
-                            <h3 class="project-title">${p.title}</h3>
-                            <p class="project-desc">${p.shortDesc || p.desc || ''}</p>
+                            <div class="project-tags"><span class="tag">${p.category || 'Logic'}</span></div>
+                            <h3 class="project-title">${title || 'Untitled'}</h3>
+                            <p class="project-desc">${desc || ''}</p>
                             <div class="project-footer">
-                                <div class="like-btn" onclick="toggleLike(this)"><i class="fa-regular fa-heart"></i> <span class="count">0</span></div>
-                                <a href="project-details.html?id=${id}" style="color: var(--accent); text-decoration: none; font-weight: 800; font-size: 0.7rem;">DETAILS</a>
+                                <div class="like-btn" onclick="toggleLike(this, '${p.id}')">
+                                    <i class="fa-regular fa-heart"></i> 
+                                    <span class="count">${likes}</span>
+                                </div>
+                                <a href="project-details.html?id=${p.id}" style="color: var(--accent); text-decoration: none; font-weight: 800; font-size: 0.7rem; letter-spacing: 1px;">DETAILS</a>
                             </div>
                         </div>
                     </div>`;
@@ -250,12 +293,16 @@
         onValue(ref(db, 'settings/footer'), (snapshot) => {
             const f = snapshot.val();
             if(!f) return;
-            document.getElementById('f-phone-link').innerText = f.phone;
-            document.getElementById('f-phone-link').href = `tel:${f.phone.replace(/\s/g, '')}`;
-            document.getElementById('f-email-link').innerText = f.email;
-            document.getElementById('f-email-link').href = `mailto:${f.email}`;
-            document.getElementById('f-role-ua').innerText = f.roleUa;
-            document.getElementById('f-role-en').innerText = f.roleEn;
+            if(f.phone) {
+                document.getElementById('f-phone-link').innerText = f.phone;
+                document.getElementById('f-phone-link').href = `tel:${f.phone.replace(/\s/g, '')}`;
+            }
+            if(f.email) {
+                document.getElementById('f-email-link').innerText = f.email;
+                document.getElementById('f-email-link').href = `mailto:${f.email}`;
+            }
+            if(f.roleUa) document.getElementById('f-role-ua').innerText = f.roleUa;
+            if(f.roleEn) document.getElementById('f-role-en').innerText = f.roleEn;
         });
     </script>
 </body>
