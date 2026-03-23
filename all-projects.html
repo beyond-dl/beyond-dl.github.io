@@ -100,7 +100,7 @@
         .like-btn:hover { color: var(--text); transform: scale(1.1); }
         .like-btn.liked { color: #ff3b30; }
 
-        /* CONTACT BLOCK - FIXED DESIGN */
+        /* CONTACT BLOCK - RESTORED & WORKING */
         .contact-cta-section {
             background: var(--card);
             border: 1px solid var(--border);
@@ -111,16 +111,16 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 25px;
+            gap: 20px;
         }
         .cta-text { font-family: var(--font-main); color: var(--text-secondary); font-size: 1.2rem; }
         .cta-button { 
             font-family: var(--font-hd);
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             color: var(--accent);
             text-decoration: none;
             text-transform: uppercase;
-            padding: 15px 30px;
+            padding: 10px 20px;
             transition: var(--transition);
             border-bottom: 2px solid transparent;
         }
@@ -171,8 +171,8 @@
             <p class="cta-text lang-en">Interested in working together?</p>
             <p class="cta-text lang-ua" style="display:none;">Зацікавлені у співпраці?</p>
             
-            <a href="javascript:void(0)" class="cta-button lang-en" onclick="if(window.parent.openBrief) { window.parent.openBrief(); } else { alert('Brief Form is loading...'); }">FILL OUT THE BRIEF</a>
-            <a href="javascript:void(0)" class="cta-button lang-ua" style="display:none;" onclick="if(window.parent.openBrief) { window.parent.openBrief(); } else { alert('Форма брифу завантажується...'); }">ЗАПОВНИТИ БРИФ</a>
+            <a href="javascript:void(0)" class="cta-button lang-en" onclick="if(window.parent && window.parent.openBrief) { window.parent.openBrief(); } else { alert('Opening brief form...'); }">FILL OUT THE BRIEF</a>
+            <a href="javascript:void(0)" class="cta-button lang-ua" style="display:none;" onclick="if(window.parent && window.parent.openBrief) { window.parent.openBrief(); } else { alert('Відкриваю форму брифу...'); }">ЗАПОВНИТИ БРИФ</a>
             
             <p class="cta-subtext lang-en">or call/write to me.</p>
             <p class="cta-subtext lang-ua" style="display:none;">або зателефонуйте/напишіть мені.</p>
@@ -291,14 +291,25 @@
                 const desc = currentLang === 'en' ? (p.shortDescEn || p.shortDesc || p.desc) : (p.shortDescUa || p.shortDesc || p.desc);
                 const img = p.mainImage || p.image || 'https://via.placeholder.com/600x400/111/fff?text=No+Image';
                 
-                // FIXED CATEGORY LOGIC - PULLING FROM ADMIN
+                // RESTORED DYNAMIC TAGS FROM ADMIN DATA
                 let catsArray = [];
                 if (p.category) {
-                    if (Array.isArray(p.category)) catsArray = p.category.map(c => typeof c === 'object' ? c.name : c);
-                    else if (typeof p.category === 'string') catsArray = p.category.split(',').map(c => c.trim());
-                    else if (p.category.name) catsArray = [p.category.name];
+                    if (Array.isArray(p.category)) {
+                        catsArray = p.category.map(c => typeof c === 'object' ? c.name : c);
+                    } else if (typeof p.category === 'string') {
+                        catsArray = p.category.split(',').map(c => c.trim());
+                    } else if (p.category.name) {
+                        catsArray = [p.category.name];
+                    }
                 }
-                if (catsArray.length === 0) catsArray = ["Artifact"]; // Default according to admin design
+                
+                // If no categories, try to use metaTag as a fallback
+                if (catsArray.length === 0 && p.metaTag) {
+                    catsArray = [p.metaTag.split('|')[0].trim()];
+                }
+                
+                // Final fallback if absolutely nothing is found
+                if (catsArray.length === 0) catsArray = ["General"];
 
                 const card = document.createElement('a');
                 card.className = 'project-card';
