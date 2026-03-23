@@ -28,45 +28,75 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body { 
             background: var(--bg); 
             color: var(--text); 
             font-family: var(--font-main); 
-            padding-top: 120px;
+            padding-top: 100px;
             transition: background 0.5s; 
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* SYNCED HEADER */
-        .nav-header {
-            position: fixed; top: 0; left: 0; width: 100%;
-            padding: 20px 8%; background: rgba(var(--bg), 0.8);
-            backdrop-filter: blur(20px); z-index: 1000;
-            display: flex; justify-content: space-between; align-items: center;
+        /* --- SYNCED HEADER (FROM ARCHIVE) --- */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 8%;
+            background: rgba(var(--bg), 0.8);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             border-bottom: 1px solid var(--border);
         }
 
-        .nav-controls { display: flex; gap: 20px; align-items: center; }
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
 
         .back-link { 
-            color: var(--text); text-decoration: none; font-weight: 800; 
-            font-family: var(--font-hd); font-size: 0.8rem;
-            display: flex; align-items: center; gap: 10px;
+            color: var(--text); 
+            text-decoration: none; 
+            font-weight: 800; 
+            font-family: var(--font-hd); 
+            font-size: 0.8rem;
+            display: flex; 
+            align-items: center; 
+            gap: 10px;
             transition: var(--transition);
             text-transform: uppercase;
         }
         .back-link:hover { color: var(--accent); transform: translateX(-5px); }
 
+        .nav-controls { 
+            display: flex; 
+            gap: 15px; 
+            align-items: center; 
+        }
+
         .control-btn { 
-            background: none; border: 1px solid var(--border); color: var(--text); 
-            padding: 8px 15px; border-radius: 50px; cursor: pointer; 
-            font-family: var(--font-hd); font-size: 0.6rem; transition: 0.3s;
+            background: none; 
+            border: 1px solid var(--border); 
+            color: var(--text); 
+            padding: 8px 15px; 
+            border-radius: 50px; 
+            cursor: pointer; 
+            font-family: var(--font-hd); 
+            font-size: 0.6rem; 
+            transition: 0.3s;
         }
         .control-btn:hover { background: var(--text); color: var(--bg); }
         .control-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
 
-        /* CONTENT */
-        .project-container { max-width: 1200px; margin: 0 auto; padding: 0 8% 100px; }
+        /* --- PROJECT CONTENT --- */
+        .project-container { max-width: 1200px; margin: 0 auto; padding: 40px 8% 100px; }
 
         .project-meta { 
             color: var(--accent); 
@@ -90,6 +120,7 @@
             border-radius: 40px; 
             margin-bottom: 80px; 
             border: 1px solid var(--border);
+            object-fit: cover;
         }
 
         .project-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 80px; }
@@ -106,7 +137,6 @@
         .sidebar .info-block { margin-bottom: 45px; }
         .sidebar p, .sidebar a { font-weight: 600; font-size: 1.1rem; color: var(--text); text-decoration: none; }
         
-        /* ACTIVE TAGS */
         .tech-tag {
             display: inline-block;
             padding: 5px 15px;
@@ -128,39 +158,121 @@
             white-space: pre-wrap; 
         }
 
-        /* GALLERY */
         .gallery { margin-top: 100px; display: grid; gap: 40px; }
         .gallery img { width: 100%; border-radius: 30px; border: 1px solid var(--border); }
 
-        /* SYNCED FOOTER */
-        footer { padding: 100px 8%; border-top: 1px solid var(--border); margin-top: 100px; }
-        .footer-grid { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 40px; }
-        .footer-contacts { display: flex; flex-direction: column; gap: 10px; }
-        .footer-contacts a { font-family: var(--font-hd); font-size: clamp(1.2rem, 3vw, 2rem); color: var(--text); text-decoration: none; font-weight: 900; transition: var(--transition); }
-        .footer-contacts a:hover { color: var(--accent); }
-        
-        .social-icons { display: flex; gap: 12px; margin-top: 20px; }
-        .social-icons a { width: 50px; height: 50px; background: var(--card); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: var(--text); border: 1px solid var(--border); transition: 0.3s; }
-        .social-icons a:hover { background: var(--accent); color: #fff; transform: translateY(-5px); }
+        /* --- SYNCED FOOTER (FROM ARCHIVE) --- */
+        footer {
+            padding: 100px 8%;
+            border-top: 1px solid var(--border);
+            margin-top: 100px;
+            background: var(--bg);
+        }
+
+        .footer-grid {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 60px;
+        }
+
+        .footer-left {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .footer-contacts {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .footer-contacts a {
+            font-family: var(--font-hd);
+            font-size: clamp(1.2rem, 3vw, 2.5rem);
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 900;
+            transition: var(--transition);
+            line-height: 1.1;
+        }
+
+        .footer-contacts a:hover {
+            color: var(--accent);
+            transform: translateX(10px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text);
+            text-decoration: none;
+            transition: 0.3s;
+            background: var(--card);
+        }
+
+        .social-btn:hover {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            transform: translateY(-5px);
+        }
+
+        .footer-right {
+            text-align: right;
+        }
+
+        .footer-brand {
+            font-family: var(--font-hd);
+            font-weight: 900;
+            font-size: 1.2rem;
+            letter-spacing: -1px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .footer-status {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
 
         @media (max-width: 900px) {
             .project-grid { grid-template-columns: 1fr; gap: 40px; }
-            .nav-header { padding: 20px 5%; }
-            .footer-grid { flex-direction: column; text-align: center; align-items: center; }
-            .social-icons { justify-content: center; }
+            header { padding: 20px 5%; }
+            .footer-grid { flex-direction: column; text-align: left; }
+            .footer-right { text-align: left; }
+            .footer-contacts a { font-size: 1.8rem; }
         }
     </style>
 </head>
 <body>
 
-    <header class="nav-header">
-        <a href="all-projects.html" class="back-link">
-            <i class="fa-solid fa-arrow-left"></i> 
-            <span class="lang-en">BACK TO ARCHIVE</span>
-            <span class="lang-ua" style="display:none;">ДО АРХІВУ</span>
-        </a>
+    <header>
+        <div class="nav-left">
+            <a href="all-projects.html" class="back-link">
+                <i class="fa-solid fa-arrow-left"></i> 
+                <span class="lang-en">BACK TO ARCHIVE</span>
+                <span class="lang-ua" style="display:none;">ДО АРХІВУ</span>
+            </a>
+        </div>
         <div class="nav-controls">
-            <button class="control-btn" onclick="toggleTheme()"><i class="fa-solid fa-circle-half-stroke"></i></button>
+            <button class="control-btn" onclick="toggleTheme()">
+                <i class="fa-solid fa-circle-half-stroke"></i>
+            </button>
             <button class="control-btn" onclick="setLang('ua')" id="btn-ua">UA</button>
             <button class="control-btn" onclick="setLang('en')" id="btn-en">EN</button>
         </div>
@@ -171,15 +283,21 @@
 
     <footer>
         <div class="footer-grid">
-            <div class="footer-contacts">
-                <a href="tel:+380932097079" id="f-phone-link">+380 93 209 70 79</a>
-                <a href="mailto:Destro729@gmail.com" class="footer-email" id="f-email-link">Destro729@gmail.com</a>
-                <div class="social-icons" id="f-socials"></div>
+            <div class="footer-left">
+                <div class="footer-contacts">
+                    <a href="tel:+380932097079" id="f-phone-link">+380 93 209 70 79</a>
+                    <a href="mailto:Destro729@gmail.com" id="f-email-link">Destro729@gmail.com</a>
+                </div>
+                <div class="social-links" id="f-socials">
+                    </div>
             </div>
-            <div style="text-align: right;">
-                <p style="font-weight: 800; color: var(--text); font-family: var(--font-hd); text-transform: uppercase;">MAKSYM RIZUN</p>
-                <p id="f-role" style="color: var(--text-secondary); margin-top: 5px;"></p>
-                <p style="color: var(--text-secondary); opacity: 0.5; font-size: 0.8rem; margin-top: 15px;">&copy; 2026 ALL RIGHTS RESERVED.</p>
+            
+            <div class="footer-right">
+                <div class="footer-brand">MAKSYM RIZUN</div>
+                <div class="footer-status" id="f-role"></div>
+                <div style="color: var(--text-secondary); opacity: 0.4; font-size: 0.7rem; font-family: var(--font-hd);">
+                    © 2026 ANOR CORE / ARCHIVE OF LOGIC
+                </div>
             </div>
         </div>
     </footer>
@@ -196,14 +314,14 @@
         const projectId = urlParams.get('id');
         let currentLang = localStorage.getItem('anor_lang') || 'ua';
 
-        // --- THEME ---
+        // --- THEME ENGINE ---
         window.toggleTheme = () => {
             const isLight = document.body.classList.toggle('light-theme');
             localStorage.setItem('anor_theme', isLight ? 'light' : 'dark');
         };
         if(localStorage.getItem('anor_theme') === 'light') document.body.classList.add('light-theme');
 
-        // --- LANG ---
+        // --- LANGUAGE ENGINE ---
         window.setLang = (lang) => {
             currentLang = lang;
             localStorage.setItem('anor_lang', lang);
@@ -211,19 +329,22 @@
         };
 
         function updateUI() {
-            // Оновлення кнопок мови
             document.querySelectorAll('.nav-controls .control-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('btn-' + currentLang).classList.add('active');
+            const activeBtn = document.getElementById('btn-' + currentLang);
+            if(activeBtn) activeBtn.classList.add('active');
             
-            // Перемикання видимих елементів мови в шапці
             document.querySelectorAll('.lang-en').forEach(el => el.style.display = currentLang === 'en' ? 'inline' : 'none');
             document.querySelectorAll('.lang-ua').forEach(el => el.style.display = currentLang === 'ua' ? 'inline' : 'none');
 
-            // Ререндер проекту, якщо дані вже є
             if(window.lastData) renderProject(window.lastData);
+            
+            // Re-sync footer role if loaded
+            if(window.lastFooter) {
+                document.getElementById('f-role').innerText = currentLang === 'ua' ? window.lastFooter.roleUa : window.lastFooter.roleEn;
+            }
         }
 
-        // --- RENDER ---
+        // --- RENDER PROJECT ---
         function renderProject(data) {
             window.lastData = data;
             const container = document.getElementById('project-render');
@@ -232,7 +353,6 @@
             const desc = currentLang === 'ua' ? (data.descUa || data.desc || data.description) : (data.descEn || data.desc || data.description);
             const meta = data.customMeta || 'SPECTRAL ARTIFACT';
             
-            // Автоматичні теги з категорій (дробимо якщо там рядок через кому)
             const categories = data.category ? data.category.split(',').map(c => c.trim()) : ['LOGIC'];
 
             container.innerHTML = `
@@ -277,7 +397,7 @@
             `;
         }
 
-        // --- LOAD DATA ---
+        // --- LOAD PROJECT DATA ---
         if (projectId) {
             onValue(ref(db, `projects/${projectId}`), (snap) => {
                 const data = snap.val();
@@ -286,10 +406,12 @@
             });
         }
 
-        // SYNC FOOTER (як на головній)
+        // --- SYNC FOOTER FROM DATABASE ---
         onValue(ref(db, 'settings/footer'), (snapshot) => {
             const f = snapshot.val();
             if(!f) return;
+            window.lastFooter = f;
+            
             document.getElementById('f-phone-link').innerText = f.phone;
             document.getElementById('f-phone-link').href = `tel:${f.phone.replace(/\s/g, '')}`;
             document.getElementById('f-email-link').innerText = f.email;
@@ -298,9 +420,9 @@
             
             const soc = document.getElementById('f-socials');
             soc.innerHTML = `
-                <a href="${f.wa || '#'}" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
-                <a href="${f.tg || '#'}" target="_blank"><i class="fa-brands fa-telegram"></i></a>
-                <a href="${f.gh || '#'}" target="_blank"><i class="fa-brands fa-github"></i></a>
+                <a href="${f.wa || '#'}" target="_blank" class="social-btn"><i class="fa-brands fa-whatsapp"></i></a>
+                <a href="${f.tg || '#'}" target="_blank" class="social-btn"><i class="fa-brands fa-telegram"></i></a>
+                <a href="${f.gh || '#'}" target="_blank" class="social-btn"><i class="fa-brands fa-github"></i></a>
             `;
         });
 
