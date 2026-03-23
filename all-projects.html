@@ -12,6 +12,7 @@
             --text: #ffffff;
             --text-secondary: #a1a1a6;
             --accent: #0071e3;
+            --accent-hover: #005bbd;
             --card: rgba(255, 255, 255, 0.05);
             --border: rgba(255, 255, 255, 0.1);
             --font-hd: 'Unbounded', sans-serif;
@@ -19,7 +20,6 @@
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* LIGHT THEME CLASSS */
         body.light-theme {
             --bg: #f5f5f7;
             --text: #1d1d1f;
@@ -87,13 +87,28 @@
         .like-btn { cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: 800; }
         .like-btn.liked { color: #ff3b30; }
 
-        /* Футер */
-        footer { padding: 80px 0 40px 0; border-top: 1px solid var(--border); margin-top: 100px; display: flex; justify-content: space-between; color: var(--text-secondary); font-size: 0.8rem; font-weight: 600; }
+        /* FOOTER SYNCED WITH INDEX */
+        footer { padding: 100px 8%; border-top: 1px solid var(--border); margin-top: 100px; margin-left: -8.7%; margin-right: -8.7%; }
+        .footer-grid { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 40px; }
+        .footer-contacts { display: flex; flex-direction: column; gap: 10px; }
+        .footer-contacts a { font-family: var(--font-hd); font-size: clamp(1.2rem, 3vw, 2rem); color: var(--text); text-decoration: none; font-weight: 900; transition: var(--transition); }
+        .footer-contacts a:hover { color: var(--accent); }
+        .footer-email { color: var(--text-secondary); text-decoration: none; font-weight: 600; font-size: 1.1rem; }
+        
+        .social-icons { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
+        .social-icons a { width: 50px; height: 50px; background: var(--card); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: var(--text); border: 1px solid var(--border); transition: 0.3s; }
+        .social-icons a:hover { background: var(--accent); color: #fff; transform: translateY(-5px); border-color: var(--accent); }
 
-        @media (max-width: 600px) { .projects-grid { grid-template-columns: 1fr; } .nav-header { padding: 20px 5%; } }
+        @media (max-width: 900px) { 
+            .projects-grid { grid-template-columns: 1fr; } 
+            .nav-header { padding: 20px 5%; }
+            .footer-grid { flex-direction: column; text-align: center; align-items: center; }
+            .footer-grid div { text-align: center !important; }
+            .social-icons { justify-content: center; }
+        }
     </style>
 </head>
-<body>
+<body data-theme="dark">
 
     <header class="nav-header">
         <a href="index.html" class="back-link">
@@ -131,9 +146,28 @@
         </div>
     </main>
 
-    <footer>
-        <div>© 2026 MAKSYM RIZUN</div>
-        <div>VERSAILLE ANOR ARCHITECTURE</div>
+    <footer id="footer">
+        <div class="footer-grid">
+            <div class="footer-contacts">
+                <a href="tel:+380932097079">+380 93 209 70 79</a>
+                <a href="mailto:Destro729@gmail.com" class="footer-email">Destro729@gmail.com</a>
+                <div class="social-icons">
+                    <a href="https://wa.me/380932097079" target="_blank" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+                    <a href="https://t.me/your_tg_username" target="_blank" title="Telegram"><i class="fa-brands fa-telegram"></i></a>
+                    <a href="https://github.com/beyond-dl" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" title="Discord"><i class="fa-brands fa-discord"></i></a>
+                    <a href="#" title="Behance"><i class="fa-brands fa-behance"></i></a>
+                    <a href="#" title="Fiverr"><i class="fa-solid fa-f"></i></a>
+                </div>
+            </div>
+            <div style="text-align: right;">
+                <p style="font-weight: 800; color: var(--text); font-family: var(--font-hd); text-transform: uppercase;">MAKSYM RIZUN</p>
+                <p style="color: var(--text-secondary); margin-top: 5px;" class="lang-en">Designer & AI Engineer 2026</p>
+                <p style="color: var(--text-secondary); margin-top: 5px;" class="lang-ua">Дизайнер та AI Інженер 2026</p>
+                <p style="color: var(--text-secondary); opacity: 0.5; font-size: 0.8rem; margin-top: 15px;" class="lang-en">&copy; All Rights Reserved.</p>
+                <p style="color: var(--text-secondary); opacity: 0.5; font-size: 0.8rem; margin-top: 15px;" class="lang-ua">&copy; Всі права захищено.</p>
+            </div>
+        </div>
     </footer>
 
     <script>
@@ -143,7 +177,7 @@
             const ens = document.querySelectorAll('.lang-en');
             const uas = document.querySelectorAll('.lang-ua');
             ens.forEach(el => el.style.display = el.style.display === 'none' ? 'block' : 'none');
-            uas.forEach(el => el.style.display = el.style.display === 'none' ? 'block' : 'none');
+            uas.forEach(el => el.style.display = uas[0].style.display === 'none' ? 'block' : 'none');
         }
 
         function filterProjects(category, btn) {
