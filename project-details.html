@@ -39,13 +39,14 @@
             overflow-x: hidden;
         }
 
+        /* --- Header за дизайном --- */
         header {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             padding: 20px 8%;
-            background: var(--bg);
+            background: rgba(5, 5, 5, 0.8);
             backdrop-filter: blur(20px);
             z-index: 1000;
             display: flex;
@@ -108,7 +109,7 @@
         .hero-img-box {
             width: 100%;
             height: auto;
-            max-height: 84vh; /* Збільшено на 20% від 70vh */
+            max-height: 84vh;
             border-radius: 30px;
             margin-bottom: 60px;
             border: 1px solid var(--border);
@@ -149,13 +150,38 @@
             color: var(--text);
             text-transform: uppercase;
             font-family: var(--font-hd);
-            text-decoration: none; /* Для посилань */
+            text-decoration: none;
         }
         .tech-tag:hover {
             border-color: var(--accent);
             color: var(--accent);
             background: rgba(0, 113, 227, 0.05);
         }
+
+        /* --- Інноваційна система лайкінгу --- */
+        .rating-system {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .like-btn {
+            background: var(--card);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: var(--font-hd);
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+        .like-btn:hover { border-color: #ff3b30; color: #ff3b30; }
+        .like-btn.voted { background: #ff3b30; border-color: #ff3b30; color: white; box-shadow: 0 0 20px rgba(255, 59, 48, 0.4); }
+        .like-btn i { font-size: 1rem; }
 
         .main-content { 
             font-size: 1.1rem; 
@@ -190,21 +216,46 @@
         }
         .close-modal { position: absolute; top: 20px; right: 20px; cursor: pointer; font-size: 1.5rem; }
 
-        footer { padding: 80px 8%; border-top: 1px solid var(--border); margin-top: 100px; }
-        .footer-grid { display: flex; justify-content: space-between; align-items: flex-end; }
+        /* --- Оновлений Футер за дизайном (1 в 1) --- */
+        footer { 
+            padding: 80px 8%; 
+            border-top: 1px solid var(--border); 
+            margin-top: 100px;
+            background: var(--bg);
+        }
+        .footer-grid { display: flex; justify-content: space-between; align-items: center; }
+        
         .footer-contacts a { 
-            display: block; font-family: var(--font-hd); font-size: 2rem; 
-            color: var(--text); text-decoration: none; margin-bottom: 10px; 
+            display: block; 
+            font-family: var(--font-hd); 
+            font-size: 2.5rem; 
+            font-weight: 900;
+            color: var(--text); 
+            text-decoration: none; 
+            margin-bottom: 5px; 
+            letter-spacing: -1px;
         }
-        .social-links { display: flex; gap: 15px; margin-top: 20px; }
+        .footer-contacts .email-link { font-size: 2.5rem; margin-top: 5px; }
+
+        .footer-right { text-align: right; }
+        .footer-name { font-family: var(--font-hd); font-weight: 900; font-size: 1.2rem; text-transform: uppercase; }
+        .footer-role { color: var(--text-secondary); font-family: var(--font-main); font-size: 0.9rem; margin-top: 5px; }
+        .copyright { font-size: 0.7rem; color: var(--text-secondary); margin-top: 15px; opacity: 0.5; }
+
+        .social-links { display: flex; gap: 15px; margin-top: 30px; }
         .social-btn { 
-            width: 50px; height: 50px; border-radius: 50%; border: 1px solid var(--border);
-            display: flex; align-items: center; justify-content: center; color: var(--text); text-decoration: none;
+            width: 45px; height: 45px; border-radius: 50%; border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center; color: var(--text); 
+            text-decoration: none; transition: var(--transition); font-size: 1rem;
+            background: rgba(255,255,255,0.03);
         }
+        .social-btn:hover { background: var(--text); color: var(--bg); transform: translateY(-3px); }
 
         @media (max-width: 900px) {
             .project-grid { grid-template-columns: 1fr; gap: 40px; }
-            .footer-grid { flex-direction: column; align-items: flex-start; gap: 40px; }
+            .footer-grid { flex-direction: column; align-items: flex-start; gap: 50px; }
+            .footer-right { text-align: left; }
+            .footer-contacts a { font-size: 1.5rem; }
         }
     </style>
 </head>
@@ -235,15 +286,15 @@
     <footer>
         <div class="footer-grid">
             <div class="footer-left">
-                <div class="footer-contacts">
-                    <a href="tel:+380932097079">+380 93 209 70 79</a>
-                    <a href="mailto:Destro729@gmail.com">Destro729@gmail.com</a>
-                </div>
-                <div class="social-links" id="f-socials"></div>
+                <div class="footer-contacts" id="f-contacts">
+                    </div>
+                <div class="social-links" id="f-socials">
+                    </div>
             </div>
-            <div class="footer-right" style="text-align: right;">
-                <div style="font-family: var(--font-hd); font-weight: 900; font-size: 1.2rem;">MAKSYM RIZUN</div>
-                <div id="f-role" style="color: var(--accent); font-family: var(--font-hd); font-size: 0.7rem; margin-top: 5px;"></div>
+            <div class="footer-right">
+                <div class="footer-name">MAKSYM RIZUN</div>
+                <div id="f-role" class="footer-role"></div>
+                <div class="copyright">© All Rights Reserved.</div>
             </div>
         </div>
     </footer>
@@ -254,6 +305,7 @@
             <h2 style="font-family: var(--font-hd); margin-bottom: 20px;">PROJECT BRIEF</h2>
             <form id="briefForm">
                 <input type="text" placeholder="Your Name" style="width: 100%; padding: 15px; margin-bottom: 10px; background: var(--card); border: 1px solid var(--border); color: white;">
+                <input type="email" placeholder="Email" style="width: 100%; padding: 15px; margin-bottom: 10px; background: var(--card); border: 1px solid var(--border); color: white;">
                 <textarea placeholder="Project Details" style="width: 100%; padding: 15px; height: 150px; background: var(--card); border: 1px solid var(--border); color: white;"></textarea>
                 <button type="submit" style="width: 100%; padding: 15px; background: var(--accent); color: white; border: none; font-family: var(--font-hd); cursor: pointer; margin-top: 10px;">SEND TO ARCHIVE</button>
             </form>
@@ -262,7 +314,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+        import { getDatabase, ref, onValue, set, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
         const firebaseConfig = { databaseURL: "https://anor-core-2026-default-rtdb.europe-west1.firebasedatabase.app" };
         const app = initializeApp(firebaseConfig);
@@ -288,12 +340,31 @@
         window.openBrief = () => document.getElementById('briefModal').style.display = 'flex';
         window.closeBrief = () => document.getElementById('briefModal').style.display = 'none';
 
+        // Система "Енергетичного Резонансу" (Лайкінг)
+        window.voteProject = () => {
+            if (!projectId) return;
+            const voteRef = ref(db, `projects/${projectId}/likes`);
+            const hasVoted = localStorage.getItem(`voted_${projectId}`);
+
+            if (hasVoted) return;
+
+            runTransaction(voteRef, (currentLikes) => {
+                return (currentLikes || 0) + 1;
+            }).then(() => {
+                localStorage.setItem(`voted_${projectId}`, 'true');
+                const btn = document.getElementById('like-btn-action');
+                if(btn) btn.classList.add('voted');
+            });
+        };
+
         function updateUI() {
             document.querySelectorAll('.control-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('btn-' + currentLang)?.classList.add('active');
             document.querySelectorAll('.lang-en').forEach(el => el.style.display = currentLang === 'en' ? 'inline-block' : 'none');
             document.querySelectorAll('.lang-ua').forEach(el => el.style.display = currentLang === 'ua' ? 'inline-block' : 'none');
-            if(window.lastFooter) document.getElementById('f-role').innerText = currentLang === 'ua' ? window.lastFooter.roleUa : window.lastFooter.roleEn;
+            if(window.lastFooter) {
+                document.getElementById('f-role').innerText = currentLang === 'ua' ? window.lastFooter.roleUa : window.lastFooter.roleEn;
+            }
         }
 
         function renderProject(data) {
@@ -317,6 +388,8 @@
                 tags = typeof data.category === 'string' ? data.category.split(',').map(t => t.trim()) : [];
             }
 
+            const votedClass = localStorage.getItem(`voted_${projectId}`) ? 'voted' : '';
+
             container.innerHTML = `
                 <div class="project-meta">${meta}</div>
                 <h1>${title}</h1>
@@ -332,6 +405,14 @@
                         <div class="info-block">
                             <h3>${currentLang === 'ua' ? 'КАТЕГОРІЇ' : 'CATEGORIES'}</h3>
                             <div>${tags.map(t => `<a href="all-projects.html?category=${encodeURIComponent(t)}" class="tech-tag">${t}</a>`).join('')}</div>
+                        </div>
+                        <div class="info-block">
+                            <h3>${currentLang === 'ua' ? 'ОЦІНИ ПРОЕКТ' : 'RATE PROJECT'}</h3>
+                            <div class="rating-system">
+                                <button class="like-btn ${votedClass}" id="like-btn-action" onclick="voteProject()">
+                                    <i class="fa-solid fa-bolt"></i> <span id="like-count">${data.likes || 0}</span>
+                                </button>
+                            </div>
                         </div>
                         ${data.githubLink ? `
                         <div class="info-block">
@@ -349,6 +430,7 @@
             `;
         }
 
+        // Отримання даних проекту
         if (projectId) {
             onValue(ref(db, `projects/${projectId}`), (snap) => {
                 const data = snap.val();
@@ -356,13 +438,26 @@
             });
         }
 
+        // ЄДИНИЙ ФУТЕР - завантаження з БД
         onValue(ref(db, 'settings/footer'), (snapshot) => {
             const f = snapshot.val();
             if(!f) return;
             window.lastFooter = f;
+            
+            // Оновлюємо контакти
+            document.getElementById('f-contacts').innerHTML = `
+                <a href="tel:${f.phone || ''}">${f.phone || '+380 00 000 00 00'}</a>
+                <a href="mailto:${f.email || ''}" class="email-link">${f.email || 'mail@example.com'}</a>
+            `;
+
+            // Оновлюємо соціальні мережі
             document.getElementById('f-socials').innerHTML = `
+                <a href="${f.wa || '#'}" target="_blank" class="social-btn"><i class="fa-brands fa-whatsapp"></i></a>
                 <a href="${f.tg || '#'}" target="_blank" class="social-btn"><i class="fa-brands fa-telegram"></i></a>
                 <a href="${f.gh || '#'}" target="_blank" class="social-btn"><i class="fa-brands fa-github"></i></a>
+                <a href="${f.ds || '#'}" target="_blank" class="social-btn"><i class="fa-brands fa-discord"></i></a>
+                <a href="${f.be || '#'}" target="_blank" class="social-btn"><i class="fa-brands fa-behance"></i></a>
+                <a href="${f.fn || '#'}" target="_blank" class="social-btn" style="font-family: 'Unbounded', sans-serif; font-weight: 900;">F</a>
             `;
             updateUI();
         });
