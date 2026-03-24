@@ -317,7 +317,16 @@
             max-width: 800px; 
             margin: 0 auto;
         }
-        .brief-trigger { color: var(--accent); cursor: pointer; font-weight: 800; text-decoration: underline; }
+        .brief-trigger { 
+            color: var(--accent); cursor: pointer; font-weight: 800; 
+            text-decoration: none; position: relative; transition: var(--transition);
+        }
+        .brief-trigger::after {
+            content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 2px;
+            background: var(--accent); transition: var(--transition);
+        }
+        .brief-trigger:hover { color: var(--text); }
+        .brief-trigger:hover::after { width: 100%; }
 
         footer { padding: 100px 8%; border-top: 1px solid var(--border); }
         .footer-grid { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 40px; }
@@ -360,8 +369,8 @@
     <main class="project-container" id="project-render"></main>
 
     <section class="cooperation-banner">
-        <p class="lang-ua">Маєш ідею для проекта та бажання втілити її в життя? <span class="brief-trigger" onclick="openModal()">Заповнюй бриф</span>, все інше беру на себе.</p>
-        <p class="lang-en">Have an idea for a project and want to bring it to life? <span class="brief-trigger" onclick="openModal()">Fill the brief</span>, and I’ll take care of the rest.</p>
+        <p class="lang-ua" id="cta-text-ua">Маєш ідею для проекта та бажання втілити її в життя? <span class="brief-trigger" onclick="openModal()">Заповнюй бриф</span>, все інше беру на себе.</p>
+        <p class="lang-en" id="cta-text-en">Have an idea for a project and want to bring it to life? <span class="brief-trigger" onclick="openModal()">Fill the brief</span>, and I’ll take care of the rest.</p>
     </section>
 
     <footer id="footer" style="margin-top: 100px;">
@@ -614,6 +623,18 @@
 
             // Після завантаження даних оновлюємо UI (плейсхолдери)
             updateUI();
+        });
+
+        // --- CMS CONTENT ---
+        onValue(ref(db, 'settings/content'), (snap) => {
+            const content = snap.val();
+            if (content && content.projectDetails && content.projectDetails.cta) {
+                const c = content.projectDetails.cta;
+                if(c.beforeUa) {
+                    document.getElementById('cta-text-ua').innerHTML = `${c.beforeUa} <span class="brief-trigger" onclick="openModal()">${c.btnUa}</span> ${c.afterUa}`;
+                    document.getElementById('cta-text-en').innerHTML = `${c.beforeEn} <span class="brief-trigger" onclick="openModal()">${c.btnEn}</span> ${c.afterEn}`;
+                }
+            }
         });
     </script>
 </body>

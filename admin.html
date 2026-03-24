@@ -385,6 +385,9 @@
 
         <div class="nav-group">
             <span class="nav-label" data-t="group_config">Конфігурація</span>
+            <button class="nav-item" id="btn-content" onclick="showSection('content')">
+                <i class="fa-solid fa-language"></i> <span data-t="nav_content">Глобальний Контент</span>
+            </button>
             <button class="nav-item" id="btn-footer" onclick="showSection('footer')">
                 <i class="fa-solid fa-sliders"></i> <span data-t="nav_global">Глобальні & Футер</span>
             </button>
@@ -500,6 +503,108 @@
             <div id="cat-list" class="card"></div>
         </section>
 
+        <style>
+            .cms-nav { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+            .cms-tab { padding: 10px 20px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; color: var(--text); cursor: pointer; font-family: var(--font-hd); font-size: 0.8rem; text-transform: uppercase; transition: var(--transition); }
+            .cms-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+            .cms-tab:hover:not(.active) { background: rgba(255,255,255,0.05); }
+            .cms-section { display: none; }
+            .cms-section.active { display: block; }
+        </style>
+        
+        <script>
+            function switchCmsTab(tabId) {
+                document.querySelectorAll('.cms-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.cms-section').forEach(s => s.classList.remove('active'));
+                document.querySelector(`[onclick="switchCmsTab('${tabId}')"]`).classList.add('active');
+                document.getElementById('cms-' + tabId).classList.add('active');
+            }
+        </script>
+
+        <section id="sec-content" class="hidden">
+            <h1 style="margin-bottom: 20px;">Глобальний Контент (CMS)</h1>
+            
+            <div class="cms-nav">
+                <button class="cms-tab active" onclick="switchCmsTab('index')"><i class="fa-solid fa-house"></i> Головна (Index)</button>
+                <button class="cms-tab" onclick="switchCmsTab('archive')"><i class="fa-solid fa-folder-open"></i> Архів (All Projects)</button>
+                <button class="cms-tab" onclick="switchCmsTab('details')"><i class="fa-solid fa-file-lines"></i> Деталі (Project Details)</button>
+            </div>
+
+            <!-- INDEX PAGE -->
+            <div id="cms-index" class="cms-section active">
+                <div class="card">
+                    <h3 style="margin-bottom:20px; font-family:var(--font-hd);"><i class="fa-solid fa-heading"></i> 1. HERO БЛОК</h3>
+                    <div class="form-grid">
+                        <div class="form-group full-width lang-split">
+                            <div><label>Заголовок (UA) [ Додайте &lt;br&gt; для переносу рядка ]</label><textarea id="ci-hero-title-ua" rows="3" placeholder="ПОЗА МЕЖАМИ&lt;br&gt;ЦИФРОВОЇ&lt;br&gt;ЛОГІКИ"></textarea></div>
+                            <div><label>Title (EN) [ Add &lt;br&gt; for line breaks ]</label><textarea id="ci-hero-title-en" rows="3" placeholder="BEYOND&lt;br&gt;DIGITAL&lt;br&gt;LOGIC"></textarea></div>
+                        </div>
+                        <div class="form-group full-width lang-split">
+                            <div><label>Підзаголовок (UA)</label><textarea id="ci-hero-sub-ua" rows="4" placeholder="UI/UX Архітектор, AI Інженер та Python розробник. Створюю сайти під ключ..."></textarea></div>
+                            <div><label>Subtitle (EN)</label><textarea id="ci-hero-sub-en" rows="4" placeholder="UI/UX Architect, AI Engineer & Python Developer. I build turn-key websites..."></textarea></div>
+                        </div>
+                    </div>
+                    
+                    <h3 style="margin-bottom:20px; margin-top:40px; font-family:var(--font-hd);"><i class="fa-solid fa-user-astronaut"></i> 2. ПРО МЕНЕ (About)</h3>
+                    <div class="form-grid">
+                        <div class="form-group full-width lang-split">
+                            <div><label>Заголовок блоку (UA)</label><input type="text" id="ci-about-h-ua" placeholder="Про мене та навички"></div>
+                            <div><label>Section Heading (EN)</label><input type="text" id="ci-about-h-en" placeholder="About & Expertise"></div>
+                        </div>
+                    </div>
+                    <div id="cms-skills-list" class="form-grid" style="margin-top:20px;"></div>
+                    <button class="btn" style="background:transparent; border:1px solid var(--accent); color:var(--accent); width:100%; margin-top:10px;" onclick="addSkill()"><i class="fa-solid fa-plus"></i> Додати Навичку</button>
+
+                    <h3 style="margin-bottom:20px; margin-top:40px; font-family:var(--font-hd);"><i class="fa-solid fa-comments"></i> 3. FAQ (Питання)</h3>
+                    <div class="form-grid">
+                        <div class="form-group full-width lang-split">
+                            <div><label>Заголовок FAQ (UA)</label><input type="text" id="ci-faq-h-ua" placeholder="Питання та відповіді"></div>
+                            <div><label>FAQ Heading (EN)</label><input type="text" id="ci-faq-h-en" placeholder="FAQ"></div>
+                        </div>
+                    </div>
+                    <div id="cms-faq-list" class="form-grid" style="margin-top:20px;"></div>
+                    <button class="btn" style="background:transparent; border:1px solid var(--accent); color:var(--accent); width:100%; margin-top:10px;" onclick="addFaq()"><i class="fa-solid fa-plus"></i> Додати Питання</button>
+                </div>
+            </div>
+
+            <!-- ARCHIVE PAGE -->
+            <div id="cms-archive" class="cms-section">
+                <div class="card">
+                    <h3 style="margin-bottom:20px; font-family:var(--font-hd);"><i class="fa-solid fa-spell-check"></i> Заголовки сторінки ВСІ ПРОЄКТИ</h3>
+                    <div class="form-grid">
+                        <div class="form-group full-width lang-split">
+                            <div><label>Заголовок (UA) [ Додайте &lt;br&gt; для переносу ]</label><textarea id="ca-title-ua" rows="2" placeholder="ВСІ&lt;br&gt;ПРОЄКТИ"></textarea></div>
+                            <div><label>Page Title (EN) [ Add &lt;br&gt; for line breaks ]</label><textarea id="ca-title-en" rows="2" placeholder="ALL&lt;br&gt;PROJECTS"></textarea></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROJECT DETAILS PAGE -->
+            <div id="cms-details" class="cms-section">
+                <div class="card">
+                    <h3 style="margin-bottom:20px; font-family:var(--font-hd);"><i class="fa-solid fa-bullhorn"></i> БЛОК CTA (Відправка Брифу)</h3>
+                    <p style="color:var(--text-secondary); margin-bottom: 20px; font-size: 0.9rem;">Розділіть речення на 3 частини. Це дозволить зберегти анімацію на кнопці виклику брифу без використання HTML тегів у адмінці.</p>
+                    <div class="form-grid">
+                        <div class="form-group full-width lang-split">
+                            <div><label>Текст ДО кнопки (UA)</label><textarea id="cd-cta-before-ua" rows="1" placeholder="Маєш ідею для проекта та бажання втілити її в життя? "></textarea></div>
+                            <div><label>Text BEFORE button (EN)</label><textarea id="cd-cta-before-en" rows="1" placeholder="Have an idea for a project and want to bring it to life? "></textarea></div>
+                        </div>
+                        <div class="form-group full-width lang-split">
+                            <div><label>Текст КНОПКИ (UA)</label><input type="text" id="cd-cta-btn-ua" placeholder="Заповнюй бриф"></div>
+                            <div><label>BUTTON Text (EN)</label><input type="text" id="cd-cta-btn-en" placeholder="Fill the brief"></div>
+                        </div>
+                        <div class="form-group full-width lang-split">
+                            <div><label>Текст ПІСЛЯ кнопки (UA)</label><textarea id="cd-cta-after-ua" rows="1" placeholder=", все інше беру на себе."></textarea></div>
+                            <div><label>Text AFTER button (EN)</label><textarea id="cd-cta-after-en" rows="1" placeholder=", and I’ll take care of the rest."></textarea></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn" onclick="saveCMSContent()" style="margin-top:20px; width:100%; display: flex; justify-content: center; align-items: center;"><i class="fa-solid fa-save" style="margin-right: 10px;"></i> ОПЕРУВАТИ (ЗБЕРЕГТИ ВЕСЬ КОНТЕНТ)</button>
+        </section>
+
         <section id="sec-footer" class="hidden">
             <h1 data-t="h_global">Налаштування Футера & Системи</h1>
             <div class="card">
@@ -582,6 +687,7 @@
 
         const translations = {
             ua: {
+                nav_content: "Глобальний Контент", h_content: "Глобальний Контент (CMS)", l_content_hero: "1. HERO БЛОК (Головна)", l_content_cta: "2. БЛОК CTA", btn_save_content: "Оновти Контент",
                 group_content: "Контент", nav_projects: "Проєкти", nav_cats: "Категорії",
                 group_config: "Конфігурація", nav_global: "Глобальні & Футер", to_site: "На сайт",
                 h_projects: "Управління Артефактами", l_title: "Назва проєкту", l_meta: "Мета-тег",
@@ -602,6 +708,7 @@
                 l_social_manager: "Менеджер Соціальних Мереж", ph_social_url: "Вставте URL (https://...)"
             },
             en: {
+                nav_content: "Global Content", h_content: "Global Content (CMS)", l_content_hero: "1. HERO BLOCK (Main)", l_content_cta: "2. CTA BLOCK", btn_save_content: "Update Content",
                 group_content: "Content", nav_projects: "Projects", nav_cats: "Categories",
                 group_config: "Config", nav_global: "Global & Footer", to_site: "To Site",
                 h_projects: "Artifact Management", l_title: "Project Title", l_meta: "Meta-tag",
@@ -642,7 +749,7 @@
         };
 
         window.showSection = (name) => {
-            ['projects', 'categories', 'footer'].forEach(s => document.getElementById('sec-' + s).classList.add('hidden'));
+            ['projects', 'categories', 'footer', 'content'].forEach(s => document.getElementById('sec-' + s).classList.add('hidden'));
             document.getElementById('sec-' + name).classList.remove('hidden');
             document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
             document.getElementById('btn-' + name).classList.add('active');
@@ -721,6 +828,174 @@
                 list.innerHTML += `<div class="project-item"><span>${data[id].name}</span><button class="btn-icon btn-delete" onclick="deleteItem('categories/${id}')"><i class="fa-solid fa-trash-can"></i></button></div>`;
             }
             renderTagsUI();
+        });
+
+        // --- CMS ARRAY EDITORS ---
+        let globalSkills = [];
+        let globalFaq = [];
+
+        window.renderSkillsList = () => {
+            const c = document.getElementById('cms-skills-list');
+            c.innerHTML = '';
+            globalSkills.forEach((s, i) => {
+                c.innerHTML += `
+                    <div class="card" style="width:100%; position:relative; padding:20px; margin-bottom:15px; background:rgba(255,255,255,0.02); border:1px solid var(--border);">
+                        <button onclick="removeSkill(${i})" style="position:absolute; top:20px; right:20px; background:none; border:none; color:var(--accent); cursor:pointer; font-size:1.2rem;"><i class="fa-solid fa-trash"></i></button>
+                        <h4 style="margin-bottom:15px; color:var(--text); font-family:var(--font-hd);">Навичка #${i+1}</h4>
+                        <div class="form-grid">
+                            <div class="form-group"><label>Icon (FontAwesome Class)</label><input type="text" id="s-icon-${i}" value="${s.icon || ''}" placeholder="fa-solid fa-code"></div>
+                            <div class="form-group"><label>Розмір (Wide?)</label><select id="s-wide-${i}"><option value="false" ${!s.wide ? 'selected':''}>Звичайна</option><option value="true" ${s.wide ? 'selected':''}>Широка</option></select></div>
+                        </div>
+                        <div class="form-group lang-split"><div><label>Title (UA)</label><input type="text" id="s-title-ua-${i}" value="${s.titleUa || ''}"></div><div><label>Title (EN)</label><input type="text" id="s-title-en-${i}" value="${s.titleEn || ''}"></div></div>
+                        <div class="form-group lang-split"><div><label>Desc (UA)</label><textarea id="s-desc-ua-${i}" rows="2">${s.descUa || ''}</textarea></div><div><label>Desc (EN)</label><textarea id="s-desc-en-${i}" rows="2">${s.descEn || ''}</textarea></div></div>
+                    </div>
+                `;
+            });
+        };
+        window.addSkill = () => { pullDynamicLists(); globalSkills.push({ icon: 'fa-solid fa-star', wide: false, titleUa: '', titleEn: '', descUa: '', descEn: '' }); renderSkillsList(); };
+        window.removeSkill = (i) => { pullDynamicLists(); globalSkills.splice(i,1); renderSkillsList(); };
+
+        window.renderFaqList = () => {
+            const c = document.getElementById('cms-faq-list');
+            c.innerHTML = '';
+            globalFaq.forEach((f, i) => {
+                c.innerHTML += `
+                    <div class="card" style="width:100%; position:relative; padding:20px; margin-bottom:15px; background:rgba(255,255,255,0.02); border:1px solid var(--border);">
+                        <button onclick="removeFaq(${i})" style="position:absolute; top:20px; right:20px; background:none; border:none; color:var(--accent); cursor:pointer; font-size:1.2rem;"><i class="fa-solid fa-trash"></i></button>
+                        <h4 style="margin-bottom:15px; color:var(--text); font-family:var(--font-hd);">Питання #${i+1}</h4>
+                        <div class="form-group lang-split"><div><label>Question (UA)</label><input type="text" id="f-q-ua-${i}" value="${f.qUa || ''}"></div><div><label>Question (EN)</label><input type="text" id="f-q-en-${i}" value="${f.qEn || ''}"></div></div>
+                        <div class="form-group lang-split"><div><label>Answer (UA)</label><textarea id="f-a-ua-${i}" rows="2">${f.aUa || ''}</textarea></div><div><label>Answer (EN)</label><textarea id="f-a-en-${i}" rows="2">${f.aEn || ''}</textarea></div></div>
+                    </div>
+                `;
+            });
+        };
+        window.addFaq = () => { pullDynamicLists(); globalFaq.push({ qUa: '', qEn: '', aUa: '', aEn: '' }); renderFaqList(); };
+        window.removeFaq = (i) => { pullDynamicLists(); globalFaq.splice(i,1); renderFaqList(); };
+
+        window.pullDynamicLists = () => {
+            globalSkills.forEach((s, i) => {
+                let elIcon = document.getElementById(`s-icon-${i}`);
+                if(elIcon) {
+                    s.icon = elIcon.value;
+                    s.wide = document.getElementById(`s-wide-${i}`).value === 'true';
+                    s.titleUa = document.getElementById(`s-title-ua-${i}`).value;
+                    s.titleEn = document.getElementById(`s-title-en-${i}`).value;
+                    s.descUa = document.getElementById(`s-desc-ua-${i}`).value;
+                    s.descEn = document.getElementById(`s-desc-en-${i}`).value;
+                }
+            });
+            globalFaq.forEach((f, i) => {
+                let elQua = document.getElementById(`f-q-ua-${i}`);
+                if(elQua) {
+                    f.qUa = elQua.value;
+                    f.qEn = document.getElementById(`f-q-en-${i}`).value;
+                    f.aUa = document.getElementById(`f-a-ua-${i}`).value;
+                    f.aEn = document.getElementById(`f-a-en-${i}`).value;
+                }
+            });
+        };
+
+        // --- CMS CONTENT MANAGER ---
+        window.saveCMSContent = () => {
+            pullDynamicLists();
+            const data = {
+                index: {
+                    hero: {
+                        titleUa: document.getElementById('ci-hero-title-ua').value,
+                        titleEn: document.getElementById('ci-hero-title-en').value,
+                        subUa: document.getElementById('ci-hero-sub-ua').value,
+                        subEn: document.getElementById('ci-hero-sub-en').value
+                    },
+                    about: {
+                        headingUa: document.getElementById('ci-about-h-ua').value,
+                        headingEn: document.getElementById('ci-about-h-en').value
+                    },
+                    faq: {
+                        headingUa: document.getElementById('ci-faq-h-ua').value,
+                        headingEn: document.getElementById('ci-faq-h-en').value,
+                        items: globalFaq
+                    },
+                    skills: globalSkills
+                },
+                allProjects: {
+                    titleUa: document.getElementById('ca-title-ua').value,
+                    titleEn: document.getElementById('ca-title-en').value
+                },
+                projectDetails: {
+                    cta: {
+                        beforeUa: document.getElementById('cd-cta-before-ua').value,
+                        beforeEn: document.getElementById('cd-cta-before-en').value,
+                        btnUa: document.getElementById('cd-cta-btn-ua').value,
+                        btnEn: document.getElementById('cd-cta-btn-en').value,
+                        afterUa: document.getElementById('cd-cta-after-ua').value,
+                        afterEn: document.getElementById('cd-cta-after-en').value
+                    }
+                }
+            };
+            
+            set(ref(db, 'settings/content'), data).then(() => {
+                alert(currentLang === 'ua' ? "Контент збережено!" : "Content Saved!");
+            }).catch(err => {
+                console.error("Firebase update error:", err);
+                alert("Помилка збереження контенту.");
+            });
+        };
+
+        onValue(ref(db, 'settings/content'), (snap) => {
+            const d = snap.val();
+            if(!d) return;
+            
+            if(d.index) {
+                if(d.index.hero) {
+                    document.getElementById('ci-hero-title-ua').value = d.index.hero.titleUa || "";
+                    document.getElementById('ci-hero-title-en').value = d.index.hero.titleEn || "";
+                    document.getElementById('ci-hero-sub-ua').value = d.index.hero.subUa || "";
+                    document.getElementById('ci-hero-sub-en').value = d.index.hero.subEn || "";
+                }
+                if(d.index.about) {
+                    document.getElementById('ci-about-h-ua').value = d.index.about.headingUa || "";
+                    document.getElementById('ci-about-h-en').value = d.index.about.headingEn || "";
+                }
+                if(d.index.faq) {
+                    document.getElementById('ci-faq-h-ua').value = d.index.faq.headingUa || "";
+                    document.getElementById('ci-faq-h-en').value = d.index.faq.headingEn || "";
+                    globalFaq = d.index.faq.items || [];
+                } else { globalFaq = []; }
+                
+                if (globalFaq.length === 0) {
+                    globalFaq = [
+                        { qEn: "What projects do you accept?", qUa: "Які проекти ви приймаєте?", aEn: "I specialize in high-load automation, AI-driven scrapers, and premium UI/UX design for tech startups.", aUa: "Я спеціалізуюся на високонавантаженій автоматизації, AI-скраперах та преміальному UI/UX дизайні." },
+                        { qEn: "What is the typical project timeline?", qUa: "Які терміни розробки?", aEn: "A standard UI/UX or Python automation project takes between 2 to 4 weeks.", aUa: "Стандартний проект з дизайну або автоматизації займає від 2 до 4 тижнів." },
+                        { qEn: "How do you handle project payments?", qUa: "Як відбувається оплата?", aEn: "I work via milestones or full prepayments through secure platforms like Fiverr or direct crypto/wire transfer.", aUa: "Я працюю через етапи або повну передоплату через Fiverr, крипту або банківський переказ." }
+                    ];
+                }
+                
+                globalSkills = d.index.skills || [];
+                if (globalSkills.length === 0) {
+                    globalSkills = [
+                        { icon: "fa-brands fa-python", wide: true, titleEn: "AI & Python", titleUa: "AI та Python", descEn: "Developing neural networks, scrapers (TikTok/IG), and complex automation systems using Python & C++.", descUa: "Розробка нейромереж, скраперів (TikTok/IG) та складних систем автоматизації на Python та C++." },
+                        { icon: "fa-solid fa-wand-magic-sparkles", wide: false, titleEn: "UI/UX Design", titleUa: "UI/UX Дизайн", descEn: "Apple-style aesthetics and user behavior analysis for maximum conversion.", descUa: "Естетика в стилі Apple та аналіз поведінки користувачів для максимальної конверсії." },
+                        { icon: "fa-solid fa-code", wide: false, titleEn: "Full-stack Web", titleUa: "Web Розробка", descEn: "Building modern websites from scratch. Clean, performant HTML/CSS/JS architecture.", descUa: "Створення сайтів з нуля. Чиста та продуктивна архітектура HTML/CSS/JS." },
+                        { icon: "fa-solid fa-database", wide: true, titleEn: "Data Mining", titleUa: "Видобуток даних", descEn: "Deep extraction and structuring of data from social media and complex web sources.", descUa: "Глибоке вилучення та структурування даних із соцмереж та складних веб-ресурсів." },
+                        { icon: "fa-solid fa-bolt", wide: false, titleEn: "Performance", titleUa: "Продуктивність", descEn: "Optimizing logic and visual speed to 100/100 standards.", descUa: "Оптимізація логіки та швидкості завантаження до стандартів 100/100." }
+                    ];
+                }
+                renderSkillsList();
+                renderFaqList();
+            }
+            if(d.allProjects) {
+                document.getElementById('ca-title-ua').value = d.allProjects.titleUa || "";
+                document.getElementById('ca-title-en').value = d.allProjects.titleEn || "";
+            }
+            if(d.projectDetails && d.projectDetails.cta) {
+                const c = d.projectDetails.cta;
+                document.getElementById('cd-cta-before-ua').value = c.beforeUa || "";
+                document.getElementById('cd-cta-before-en').value = c.beforeEn || "";
+                document.getElementById('cd-cta-btn-ua').value = c.btnUa || "";
+                document.getElementById('cd-cta-btn-en').value = c.btnEn || "";
+                document.getElementById('cd-cta-after-ua').value = c.afterUa || "";
+                document.getElementById('cd-cta-after-en').value = c.afterEn || "";
+            }
         });
 
         // --- PROJECTS LOGIC ---

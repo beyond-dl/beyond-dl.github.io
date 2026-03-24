@@ -129,7 +129,7 @@
 
     <header class="nav-header">
         <a href="index.html" class="back-link">
-            <i class="fa-solid fa-arrow-left"></i> <span class="lang-en">BACK TO CORE</span><span class="lang-ua" style="display:none;">ДО ГОЛОВНОЇ</span>
+            <i class="fa-solid fa-arrow-left"></i> <span class="lang-en">BACK TO CORE</span><span class="lang-ua">ДО ГОЛОВНОЇ</span>
         </a>
         <div class="nav-controls">
             <button class="control-btn" onclick="toggleTheme()"><i class="fa-solid fa-circle-half-stroke"></i></button>
@@ -138,8 +138,8 @@
     </header>
 
     <main>
-        <h1 class="lang-en">ALL<br>PROJECTS</h1>
-        <h1 class="lang-ua">ВСІ<br>ПРОЄКТИ</h1>
+        <h1 class="lang-en" id="ap-title-en">ALL<br>PROJECTS</h1>
+        <h1 class="lang-ua" id="ap-title-ua">ВСІ<br>ПРОЄКТИ</h1>
 
         <div class="filters" id="filtersContainer">
             <button class="filter-btn active" onclick="filterProjects('ALL', this)">ALL</button>
@@ -338,6 +338,15 @@
                         <i class="${iconMap[s.platform] || 'fa-solid fa-link'}"></i>
                     </a>
                 `).join('');
+            }
+        });
+
+        // --- CMS CONTENT ---
+        onValue(ref(db, 'settings/content'), (snap) => {
+            const c = snap.val();
+            if (c && c.allProjects) {
+                if(c.allProjects.titleUa) document.getElementById('ap-title-ua').innerHTML = c.allProjects.titleUa;
+                if(c.allProjects.titleEn) document.getElementById('ap-title-en').innerHTML = c.allProjects.titleEn;
             }
         });
 

@@ -243,15 +243,15 @@
     </nav>
 
     <section class="hero">
-        <h1 class="lang-en">BEYOND<br>DIGITAL<br>LOGIC</h1>
-        <h1 class="lang-ua">ПОЗА МЕЖАМИ<br>ЦИФРОВОЇ<br>ЛОГІКИ</h1>
-        <p class="lang-en">UI/UX Architect, AI Engineer & Python Developer. I build turn-key websites (HTML/C++), complex automation systems, and aesthetically perfect digital ecosystems.</p>
-        <p class="lang-ua">UI/UX Архітектор, AI Інженер та Python розробник. Створюю сайти під ключ (HTML/C++), складні системи автоматизації та естетично досконалі цифрові екосистеми.</p>
+        <h1 class="lang-en" id="hero-title-en">BEYOND<br>DIGITAL<br>LOGIC</h1>
+        <h1 class="lang-ua" id="hero-title-ua">ПОЗА МЕЖАМИ<br>ЦИФРОВОЇ<br>ЛОГІКИ</h1>
+        <p class="lang-en" id="hero-sub-en">UI/UX Architect, AI Engineer & Python Developer. I build turn-key websites (HTML/C++), complex automation systems, and aesthetically perfect digital ecosystems.</p>
+        <p class="lang-ua" id="hero-sub-ua">UI/UX Архітектор, AI Інженер та Python розробник. Створюю сайти під ключ (HTML/C++), складні системи автоматизації та естетично досконалі цифрові екосистеми.</p>
     </section>
 
     <section id="about">
-        <h2 class="about-heading lang-en">About & Expertise</h2>
-        <h2 class="about-heading lang-ua">Про мене та навички</h2>
+        <h2 class="about-heading lang-en" id="about-heading-en">About & Expertise</h2>
+        <h2 class="about-heading lang-ua" id="about-heading-ua">Про мене та навички</h2>
         <div class="bento">
             <div class="bento-item wide">
                 <i class="fa-brands fa-python"></i>
@@ -302,8 +302,8 @@
     </section>
 
     <section id="faq">
-        <h2 class="about-heading lang-en">FAQ</h2>
-        <h2 class="about-heading lang-ua">Питання та відповіді</h2>
+        <h2 class="about-heading lang-en" id="faq-heading-en">FAQ</h2>
+        <h2 class="about-heading lang-ua" id="faq-heading-ua">Питання та відповіді</h2>
         <div class="faq-list">
             <div class="faq-item" onclick="this.classList.toggle('active')">
                 <div class="faq-question lang-en">What projects do you accept? <span>+</span></div>
@@ -530,6 +530,72 @@
                         a.target = '_blank';
                         a.innerHTML = `<i class="${iconMap[s.platform] || 'fa-solid fa-link'}"></i>`;
                         container.appendChild(a);
+                    });
+                }
+            }
+        });
+
+        // --- ДИНАМІЧНИЙ КОНТЕНТ (CMS) ТЕКСТІВ ---
+        onValue(ref(db, 'settings/content'), (snap) => {
+            const content = snap.val();
+            if (content && content.index) {
+                if (content.index.hero) {
+                    if (content.index.hero.titleEn) document.getElementById('hero-title-en').innerHTML = content.index.hero.titleEn;
+                    if (content.index.hero.titleUa) document.getElementById('hero-title-ua').innerHTML = content.index.hero.titleUa;
+                    if (content.index.hero.subEn) document.getElementById('hero-sub-en').innerHTML = content.index.hero.subEn;
+                    if (content.index.hero.subUa) document.getElementById('hero-sub-ua').innerHTML = content.index.hero.subUa;
+                }
+                if (content.index.about) {
+                    if (content.index.about.headingEn) document.getElementById('about-heading-en').innerHTML = content.index.about.headingEn;
+                    if (content.index.about.headingUa) document.getElementById('about-heading-ua').innerHTML = content.index.about.headingUa;
+                }
+                if(content.index.faq) {
+                    if(content.index.faq.headingEn) document.getElementById('faq-heading-en').innerHTML = content.index.faq.headingEn;
+                    if(content.index.faq.headingUa) document.getElementById('faq-heading-ua').innerHTML = content.index.faq.headingUa;
+                    
+                    let items = content.index.faq.items || [];
+                    if (items.length === 0) {
+                        items = [
+                            { qEn: "What projects do you accept?", qUa: "Які проекти ви приймаєте?", aEn: "I specialize in high-load automation, AI-driven scrapers, and premium UI/UX design for tech startups.", aUa: "Я спеціалізуюся на високонавантаженій автоматизації, AI-скраперах та преміальному UI/UX дизайні." },
+                            { qEn: "What is the typical project timeline?", qUa: "Які терміни розробки?", aEn: "A standard UI/UX or Python automation project takes between 2 to 4 weeks.", aUa: "Стандартний проект з дизайну або автоматизації займає від 2 до 4 тижнів." },
+                            { qEn: "How do you handle project payments?", qUa: "Як відбувається оплата?", aEn: "I work via milestones or full prepayments through secure platforms like Fiverr or direct crypto/wire transfer.", aUa: "Я працюю через етапи або повну передоплату через Fiverr, крипту або банківський переказ." }
+                        ];
+                    }
+                    if(items.length > 0) {
+                        const faqList = document.querySelector('.faq-list');
+                        faqList.innerHTML = '';
+                        items.forEach(f => {
+                            faqList.innerHTML += `<div class="faq-item" onclick="this.classList.toggle('active')">
+                                <div class="faq-question lang-en">${f.qEn} <span>+</span></div>
+                                <div class="faq-question lang-ua">${f.qUa} <span>+</span></div>
+                                <div class="faq-answer lang-en">${f.aEn}</div>
+                                <div class="faq-answer lang-ua">${f.aUa}</div>
+                            </div>`;
+                        });
+                    }
+                }
+                
+                let skills = content.index.skills || [];
+                if (skills.length === 0) {
+                    skills = [
+                        { icon: "fa-brands fa-python", wide: true, titleEn: "AI & Python", titleUa: "AI та Python", descEn: "Developing neural networks, scrapers (TikTok/IG), and complex automation systems using Python & C++.", descUa: "Розробка нейромереж, скраперів (TikTok/IG) та складних систем автоматизації на Python та C++." },
+                        { icon: "fa-solid fa-wand-magic-sparkles", wide: false, titleEn: "UI/UX Design", titleUa: "UI/UX Дизайн", descEn: "Apple-style aesthetics and user behavior analysis for maximum conversion.", descUa: "Естетика в стилі Apple та аналіз поведінки користувачів для максимальної конверсії." },
+                        { icon: "fa-solid fa-code", wide: false, titleEn: "Full-stack Web", titleUa: "Web Розробка", descEn: "Building modern websites from scratch. Clean, performant HTML/CSS/JS architecture.", descUa: "Створення сайтів з нуля. Чиста та продуктивна архітектура HTML/CSS/JS." },
+                        { icon: "fa-solid fa-database", wide: true, titleEn: "Data Mining", titleUa: "Видобуток даних", descEn: "Deep extraction and structuring of data from social media and complex web sources.", descUa: "Глибоке вилучення та структурування даних із соцмереж та складних веб-ресурсів." },
+                        { icon: "fa-solid fa-bolt", wide: false, titleEn: "Performance", titleUa: "Продуктивність", descEn: "Optimizing logic and visual speed to 100/100 standards.", descUa: "Оптимізація логіки та швидкості завантаження до стандартів 100/100." }
+                    ];
+                }
+                if(skills.length > 0) {
+                    const bento = document.querySelector('.bento');
+                    bento.innerHTML = '';
+                    skills.forEach(s => {
+                        bento.innerHTML += `<div class="bento-item ${s.wide ? 'wide' : ''}">
+                            <i class="${s.icon}"></i>
+                            <h3 class="lang-en">${s.titleEn}</h3>
+                            <h3 class="lang-ua">${s.titleUa}</h3>
+                            <p class="lang-en">${s.descEn}</p>
+                            <p class="lang-ua">${s.descUa}</p>
+                        </div>`;
                     });
                 }
             }
