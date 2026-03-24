@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maksym Rizun | Designer & AI Engineer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Unbounded:wght@700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #050505;
+            --text: #ffffff;
+            --text-secondary: #a1a1a6;
+            --accent: #0071e3;
+            --accent-hover: #005bbd;
+            --card: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+            --glow-color: rgba(0, 113, 227, 0.3);
+            --font-hd: 'Unbounded', sans-serif;
+            --font-main: 'Inter', sans-serif;
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="light"] {
+            --bg: #f5f5f7;
+            --text: #1d1d1f;
+            --text-secondary: #6e6e73;
+            --accent: #0071e3;
+            --accent-hover: #005bbd;
+            --card: rgba(0, 0, 0, 0.03);
+            --border: rgba(0, 0, 0, 0.08);
+            --glow-color: rgba(0, 113, 227, 0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--bg); color: var(--text); font-family: var(--font-main); overflow-x: hidden; transition: background 0.5s; line-height: 1.5; }
+
+        .cursor-glow {
+            position: fixed; width: 450px; height: 450px;
+            background: radial-gradient(circle, var(--glow-color) 0%, transparent 70%);
+            border-radius: 50%; pointer-events: none; z-index: -1;
+            transform: translate(-50%, -50%); will-change: transform;
+        }
+
+        nav {
+            position: fixed; top: 0; width: 100%; padding: 25px 8%;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 1000; backdrop-filter: blur(15px); border-bottom: 1px solid var(--border);
+        }
+        .logo { font-family: var(--font-hd); font-size: 1.2rem; letter-spacing: -1px; font-weight: 900; }
+        .controls { display: flex; gap: 20px; align-items: center; }
+        
+        .theme-switch {
+            width: 50px; height: 26px; background: var(--card); border-radius: 20px;
+            position: relative; cursor: pointer; border: 1px solid var(--border);
+        }
+        .theme-switch .toggle {
+            width: 20px; height: 20px; background: #fff; border-radius: 50%;
+            position: absolute; top: 2px; left: 2px; transition: var(--transition);
+        }
+        [data-theme="light"] .theme-switch .toggle { transform: translateX(24px); background: var(--accent); }
+        .lang-switch { 
+            cursor: pointer; font-weight: 800; font-size: 0.8rem; color: var(--accent); transition: var(--transition); 
+            min-width: 100px; text-align: right;
+        }
+        .lang-switch:hover { filter: brightness(1.2); letter-spacing: 1px; }
+
+        section { padding: 100px 8%; }
+        .hero { padding-top: 260px; min-height: 95vh; }
+        .hero h1 { font-family: var(--font-hd); font-size: clamp(3rem, 10vw, 8.5rem); line-height: 0.9; margin-bottom: 40px; text-transform: uppercase; font-weight: 900; }
+        
+        body.ua .hero h1.lang-ua { 
+            font-size: clamp(2.5rem, 8.5vw, 6.5rem); 
+            line-height: 1.1; 
+            letter-spacing: -1px;
+        }
+
+        .hero p { font-size: 1.5rem; color: var(--text-secondary); max-width: 700px; font-weight: 400; }
+
+        .about-heading { font-family: var(--font-hd); font-size: 3rem; margin-bottom: 50px; text-transform: uppercase; font-weight: 700; }
+
+        .bento { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .bento-item { 
+            background: var(--card); border: 1px solid var(--border); border-radius: 35px; 
+            padding: 40px; transition: var(--transition); backdrop-filter: blur(10px);
+        }
+        .bento-item:hover { border-color: var(--accent); transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); }
+        .bento-item i { font-size: 2rem; color: var(--accent); margin-bottom: 20px; display: block; }
+        .bento-item h3 { font-family: var(--font-hd); margin-bottom: 10px; font-size: 1.2rem; font-weight: 700; }
+        .bento-item p { color: var(--text-secondary); }
+        .wide { grid-column: span 2; }
+
+        .portfolio-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; perspective: 1500px; }
+        .project-card {
+            height: 480px; border-radius: 40px; overflow: hidden; position: relative;
+            background: #111; cursor: pointer; transform-style: preserve-3d; transition: transform 0.1s;
+        }
+        .project-card img { width: 100%; height: 100%; object-fit: cover; transition: var(--transition); }
+        .project-card:hover img { transform: scale(1.1); }
+        
+        .project-info { position: absolute; bottom: 0; padding: 40px; background: linear-gradient(transparent, rgba(0,0,0,0.9)); width: 100%; color: #fff; }
+        .project-info h3 { font-family: var(--font-hd); font-size: 1.5rem; font-weight: 700; }
+        .project-info p { font-size: 0.9rem; opacity: 0.8; margin-top: 5px; }
+        .project-tag { display: inline-block; padding: 5px 12px; background: var(--accent); border-radius: 20px; font-size: 0.7rem; font-family: var(--font-hd); margin-bottom: 10px; text-transform: uppercase; }
+
+        .more-projects-container { text-align: center; margin-top: 60px; }
+        .btn-outline {
+            padding: 20px 50px; border: 2px solid var(--accent); color: var(--accent);
+            border-radius: 100px; font-family: var(--font-hd); font-weight: 700;
+            text-decoration: none; display: inline-block; transition: var(--transition);
+            min-width: 280px;
+        }
+        .btn-outline:hover { background: var(--accent); color: #fff; transform: scale(1.05); }
+
+        .faq-list { width: 100%; margin-top: 40px; }
+        .faq-item { border-bottom: 1px solid var(--border); padding: 35px 0; cursor: pointer; }
+        .faq-question { font-family: var(--font-hd); font-size: 1.8rem; display: flex; justify-content: space-between; font-weight: 700; }
+        .faq-answer { max-height: 0; overflow: hidden; transition: 0.4s; color: var(--text-secondary); margin-top: 15px; font-size: 1.2rem; }
+        .faq-item.active .faq-answer { max-height: 300px; }
+        
+        .faq-cta { margin-top: 50px; font-size: 1.3rem; font-family: var(--font-main); }
+        .link-btn { 
+            background: none; border: none; color: var(--accent); font-weight: 800; 
+            text-decoration: none; cursor: pointer; padding: 0; font-size: inherit; 
+            font-family: var(--font-main); position: relative; transition: var(--transition);
+        }
+        .link-btn::after {
+            content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 2px;
+            background: var(--accent); transition: var(--transition);
+        }
+        .link-btn:hover { color: var(--text); }
+        .link-btn:hover::after { width: 100%; }
+
+        .fab {
+            position: fixed; bottom: 40px; right: 40px; padding: 22px 40px;
+            background: var(--accent); color: #fff; border-radius: 100px;
+            font-family: var(--font-main); font-weight: 800; text-transform: uppercase;
+            letter-spacing: 2px; font-size: 0.9rem; text-decoration: none; z-index: 2000;
+            box-shadow: 0 15px 35px rgba(0, 113, 227, 0.4); transition: var(--transition);
+            border: none; cursor: pointer;
+            min-width: 200px;
+        }
+        .fab:hover { 
+            transform: scale(1.05) translateY(-5px); 
+            background: var(--accent-hover);
+            box-shadow: 0 20px 45px rgba(0, 113, 227, 0.6);
+        }
+
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.94); display: none; justify-content: center; align-items: center; z-index: 3000; padding: 20px; backdrop-filter: blur(20px); overflow: hidden; }
+        .modal-blob {
+            position: absolute; width: 500px; height: 500px;
+            background: linear-gradient(45deg, var(--accent), #ff00ff, #00ffff);
+            filter: blur(80px); opacity: 0.2; border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            z-index: 2999; animation: blob-float 15s infinite alternate ease-in-out;
+            pointer-events: none;
+        }
+
+        @keyframes blob-float {
+            0% { transform: translate(-20%, -20%) rotate(0deg) scale(1); }
+            50% { transform: translate(20%, 10%) rotate(180deg) scale(1.2); }
+            100% { transform: translate(-10%, 30%) rotate(360deg) scale(0.9); }
+        }
+
+        .modal-content { 
+            background: var(--bg); border: 1px solid var(--border); border-radius: 40px; padding: 45px; 
+            width: 100%; max-width: 500px; position: relative; z-index: 3001; box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        }
+        .modal-content h2 { font-family: var(--font-hd); font-weight: 700; font-size: 1.8rem; margin-bottom: 10px; }
+        
+        form input, form textarea { 
+            width: 100%; padding: 18px; margin-top: 15px; 
+            background: var(--card); border: 1px solid var(--border); 
+            border-radius: 15px; color: var(--text); outline: none; 
+            font-family: var(--font-main); transition: var(--transition);
+        }
+        form input:focus, form textarea:focus { border-color: var(--accent); background: rgba(255,255,255,0.08); }
+
+        .file-upload {
+            position: relative; margin-top: 15px; width: 100%; height: 55px;
+            background: var(--card); border: 1px solid var(--border); border-radius: 15px;
+            display: flex; align-items: center; padding: 0 18px; cursor: pointer; transition: var(--transition);
+        }
+        .file-upload:hover { border-color: var(--accent); }
+        .file-upload input[type="file"] {
+            position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%;
+        }
+        .file-upload span { color: var(--text-secondary); font-size: 0.9rem; pointer-events: none; }
+        .file-upload i { color: var(--accent); margin-right: 12px; pointer-events: none; }
+
+        form button { 
+            width: 100%; padding: 20px; background: var(--accent); color: #fff; 
+            border: none; border-radius: 15px; margin-top: 25px; font-weight: 800; 
+            cursor: pointer; font-family: var(--font-main); text-transform: uppercase; 
+            letter-spacing: 1px; transition: var(--transition);
+        }
+        form button:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0, 113, 227, 0.3); }
+
+        #toast { position: fixed; top: -150px; left: 50%; transform: translateX(-50%); background: #fff; color: #000; padding: 18px 40px; border-radius: 100px; font-weight: 800; z-index: 4000; transition: 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28); font-family: var(--font-main); white-space: nowrap; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        #toast.show { top: 40px; }
+
+        footer { padding: 100px 8%; border-top: 1px solid var(--border); }
+        .footer-grid { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 40px; }
+        .footer-contacts { display: flex; flex-direction: column; gap: 10px; }
+        .footer-contacts a { font-family: var(--font-hd); font-size: clamp(1.2rem, 3vw, 2rem); color: var(--text); text-decoration: none; font-weight: 900; transition: var(--transition); }
+        .footer-contacts a:hover { color: var(--accent); }
+        .footer-email { color: var(--text-secondary); text-decoration: none; font-weight: 600; font-size: 1.1rem; }
+        
+        .social-icons { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
+        .social-icons a { width: 50px; height: 50px; background: var(--card); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: var(--text); border: 1px solid var(--border); transition: 0.3s; }
+        .social-icons a:hover { background: var(--accent); color: #fff; transform: translateY(-5px); border-color: var(--accent); }
+
+        .lang-ua { display: none; }
+        body.ua .lang-en { display: none; }
+        body.ua .lang-ua { display: block; }
+
+        @media (max-width: 900px) { 
+            .bento, .portfolio-grid { grid-template-columns: 1fr; } 
+            .wide { grid-column: span 1; } 
+            .hero { padding-top: 200px; } 
+            .footer-grid { flex-direction: column; text-align: center; align-items: center; }
+            .footer-grid div { text-align: center !important; }
+            .social-icons { justify-content: center; }
+            .hero h1 { font-size: 3.5rem; }
+            .about-heading { font-size: 2.2rem; }
+        }
+    </style>
+</head>
+<body data-theme="dark">
+
+    <div class="cursor-glow" id="glow"></div>
+    <div id="toast">✅ SUCCESS! BRIEF SENT.</div>
+
+    <nav>
+        <div class="logo">MAKSYM RIZUN</div>
+        <div class="controls">
+            <div class="lang-switch" onclick="toggleLang()">
+                <span class="lang-en">УКРАЇНСЬКА</span><span class="lang-ua">ENGLISH</span>
+            </div>
+            <div class="theme-switch" onclick="toggleTheme()">
+                <div class="toggle"></div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <h1 class="lang-en">BEYOND<br>DIGITAL<br>LOGIC</h1>
+        <h1 class="lang-ua">ПОЗА МЕЖАМИ<br>ЦИФРОВОЇ<br>ЛОГІКИ</h1>
+        <p class="lang-en">UI/UX Architect, AI Engineer & Python Developer. I build turn-key websites (HTML/C++), complex automation systems, and aesthetically perfect digital ecosystems.</p>
+        <p class="lang-ua">UI/UX Архітектор, AI Інженер та Python розробник. Створюю сайти під ключ (HTML/C++), складні системи автоматизації та естетично досконалі цифрові екосистеми.</p>
+    </section>
+
+    <section id="about">
+        <h2 class="about-heading lang-en">About & Expertise</h2>
+        <h2 class="about-heading lang-ua">Про мене та навички</h2>
+        <div class="bento">
+            <div class="bento-item wide">
+                <i class="fa-brands fa-python"></i>
+                <h3 class="lang-en">AI & Python</h3>
+                <h3 class="lang-ua">AI та Python</h3>
+                <p class="lang-en">Developing neural networks, scrapers (TikTok/IG), and complex automation systems using Python & C++.</p>
+                <p class="lang-ua">Розробка нейромереж, скраперів (TikTok/IG) та складних систем автоматизації на Python та C++.</p>
+            </div>
+            <div class="bento-item">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <h3 class="lang-en">UI/UX Design</h3>
+                <h3 class="lang-ua">UI/UX Дизайн</h3>
+                <p class="lang-en">Apple-style aesthetics and user behavior analysis for maximum conversion.</p>
+                <p class="lang-ua">Естетика в стилі Apple та аналіз поведінки користувачів для максимальної конверсії.</p>
+            </div>
+            <div class="bento-item">
+                <i class="fa-solid fa-code"></i>
+                <h3 class="lang-en">Full-stack Web</h3>
+                <h3 class="lang-ua">Web Розробка</h3>
+                <p class="lang-en">Building modern websites from scratch. Clean, performant HTML/CSS/JS architecture.</p>
+                <p class="lang-ua">Створення сайтів з нуля. Чиста та продуктивна архітектура HTML/CSS/JS.</p>
+            </div>
+            <div class="bento-item wide">
+                <i class="fa-solid fa-database"></i>
+                <h3 class="lang-en">Data Mining</h3>
+                <h3 class="lang-ua">Видобуток даних</h3>
+                <p class="lang-en">Deep extraction and structuring of data from social media and complex web sources.</p>
+                <p class="lang-ua">Глибоке вилучення та структурування даних із соцмереж та складних веб-ресурсів.</p>
+            </div>
+            <div class="bento-item">
+                <i class="fa-solid fa-bolt"></i>
+                <h3 class="lang-en">Performance</h3>
+                <h3 class="lang-ua">Продуктивність</h3>
+                <p class="lang-en">Optimizing logic and visual speed to 100/100 standards.</p>
+                <p class="lang-ua">Оптимізація логіки та швидкості завантаження до стандартів 100/100.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="portfolio">
+        <h2 class="about-heading lang-en">Portfolio</h2>
+        <h2 class="about-heading lang-ua">Портфоліо</h2>
+        
+        <div class="portfolio-grid" id="projects-grid">
+             </div>
+
+        <div class="more-projects-container">
+            <a href="all-projects.html" class="btn-outline lang-en">SEE ALL PROJECTS</a>
+            <a href="all-projects.html" class="btn-outline lang-ua">БІЛЬШЕ ПРОЕКТІВ</a>
+        </div>
+    </section>
+
+    <section id="faq">
+        <h2 class="about-heading lang-en">FAQ</h2>
+        <h2 class="about-heading lang-ua">Питання та відповіді</h2>
+        <div class="faq-list">
+            <div class="faq-item" onclick="this.classList.toggle('active')">
+                <div class="faq-question lang-en">What projects do you accept? <span>+</span></div>
+                <div class="faq-question lang-ua">Які проекти ви приймаєте? <span>+</span></div>
+                <div class="faq-answer lang-en">I specialize in high-load automation, AI-driven scrapers, and premium UI/UX design for tech startups.</div>
+                <div class="faq-answer lang-ua">Я спеціалізуюся на високонавантаженій автоматизації, AI-скраперах та преміальному UI/UX дизайні.</div>
+            </div>
+            <div class="faq-item" onclick="this.classList.toggle('active')">
+                <div class="faq-question lang-en">What is the typical project timeline? <span>+</span></div>
+                <div class="faq-question lang-ua">Які терміни розробки? <span>+</span></div>
+                <div class="faq-answer lang-en">A standard UI/UX or Python automation project takes between 2 to 4 weeks.</div>
+                <div class="faq-answer lang-ua">Стандартний проект з дизайну або автоматизації займає від 2 до 4 тижнів.</div>
+            </div>
+            <div class="faq-item" onclick="this.classList.toggle('active')">
+                <div class="faq-question lang-en">How do you handle project payments? <span>+</span></div>
+                <div class="faq-question lang-ua">Як відбувається оплата? <span>+</span></div>
+                <div class="faq-answer lang-en">I work via milestones or full prepayments through secure platforms like Fiverr or direct crypto/wire transfer.</div>
+                <div class="faq-answer lang-ua">Я працюю через етапи або повну передоплату через Fiverr, крипту або банківський переказ.</div>
+            </div>
+        </div>
+        <div class="faq-cta lang-en">
+            Didn't find an answer? <button class="link-btn" onclick="document.getElementById('footer').scrollIntoView()">Contact me</button> or <button class="link-btn" onclick="openModal()">Send a Brief</button>
+        </div>
+        <div class="faq-cta lang-ua">
+            Не знайшли відповідь? <button class="link-btn" onclick="document.getElementById('footer').scrollIntoView()">Зв'яжіться зі мною</button> або <button class="link-btn" onclick="openModal()">Відправте бриф</button>
+        </div>
+    </section>
+
+    <footer id="footer">
+        <div class="footer-grid">
+            <div class="footer-contacts">
+                <a href="tel:+380932097079" id="f-phone-link">+380 93 209 70 79</a>
+                <a href="mailto:Destro729@gmail.com" class="footer-email" id="f-email-link">Destro729@gmail.com</a>
+                <div class="social-icons">
+                    <a href="https://wa.me/380932097079" target="_blank" title="WhatsApp" id="f-wa"><i class="fa-brands fa-whatsapp"></i></a>
+                    <a href="https://t.me/your_tg_username" target="_blank" title="Telegram" id="f-tg"><i class="fa-brands fa-telegram"></i></a>
+                    <a href="https://github.com/beyond-dl" target="_blank" title="GitHub" id="f-gh"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" title="Discord" id="f-ds"><i class="fa-brands fa-discord"></i></a>
+                    <a href="#" title="Behance" id="f-bh"><i class="fa-brands fa-behance"></i></a>
+                    <a href="#" title="Fiverr" id="f-fv"><i class="fa-solid fa-f"></i></a>
+                </div>
+            </div>
+            <div style="text-align: right;">
+                <p style="font-weight: 800; color: var(--text); font-family: var(--font-hd); text-transform: uppercase;">MAKSYM RIZUN</p>
+                <p style="color: var(--text-secondary); margin-top: 5px;" class="lang-en" id="f-role-en">Designer & AI Engineer 2026</p>
+                <p style="color: var(--text-secondary); margin-top: 5px;" class="lang-ua" id="f-role-ua">Дизайнер та AI Інженер 2026</p>
+                <p style="color: var(--text-secondary); opacity: 0.5; font-size: 0.8rem; margin-top: 15px;" class="lang-en">&copy; All Rights Reserved.</p>
+                <p style="color: var(--text-secondary); opacity: 0.5; font-size: 0.8rem; margin-top: 15px;" class="lang-ua">&copy; Всі права захищено.</p>
+            </div>
+        </div>
+    </footer>
+
+    <button class="fab" onclick="openModal()">
+        <span class="lang-en">SEND BRIEF</span>
+        <span class="lang-ua">НАДІСЛАТИ БРИФ</span>
+    </button>
+
+    <div class="modal" id="briefModal">
+        <div class="modal-blob"></div>
+        <div class="modal-content">
+            <span style="position: absolute; top:25px; right:30px; cursor:pointer; font-size:2rem; transition: 0.3s;" onclick="closeModal()" id="closeModalBtn">&times;</span>
+            <h2 class="lang-en">PROJECT BRIEF</h2>
+            <h2 class="lang-ua">БРИФ ПРОЕКТУ</h2>
+            <form id="briefForm">
+                <input type="text" id="nameInput" placeholder="Your Name" required name="from_name">
+                <input type="text" id="contactInput" placeholder="Contact Details (TG / Email)" required name="contact_info">
+                <textarea id="descInput" placeholder="Describe your task (max 300 symbols)..." maxlength="300" rows="5" required name="message"></textarea>
+                
+                <div class="file-upload">
+                    <i class="fa-solid fa-paperclip"></i>
+                    <span id="fileNameDisplay" class="lang-en">Attach file (optional)</span>
+                    <span id="fileNameDisplayUa" class="lang-ua" style="display:none;">Додати файл (опціонально)</span>
+                    <input type="file" id="fileInput" onchange="handleFileSelect()">
+                </div>
+
+                <button type="submit">
+                    <span class="lang-en">SUBMIT BRIEF</span>
+                    <span class="lang-ua">ВІДПРАВИТИ</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDwQpDnT4_o1fiVDKuWI7VAYeal9nh6dRQ",
+            authDomain: "anor-core-2026.firebaseapp.com",
+            databaseURL: "https://anor-core-2026-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "anor-core-2026",
+            storageBucket: "anor-core-2026.firebasestorage.app",
+            messagingSenderId: "787691904559",
+            appId: "1:787691904559:web:845da19d72ceb9ec50b0da"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const grid = document.getElementById('projects-grid');
+
+        // --- ВИВІД ПРОЕКТІВ (ПОРТФОЛІО) ---
+        onValue(ref(db, 'projects'), (snap) => {
+            const data = snap.val();
+            grid.innerHTML = "";
+            
+            if (data) {
+                const projectList = Object.keys(data).map(key => ({
+                    id: key,
+                    ...data[key]
+                })).reverse().slice(0, 4); 
+
+                projectList.forEach(p => {
+                    const card = document.createElement('div');
+                    card.className = 'project-card';
+                    card.onclick = () => { window.location.href = `project-details.html?id=${p.id}`; };
+                    
+                    const projectImg = p.mainImage || p.image || 'img/default.jpg';
+                    
+                    // --- ЛОГІКА КАТЕГОРІЇ (ФІКС ДЛЯ ВЕРСО) ---
+                    // Тепер беремо саме те, що ти ввів у адмінці
+                    let displayCat = "Artifact";
+                    if (p.categories && Array.isArray(p.categories)) {
+                        displayCat = p.categories[0];
+                    } else if (p.category) {
+                        displayCat = typeof p.category === 'object' ? Object.values(p.category)[0] : p.category;
+                    }
+
+                    card.innerHTML = `
+                        <img src="${projectImg}" alt="${p.title || 'Project'}">
+                        <div class="project-info">
+                            <span class="project-tag">${displayCat}</span>
+                            <h3>${p.title || 'Untitled'}</h3>
+                            <p>${p.shortDesc ? p.shortDesc.substring(0, 60) + '...' : (p.desc ? p.desc.substring(0, 60) + '...' : '')}</p>
+                        </div>
+                    `;
+                    
+                    card.addEventListener('mousemove', (e) => {
+                        const rect = card.getBoundingClientRect();
+                        const x = (e.clientX - rect.left) / rect.width - 0.5;
+                        const y = (e.clientY - rect.top) / rect.height - 0.5;
+                        card.style.transform = `perspective(1000px) rotateY(${x * 12}deg) rotateX(${y * -12}deg) scale3d(1.02, 1.02, 1.02)`;
+                    });
+                    
+                    card.addEventListener('mouseleave', () => {
+                        card.style.transform = `perspective(1000px) rotateY(0) rotateX(0) scale3d(1, 1, 1)`;
+                    });
+                    
+                    grid.appendChild(card);
+                });
+            } else {
+                grid.innerHTML = "<p style='grid-column: 1/-1; text-align: center; opacity: 0.5;'>No projects found in the database.</p>";
+            }
+        });
+
+        // --- ПОВНІСТЮ ДИНАМІЧНИЙ ФУТЕР ---
+        onValue(ref(db, 'settings/footer'), (snap) => {
+            const f = snap.val();
+            if (f) {
+                if (f.phone) {
+                    const phoneEl = document.getElementById('f-phone-link');
+                    phoneEl.innerText = f.phone;
+                    phoneEl.href = `tel:${f.phone.replace(/\s/g, '')}`;
+                }
+                if (f.email) {
+                    const emailEl = document.getElementById('f-email-link');
+                    emailEl.innerText = f.email;
+                    emailEl.href = `mailto:${f.email}`;
+                }
+                if (f.roleUa) document.getElementById('f-role-ua').innerText = f.roleUa;
+                if (f.roleEn) document.getElementById('f-role-en').innerText = f.roleEn;
+                if (f.tg) document.getElementById('f-tg').href = f.tg;
+                if (f.wa) document.getElementById('f-wa').href = f.wa;
+                if (f.gh) document.getElementById('f-gh').href = f.gh;
+                if (f.ds) document.getElementById('f-ds').href = f.ds;
+                if (f.bh) document.getElementById('f-bh').href = f.bh;
+                if (f.fv) document.getElementById('f-fv').href = f.fv;
+            }
+        });
+    </script>
+
+    <script>
+        (function() {
+            emailjs.init("YOUR_PUBLIC_KEY");
+        })();
+
+        const glow = document.getElementById('glow');
+        document.addEventListener('mousemove', (e) => {
+            glow.style.left = e.clientX + 'px';
+            glow.style.top = e.clientY + 'px';
+        });
+
+        function toggleTheme() {
+            const body = document.body;
+            body.setAttribute('data-theme', body.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+        }
+
+        function toggleLang() { 
+            document.body.classList.toggle('ua'); 
+            const isUa = document.body.classList.contains('ua');
+            document.getElementById('nameInput').placeholder = isUa ? "Ваше ім'я" : "Your Name";
+            document.getElementById('contactInput').placeholder = isUa ? "Контакти (TG / Email)" : "Contact Details (TG / Email)";
+            document.getElementById('descInput').placeholder = isUa ? "Опишіть завдання (макс 300 симв)..." : "Describe your task (max 300 symbols)...";
+            document.getElementById('toast').innerText = isUa ? "✅ УСПІШНО! БРИФ ВІДПРАВЛЕНО." : "✅ SUCCESS! BRIEF SENT.";
+            
+            const fileEn = document.getElementById('fileNameDisplay');
+            const fileUa = document.getElementById('fileNameDisplayUa');
+            if (isUa) {
+                fileEn.style.display = 'none';
+                fileUa.style.display = 'inline';
+            } else {
+                fileEn.style.display = 'inline';
+                fileUa.style.display = 'none';
+            }
+        }
+
+        function handleFileSelect() {
+            const file = document.getElementById('fileInput').files[0];
+            if (file) {
+                document.getElementById('fileNameDisplay').innerText = file.name;
+                document.getElementById('fileNameDisplayUa').innerText = file.name;
+            }
+        }
+
+        function openModal() { document.getElementById('briefModal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('briefModal').style.display = 'none'; }
+
+        document.getElementById('briefForm').onsubmit = (e) => {
+            e.preventDefault();
+            closeModal();
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+            e.target.reset();
+        };
+
+        const closeBtn = document.getElementById('closeModalBtn');
+        closeBtn.onmouseover = () => closeBtn.style.color = 'var(--accent)';
+        closeBtn.onmouseleave = () => closeBtn.style.color = 'var(--text)';
+    </script>
+</body>
+</html>

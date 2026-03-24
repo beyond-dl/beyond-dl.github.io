@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anor Core | Versailles Admin 3.8 (Elite Edition)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&family=Unbounded:wght@700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #050505;
+            --sidebar: #0a0a0a;
+            --text: #ffffff;
+            --text-secondary: #a1a1a6;
+            --accent: #0071e3;
+            --border: rgba(255, 255, 255, 0.08);
+            --card: #121212;
+            --input-bg: #000000;
+            --font-hd: 'Unbounded', sans-serif;
+            --font-main: 'Inter', sans-serif;
+            --danger: #ff3b30;
+            --success: #34c759;
+        }
+
+        body.light-theme {
+            --bg: #f5f5f7;
+            --sidebar: #ffffff;
+            --text: #1d1d1f;
+            --text-secondary: #86868b;
+            --border: rgba(0, 0, 0, 0.1);
+            --card: #ffffff;
+            --input-bg: #fbfbfd;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; transition: background 0.2s ease; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-main);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: var(--sidebar);
+            border-right: 1px solid var(--border);
+            padding: 40px 20px;
+            position: fixed;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-family: var(--font-hd);
+            font-size: 0.8rem;
+            color: var(--accent);
+            margin-bottom: 50px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .nav-group { margin-bottom: 30px; }
+        .nav-label {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-weight: 800;
+            margin-bottom: 15px;
+            padding-left: 15px;
+            display: block;
+        }
+
+        .nav-item {
+            padding: 14px 18px;
+            border-radius: 14px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 4px;
+            border: none;
+            background: none;
+            width: 100%;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-align: left;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .main-content {
+            margin-left: 280px;
+            flex-grow: 1;
+            padding: 60px 5%; 
+            width: calc(100% - 280px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        section { width: 100%; max-width: 1200px; }
+
+        h1 {
+            font-family: var(--font-hd);
+            font-size: 1.8rem;
+            margin-bottom: 40px;
+            font-weight: 900;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            padding: 40px;
+            margin-bottom: 40px;
+            width: 100%;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .form-group { margin-bottom: 25px; position: relative; }
+        .full-width { grid-column: span 2; }
+
+        label {
+            display: block;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            padding: 16px 20px;
+            border-radius: 15px;
+            color: var(--text);
+            outline: none;
+            font-family: inherit;
+        }
+
+        input:focus, textarea:focus { border-color: var(--accent); }
+
+        .tags-custom-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 10px;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            min-height: 56px;
+            cursor: pointer;
+        }
+
+        .tag-pill {
+            background: var(--accent);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+        .tag-pill i { cursor: pointer; font-size: 0.7rem; }
+
+        .tags-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            margin-top: 5px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .tags-dropdown.active { display: block; }
+
+        .tag-option {
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tag-option:hover { background: rgba(255,255,255,0.05); }
+
+        .btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 50px;
+            font-family: var(--font-hd);
+            font-size: 0.7rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-weight: 900;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .project-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: var(--input-bg);
+            border-radius: 18px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .project-actions { display: flex; gap: 10px; }
+        .btn-icon {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 8px;
+            transition: transform 0.2s, color 0.2s;
+        }
+        .btn-edit { color: var(--accent); }
+        .btn-edit:hover { transform: scale(1.1); }
+        .btn-delete { color: var(--text-secondary); }
+        .btn-delete:hover { color: var(--danger); transform: scale(1.1); }
+
+        .admin-controls {
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .control-btn {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .control-btn.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .hidden { display: none; }
+        
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .social-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar { width: 80px; padding: 20px 10px; }
+            .nav-label, .nav-item span, .logo { display: none; }
+            .main-content { margin-left: 80px; width: calc(100% - 80px); }
+        }
+
+        @media (max-width: 768px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .full-width { grid-column: span 1; }
+        }
+    </style>
+</head>
+<body class="dark-theme">
+
+    <aside class="sidebar">
+        <div class="logo">ANOR CORE 3.8</div>
+        
+        <div class="nav-group">
+            <span class="nav-label" data-t="group_content">Контент</span>
+            <button class="nav-item active" id="btn-projects" onclick="showSection('projects')">
+                <i class="fa-solid fa-rocket"></i> <span data-t="nav_projects">Проєкти</span>
+            </button>
+            <button class="nav-item" id="btn-categories" onclick="showSection('categories')">
+                <i class="fa-solid fa-tags"></i> <span data-t="nav_cats">Категорії</span>
+            </button>
+        </div>
+
+        <div class="nav-group">
+            <span class="nav-label" data-t="group_config">Конфігурація</span>
+            <button class="nav-item" id="btn-footer" onclick="showSection('footer')">
+                <i class="fa-solid fa-sliders"></i> <span data-t="nav_global">Глобальні & Футер</span>
+            </button>
+        </div>
+
+        <div class="admin-controls">
+            <div style="margin-bottom: 15px; display: flex; gap: 5px;">
+                <button class="control-btn active" id="theme-dark" onclick="setTheme('dark')"><i class="fa-solid fa-moon"></i></button>
+                <button class="control-btn" id="theme-light" onclick="setTheme('light')"><i class="fa-solid fa-sun"></i></button>
+                <div style="margin-left: auto;">
+                    <button class="control-btn lang-btn" id="lang-ua" onclick="setLang('ua')">UA</button>
+                    <button class="control-btn lang-btn" id="lang-en" onclick="setLang('en')">EN</button>
+                </div>
+            </div>
+            <a href="index.html" target="_blank" class="nav-item" style="background: rgba(0,113,227,0.1); color: var(--accent);">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> <span data-t="to_site">На сайт</span>
+            </a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        
+        <section id="sec-projects">
+            <h1 data-t="h_projects">Управління Артефактами</h1>
+            <div class="card">
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label data-t="l_title">Назва проєкту</label>
+                        <input type="text" id="p-title" placeholder="Приклад: TikTok Stealth Bot / Stealth Bot EN">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label data-t="l_meta">Мета-тег (Над назвою)</label>
+                        <input type="text" id="p-meta" placeholder="Приклад: AUTOMATION, 2026">
+                    </div>
+
+                    <div class="form-group">
+                        <label data-t="l_cat">Категорії та Технології</label>
+                        <div class="tags-custom-container" id="tags-display" onclick="toggleTagsDropdown(event)">
+                            <span style="color: var(--text-secondary); font-size: 0.9rem;">Оберіть зі списку...</span>
+                        </div>
+                        <div class="tags-dropdown" id="tags-dropdown"></div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label data-t="l_short">Короткий опис (UA/EN)</label>
+                        <input type="text" id="p-short" placeholder="Короткий рядок для картки на головній (двома мовами через /)">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label data-t="l_desc">Повний опис (Логіка та деталі)</label>
+                        <textarea id="p-desc" rows="5" placeholder="Розгорнутий текст для сторінки проекту. Використовуйте <br> для переносів."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label data-t="l_img">Головне зображення (Прямий URL)</label>
+                        <input type="text" id="p-img" placeholder="https://example.com/image.jpg">
+                    </div>
+
+                    <div class="form-group">
+                        <label data-t="l_link">GitHub або Demo Посилання</label>
+                        <input type="text" id="p-link" placeholder="https://github.com/user/repo">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label data-t="l_gallery">Додаткові зображення (URL через кому)</label>
+                        <textarea id="p-gallery" rows="2" placeholder="url1.jpg, url2.jpg, url3.jpg"></textarea>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <div class="toggle-container">
+                             <input type="checkbox" id="p-on-main" style="width: 20px; height: 20px;">
+                             <label style="margin-bottom: 0;" data-t="l_main">Відображати у блоці 'Selected Works'</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn" id="btn-save-project" onclick="saveProject()">
+                    <i class="fa-solid fa-sparkles"></i> <span id="btn-text" data-t="btn_save">Зберегти в Спектраль</span>
+                </button>
+                <button class="btn hidden" id="btn-cancel-edit" onclick="cancelEdit()" style="background: var(--danger); margin-left: 10px;">
+                    <span data-t="btn_cancel">Скасувати</span>
+                </button>
+            </div>
+
+            <div id="project-list-container">
+                <label data-t="l_existing" style="margin-bottom: 20px;">Існуючі Проєкти в базі</label>
+                <div id="project-list"></div>
+            </div>
+        </section>
+
+        <section id="sec-categories" class="hidden">
+            <h1 data-t="h_cats">Матриця Категорій</h1>
+            <div class="card">
+                <div class="form-group">
+                    <label data-t="l_new_cat">Назва нової категорії/тегу</label>
+                    <input type="text" id="new-cat-name" placeholder="Приклад: UI/UX, PYTHON, AI">
+                </div>
+                <button class="btn" onclick="addCategory()" data-t="btn_add_cat">Додати до Матриці</button>
+            </div>
+            <div id="cat-list" class="card"></div>
+        </section>
+
+        <section id="sec-footer" class="hidden">
+            <h1 data-t="h_global">Налаштування Футера & Системи</h1>
+            <div class="card">
+                <div class="form-grid">
+                    <div class="form-group"><label>Текст Логотипу</label><input type="text" id="f-logo" placeholder="ANOR"></div>
+                    <div class="form-group"><label>Копірайт</label><input type="text" id="f-copy" placeholder="© 2026 ANOR CORE SYSTEM"></div>
+                    
+                    <div class="form-group full-width">
+                        <label>Опис під лого (UA)</label>
+                        <input type="text" id="f-role-ua" placeholder="UI\UX Веб Дизайнер та ШІ Python розробник.">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Опис під лого (EN)</label>
+                        <input type="text" id="f-role-en" placeholder="UI\UX Web Designer & AI Python Developer.">
+                    </div>
+
+                    <div class="form-group"><label>Контактний Телефон</label><input type="text" id="f-phone" placeholder="+380..."></div>
+                    <div class="form-group"><label>Контактний Email</label><input type="text" id="f-email" placeholder="example@gmail.com"></div>
+                    
+                    <div class="form-group full-width">
+                        <label>Соціальні мережі (Повні посилання)</label>
+                        <div class="social-grid">
+                            <input type="text" id="s-tg" placeholder="Telegram URL">
+                            <input type="text" id="s-gh" placeholder="GitHub URL">
+                            <input type="text" id="s-wa" placeholder="WhatsApp URL">
+                            <input type="text" id="s-ds" placeholder="Discord URL">
+                            <input type="text" id="s-be" placeholder="Behance URL">
+                            <input type="text" id="s-fb" placeholder="Facebook URL">
+                        </div>
+                    </div>
+                </div>
+                <button class="btn" onclick="saveFooter()" data-t="btn_update">Оновити Глобальні Налаштування</button>
+            </div>
+        </section>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getDatabase, ref, set, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+        const firebaseConfig = { databaseURL: "https://anor-core-2026-default-rtdb.europe-west1.firebasedatabase.app" };
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        let editingProjectId = null;
+        let currentLang = 'ua';
+        let selectedCategories = [];
+        let allCategories = [];
+
+        const translations = {
+            ua: {
+                group_content: "Контент", nav_projects: "Проєкти", nav_cats: "Категорії",
+                group_config: "Конфігурація", nav_global: "Глобальні & Футер", to_site: "На сайт",
+                h_projects: "Управління Артефактами", l_title: "Назва проєкту", l_meta: "Мета-тег",
+                l_cat: "Категорії", l_short: "Короткий опис", l_desc: "Повний опис",
+                l_img: "Зображення URL", l_link: "GitHub Link", l_gallery: "Галерея URL",
+                l_main: "На головну", btn_save: "Зберегти в Спектраль", l_existing: "Існуючі Проєкти",
+                h_cats: "Матриця Категорій", btn_add_cat: "Додати", btn_cancel: "Скасувати", btn_update: "Оновити"
+            },
+            en: {
+                group_content: "Content", nav_projects: "Projects", nav_cats: "Categories",
+                group_config: "Config", nav_global: "Global & Footer", to_site: "To Site",
+                h_projects: "Artifact Management", l_title: "Project Title", l_meta: "Meta-tag",
+                l_cat: "Categories", l_short: "Short Desc", l_desc: "Full Logic",
+                l_img: "Image URL", l_link: "GitHub Link", l_gallery: "Gallery URLs",
+                l_main: "Show on Main", btn_save: "Save to Spectral", l_existing: "Existing Projects",
+                h_cats: "Category Matrix", btn_add_cat: "Add", btn_cancel: "Cancel", btn_update: "Update"
+            }
+        };
+
+        window.setLang = (lang) => {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('lang-' + lang).classList.add('active');
+            document.querySelectorAll('[data-t]').forEach(el => {
+                const key = el.getAttribute('data-t');
+                el.innerText = translations[lang][key] || el.innerText;
+            });
+        };
+
+        window.showSection = (name) => {
+            ['projects', 'categories', 'footer'].forEach(s => document.getElementById('sec-' + s).classList.add('hidden'));
+            document.getElementById('sec-' + name).classList.remove('hidden');
+            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+            document.getElementById('btn-' + name).classList.add('active');
+        };
+
+        window.setTheme = (theme) => {
+            document.body.classList.toggle('light-theme', theme === 'light');
+            document.getElementById('theme-light').classList.toggle('active', theme === 'light');
+            document.getElementById('theme-dark').classList.toggle('active', theme === 'dark');
+        };
+
+        // --- TAGS UI LOGIC ---
+        window.toggleTagsDropdown = (e) => {
+            e.stopPropagation();
+            document.getElementById('tags-dropdown').classList.toggle('active');
+        };
+
+        document.addEventListener('click', () => {
+            document.getElementById('tags-dropdown').classList.remove('active');
+        });
+
+        function renderTagsUI() {
+            const display = document.getElementById('tags-display');
+            const dropdown = document.getElementById('tags-dropdown');
+            
+            if (selectedCategories.length === 0) {
+                display.innerHTML = '<span style="color: var(--text-secondary); font-size: 0.9rem;">Оберіть зі списку...</span>';
+            } else {
+                display.innerHTML = selectedCategories.map(cat => `
+                    <span class="tag-pill">
+                        ${cat} 
+                        <i class="fa-solid fa-xmark" onclick="event.stopPropagation(); removeTag('${cat}')"></i>
+                    </span>
+                `).join('');
+            }
+
+            dropdown.innerHTML = allCategories.map(cat => {
+                const isSelected = selectedCategories.includes(cat.name);
+                return `
+                    <div class="tag-option" onclick="event.stopPropagation(); toggleTag('${cat.name}')">
+                        <span>${cat.name}</span>
+                        <i class="fa-solid ${isSelected ? 'fa-xmark' : 'fa-plus'}"></i>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        window.toggleTag = (name) => {
+            if (selectedCategories.includes(name)) {
+                selectedCategories = selectedCategories.filter(c => c !== name);
+            } else {
+                selectedCategories.push(name);
+            }
+            renderTagsUI();
+        };
+
+        window.removeTag = (name) => {
+            selectedCategories = selectedCategories.filter(c => c !== name);
+            renderTagsUI();
+        };
+
+        // --- CATEGORIES ---
+        window.addCategory = () => {
+            const name = document.getElementById('new-cat-name').value;
+            if(name) push(ref(db, 'categories'), { name: name.toUpperCase() });
+            document.getElementById('new-cat-name').value = "";
+        };
+
+        onValue(ref(db, 'categories'), (snap) => {
+            const list = document.getElementById('cat-list');
+            list.innerHTML = "";
+            const data = snap.val();
+            allCategories = [];
+            for(let id in data) {
+                allCategories.push({id, name: data[id].name});
+                list.innerHTML += `<div class="project-item"><span>${data[id].name}</span><button class="btn-icon btn-delete" onclick="deleteItem('categories/${id}')"><i class="fa-solid fa-trash-can"></i></button></div>`;
+            }
+            renderTagsUI();
+        });
+
+        // --- PROJECTS LOGIC ---
+        window.saveProject = () => {
+            const data = {
+                title: document.getElementById('p-title').value,
+                customMeta: document.getElementById('p-meta').value,
+                categories: selectedCategories, 
+                shortDesc: document.getElementById('p-short').value,
+                description: document.getElementById('p-desc').value,
+                mainImage: document.getElementById('p-img').value,
+                gallery: document.getElementById('p-gallery').value.split(',').map(s => s.trim()).filter(s => s),
+                link: document.getElementById('p-link').value,
+                onMain: document.getElementById('p-on-main').checked,
+                time: Date.now()
+            };
+
+            if(!data.title) return alert("Title is required!");
+
+            if(editingProjectId) {
+                update(ref(db, `projects/${editingProjectId}`), data).then(() => {
+                    alert("Артефакт оновлено!");
+                    cancelEdit();
+                });
+            } else {
+                push(ref(db, 'projects'), data).then(() => {
+                    alert("Артефакт створено!");
+                    clearForm();
+                });
+            }
+        };
+
+        window.editProject = (id) => {
+            onValue(ref(db, `projects/${id}`), (snap) => {
+                const d = snap.val();
+                if(!d) return;
+                editingProjectId = id;
+                document.getElementById('p-title').value = d.title || "";
+                document.getElementById('p-meta').value = d.customMeta || "";
+                
+                selectedCategories = d.categories || (d.category ? [d.category] : []);
+                renderTagsUI();
+
+                document.getElementById('p-short').value = d.shortDesc || "";
+                document.getElementById('p-desc').value = d.description || "";
+                document.getElementById('p-img').value = d.mainImage || "";
+                document.getElementById('p-link').value = d.link || "";
+                document.getElementById('p-gallery').value = d.gallery ? d.gallery.join(', ') : "";
+                document.getElementById('p-on-main').checked = d.onMain || false;
+                
+                document.getElementById('btn-text').innerText = "Оновити Артефакт";
+                document.getElementById('btn-cancel-edit').classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, { onlyOnce: true });
+        };
+
+        window.cancelEdit = () => {
+            editingProjectId = null;
+            clearForm();
+            document.getElementById('btn-text').innerText = translations[currentLang].btn_save;
+            document.getElementById('btn-cancel-edit').classList.add('hidden');
+        };
+
+        function clearForm() {
+            document.querySelectorAll('#sec-projects input, #sec-projects textarea').forEach(i => i.value = "");
+            document.getElementById('p-on-main').checked = false;
+            selectedCategories = [];
+            renderTagsUI();
+        }
+
+        onValue(ref(db, 'projects'), (snap) => {
+            const list = document.getElementById('project-list');
+            list.innerHTML = "";
+            const data = snap.val();
+            for(let id in data) {
+                const catsLabel = data[id].categories ? data[id].categories.join(', ') : (data[id].category || "");
+                list.innerHTML += `
+                    <div class="project-item">
+                        <div class="project-info">
+                            <h4 style="font-family: var(--font-hd); font-size: 0.9rem;">${data[id].title}</h4>
+                            <span style="font-size:0.75rem; color:var(--text-secondary)">${catsLabel} ${data[id].onMain ? ' • [SELECTED]' : ''}</span>
+                        </div>
+                        <div class="project-actions">
+                            <button class="btn-icon btn-edit" onclick="editProject('${id}')"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button class="btn-icon btn-delete" onclick="deleteItem('projects/${id}')"><i class="fa-solid fa-trash-can"></i></button>
+                        </div>
+                    </div>`;
+            }
+        });
+
+        // --- FOOTER & GLOBAL ---
+        window.saveFooter = () => {
+            const data = {
+                logoText: document.getElementById('f-logo').value,
+                copyright: document.getElementById('f-copy').value,
+                phone: document.getElementById('f-phone').value,
+                email: document.getElementById('f-email').value,
+                roleUa: document.getElementById('f-role-ua').value,
+                roleEn: document.getElementById('f-role-en').value,
+                socials: {
+                    tg: document.getElementById('s-tg').value,
+                    gh: document.getElementById('s-gh').value,
+                    wa: document.getElementById('s-wa').value,
+                    ds: document.getElementById('s-ds').value,
+                    be: document.getElementById('s-be').value,
+                    fb: document.getElementById('s-fb').value
+                }
+            };
+            set(ref(db, 'settings/global'), data).then(() => alert("Систему оновлено успішно!"));
+        };
+
+        onValue(ref(db, 'settings/global'), (snap) => {
+            const d = snap.val();
+            if(!d) return;
+            document.getElementById('f-logo').value = d.logoText || "ANOR";
+            document.getElementById('f-copy').value = d.copyright || "© 2026 ANOR CORE SYSTEM";
+            document.getElementById('f-phone').value = d.phone || "";
+            document.getElementById('f-email').value = d.email || "";
+            document.getElementById('f-role-ua').value = d.roleUa || "";
+            document.getElementById('f-role-en').value = d.roleEn || "";
+            if(d.socials) {
+                for(let s in d.socials) {
+                    const el = document.getElementById('s-' + s);
+                    if(el) el.value = d.socials[s];
+                }
+            }
+        });
+
+        window.deleteItem = (path) => {
+            if(confirm("Видалити цей елемент з бази Спектраля назавжди?")) remove(ref(db, path));
+        };
+        
+        setLang('ua');
+    </script>
+</body>
+</html>
