@@ -1371,6 +1371,12 @@
             });
         }
 
+        window.toggleProcessed = (id, currentStatus) => {
+            import("https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js").then(({ update, ref: dbRef }) => {
+                update(dbRef(db, 'messages/' + id), { isProcessed: !currentStatus });
+            });
+        };
+
         window.toggleMessage = async (id) => {
             const el = document.getElementById('msg-' + id);
             if(!el) return;

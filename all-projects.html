@@ -41,6 +41,44 @@
         }
 
         .nav-controls { display: flex; gap: 20px; align-items: center; }
+        
+        /* --- UNIFIED MODAL STYLES (FROM INDEX) --- */
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.94); display: none; justify-content: center; align-items: center; z-index: 3000; padding: 20px; backdrop-filter: blur(20px); overflow: hidden; }
+        .modal-blob {
+            position: absolute; width: 500px; height: 500px;
+            background: linear-gradient(45deg, var(--accent), #ff00ff, #00ffff);
+            filter: blur(80px); opacity: 0.2; border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            z-index: 2999; animation: blob-float 15s infinite alternate ease-in-out;
+            pointer-events: none;
+        }
+        @keyframes blob-float {
+            0% { transform: translate(-20%, -20%) rotate(0deg) scale(1); }
+            50% { transform: translate(20%, 10%) rotate(180deg) scale(1.2); }
+            100% { transform: translate(-10%, 30%) rotate(360deg) scale(0.9); }
+        }
+        .modal-content { 
+            background: var(--bg); border: 1px solid var(--border); border-radius: 40px; padding: 45px; 
+            width: 100%; max-width: 500px; position: relative; z-index: 3001; box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        }
+        .modal-content h2 { font-family: var(--font-hd); font-weight: 700; font-size: 1.8rem; margin-bottom: 10px; }
+        form input, form textarea { 
+            width: 100%; padding: 18px; margin-top: 15px; 
+            background: var(--card); border: 1px solid var(--border); 
+            border-radius: 15px; color: var(--text); outline: none; 
+            font-family: var(--font-main); transition: var(--transition);
+        }
+        form input:focus, form textarea:focus { border-color: var(--accent); background: rgba(255,255,255,0.08); }
+        form button { 
+            width: 100%; padding: 20px; background: var(--accent); color: #fff; 
+            border: none; border-radius: 15px; margin-top: 25px; font-weight: 800; 
+            cursor: pointer; font-family: var(--font-main); text-transform: uppercase; 
+            letter-spacing: 1px; transition: var(--transition);
+        }
+        form button:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0, 113, 227, 0.3); }
+        
+        #toast { position: fixed; top: -150px; left: 50%; transform: translateX(-50%); background: #fff; color: #000; padding: 18px 40px; border-radius: 100px; font-weight: 800; z-index: 4000; transition: 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28); font-family: var(--font-main); white-space: nowrap; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        #toast.show { top: 40px; }
+        /* --- END UNIFIED STYLES --- */
 
         .back-link { 
             color: var(--text); text-decoration: none; font-weight: 800; 
@@ -152,22 +190,26 @@
             <p class="lang-en" id="cta-text-en">Have an idea for a project and want to bring it to life? <span class="brief-trigger" onclick="openModal()" style="color: var(--accent); cursor: pointer; font-weight: 800; text-decoration: underline;">Fill the brief</span>, and I’ll take care of the rest.</p>
         </section>
 
-        <!-- Brief Modal (Same as index) -->
-        <div class="modal" id="briefModal" style="position: fixed; inset: 0; background: rgba(0,0,0,0.94); display: none; justify-content: center; align-items: center; z-index: 3000; padding: 20px; backdrop-filter: blur(20px); overflow: hidden;">
-            <div class="modal-content" style="background: var(--bg); border: 1px solid var(--border); border-radius: 40px; padding: 45px; width: 100%; max-width: 500px; position: relative; z-index: 3001;">
-                <span style="position: absolute; top:25px; right:30px; cursor:pointer; font-size:2rem;" onclick="closeModal()">&times;</span>
-                <h2 class="lang-en" style="font-family: var(--font-hd); margin-bottom: 20px;">PROJECT BRIEF</h2>
-                <h2 class="lang-ua" style="font-family: var(--font-hd); margin-bottom: 20px;">БРИФ ПРОЕКТУ</h2>
+        <!-- UNIFIED BRIEF MODAL (FROM INDEX) -->
+        <div class="modal" id="briefModal">
+            <div class="modal-blob"></div>
+            <div class="modal-content">
+                <span style="position: absolute; top:25px; right:30px; cursor:pointer; font-size:2rem; transition: 0.3s;" onclick="closeModal()" id="closeModalBtn">&times;</span>
+                <h2 class="lang-en">PROJECT BRIEF</h2>
+                <h2 class="lang-ua">БРИФ ПРОЕКТУ</h2>
                 <form id="briefForm">
-                    <input type="text" id="nameInput" placeholder="Your Name" required style="width:100%; padding:15px; margin-bottom:15px; border-radius:12px; background:rgba(255,255,255,0.05); border:1px solid var(--border); color:#fff;">
-                    <input type="text" id="contactInput" placeholder="Email / TG" required style="width:100%; padding:15px; margin-bottom:15px; border-radius:12px; background:rgba(255,255,255,0.05); border:1px solid var(--border); color:#fff;">
-                    <textarea id="descInput" placeholder="Message" rows="4" required style="width:100%; padding:15px; border-radius:12px; background:rgba(255,255,255,0.05); border:1px solid var(--border); color:#fff;"></textarea>
-                    <button type="submit" style="width:100%; padding:20px; background:var(--accent); border:none; border-radius:15px; color:#fff; font-weight:800; margin-top:20px; cursor:pointer;">SUBMIT</button>
+                    <input type="text" id="nameInput" placeholder="Ваше Ім'я / Your Name" required>
+                    <input type="email" id="contactInput" placeholder="Ваш Email / Your Email" required>
+                    <textarea id="descInput" placeholder="Опишіть ваше завдання (макс. 300 символів) / Describe your task..." maxlength="300" rows="5" required></textarea>
+                    <button type="submit">
+                        <span class="lang-en">SUBMIT BRIEF</span>
+                        <span class="lang-ua">ВІДПРАВИТИ</span>
+                    </button>
                 </form>
             </div>
         </div>
 
-        <div id="toast" style="position: fixed; top: -150px; left: 50%; transform: translateX(-50%); background: #fff; color: #000; padding: 18px 40px; border-radius: 100px; font-weight: 800; z-index: 4000; transition: 0.5s;">SENT!</div>
+        <div id="toast">✅ SUCCESS! BRIEF SENT.</div>
 
     </main>
 
@@ -245,16 +287,16 @@
                     await emailjs.send(SERVICE_ID, "template_autoreply", {
                         name: formData.name,
                         email: formData.email,
-                        title: "General Portfolio Inquiry"
+                        title: "Archive of Logic Submission"
                     }, PUBLIC_KEY);
                 }
 
                 const toast = document.getElementById('toast');
-                toast.style.top = "40px";
-                setTimeout(() => toast.style.top = "-150px", 3000);
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 3000);
                 e.target.reset();
-                setTimeout(closeModal, 1000);
-            } catch(e) { alert("Error connecting to Firebase"); }
+                setTimeout(closeModal, 2000);
+            } catch(e) { console.error(e); }
             finally { btn.disabled = false; btn.innerHTML = originalText; }
         };
 
