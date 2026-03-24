@@ -13,26 +13,30 @@
             --text: #ffffff;
             --text-secondary: #a1a1a6;
             --accent: #0071e3;
-            --border: rgba(255, 255, 255, 0.08);
-            --card: #121212;
-            --input-bg: #000000;
+            --accent-hover: #005bbd;
+            --border: rgba(255, 255, 255, 0.1);
+            --card: rgba(255, 255, 255, 0.05);
+            --input-bg: rgba(0, 0, 0, 0.3);
+            --glow-color: rgba(0, 113, 227, 0.3);
             --font-hd: 'Unbounded', sans-serif;
             --font-main: 'Inter', sans-serif;
             --danger: #ff3b30;
             --success: #34c759;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         body.light-theme {
             --bg: #f5f5f7;
             --sidebar: #ffffff;
             --text: #1d1d1f;
-            --text-secondary: #86868b;
-            --border: rgba(0, 0, 0, 0.1);
-            --card: #ffffff;
-            --input-bg: #fbfbfd;
+            --text-secondary: #6e6e73;
+            --border: rgba(0, 0, 0, 0.08);
+            --card: rgba(255, 255, 255, 0.6);
+            --input-bg: rgba(0, 0, 0, 0.03);
+            --glow-color: rgba(0, 113, 227, 0.15);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; transition: background 0.2s ease; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             background: var(--bg);
@@ -41,11 +45,20 @@
             display: flex;
             min-height: 100vh;
             overflow-x: hidden;
+            transition: background 0.5s;
+        }
+
+        .cursor-glow {
+            position: fixed; width: 450px; height: 450px;
+            background: radial-gradient(circle, var(--glow-color) 0%, transparent 70%);
+            border-radius: 50%; pointer-events: none; z-index: -1;
+            transform: translate(-50%, -50%); will-change: transform;
         }
 
         .sidebar {
             width: 280px;
-            background: var(--sidebar);
+            background: var(--card);
+            backdrop-filter: blur(20px);
             border-right: 1px solid var(--border);
             padding: 40px 20px;
             position: fixed;
@@ -57,11 +70,13 @@
 
         .logo {
             font-family: var(--font-hd);
-            font-size: 0.8rem;
-            color: var(--accent);
+            font-size: 1rem;
+            color: var(--text);
             margin-bottom: 50px;
-            letter-spacing: 2px;
+            letter-spacing: -1px;
             text-transform: uppercase;
+            font-weight: 900;
+            padding-left: 15px;
         }
 
         .nav-group { margin-bottom: 30px; }
@@ -73,6 +88,7 @@
             margin-bottom: 15px;
             padding-left: 15px;
             display: block;
+            letter-spacing: 1px;
         }
 
         .nav-item {
@@ -91,11 +107,13 @@
             font-size: 0.9rem;
             font-weight: 600;
             text-align: left;
+            transition: var(--transition);
         }
 
         .nav-item:hover, .nav-item.active {
             color: var(--text);
-            background: rgba(255, 255, 255, 0.05);
+            background: var(--accent);
+            color: white;
         }
 
         .main-content {
@@ -108,22 +126,29 @@
             align-items: center;
         }
 
-        section { width: 100%; max-width: 1200px; }
+        section { width: 100%; max-width: 1600px; }
 
         h1 {
             font-family: var(--font-hd);
             font-size: 1.8rem;
             margin-bottom: 40px;
             font-weight: 900;
+            text-transform: uppercase;
         }
 
         .card {
             background: var(--card);
+            backdrop-filter: blur(10px);
             border: 1px solid var(--border);
             border-radius: 30px;
             padding: 40px;
             margin-bottom: 40px;
             width: 100%;
+            transition: var(--transition);
+        }
+        
+        .card:hover {
+            border-color: var(--accent);
         }
 
         .form-grid {
@@ -142,6 +167,8 @@
             color: var(--text-secondary);
             font-weight: 800;
             margin-bottom: 10px;
+            letter-spacing: 0.5px;
+            font-family: var(--font-hd);
         }
 
         input, select, textarea {
@@ -152,10 +179,14 @@
             border-radius: 15px;
             color: var(--text);
             outline: none;
-            font-family: inherit;
+            font-family: var(--font-main);
+            transition: var(--transition);
         }
 
-        input:focus, textarea:focus { border-color: var(--accent); }
+        input:focus, textarea:focus, select:focus { 
+            border-color: var(--accent); 
+            background: rgba(255,255,255,0.08);
+        }
 
         .tags-custom-container {
             display: flex;
@@ -167,7 +198,9 @@
             border-radius: 15px;
             min-height: 56px;
             cursor: pointer;
+            transition: var(--transition);
         }
+        .tags-custom-container:hover { border-color: var(--accent); }
 
         .tag-pill {
             background: var(--accent);
@@ -188,7 +221,7 @@
             top: 100%;
             left: 0;
             right: 0;
-            background: var(--card);
+            background: #1a1a1a;
             border: 1px solid var(--border);
             border-radius: 15px;
             margin-top: 5px;
@@ -226,7 +259,10 @@
             display: inline-flex;
             align-items: center;
             gap: 10px;
+            transition: var(--transition);
+            letter-spacing: 1px;
         }
+        .btn:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0, 113, 227, 0.3); }
 
         .project-item {
             display: flex;
@@ -236,6 +272,19 @@
             background: var(--input-bg);
             border-radius: 18px;
             margin-bottom: 12px;
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+        .project-item:hover { border-color: var(--accent); transform: translateX(5px); }
+        
+        .social-add-row {
+            display: flex; 
+            gap: 15px; 
+            margin-bottom: 20px;
+            align-items: stretch;
+            background: var(--input-bg);
+            padding: 15px;
+            border-radius: 20px;
             border: 1px solid var(--border);
         }
 
@@ -266,11 +315,17 @@
             padding: 10px;
             border-radius: 10px;
             cursor: pointer;
+            transition: var(--transition);
+        }
+        .control-btn:hover {
+            border-color: var(--text);
+            color: var(--text);
         }
 
         .control-btn.active {
             background: var(--accent);
             color: white;
+            border-color: var(--accent);
         }
 
         .hidden { display: none; }
@@ -282,10 +337,11 @@
             margin-top: 10px;
         }
 
-        .social-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
+        .social-manager-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
         }
 
         @media (max-width: 1024px) {
@@ -302,6 +358,7 @@
 </head>
 <body class="dark-theme">
 
+    <div class="cursor-glow" id="glow"></div>
     <aside class="sidebar">
         <div class="logo">ANOR CORE 3.8</div>
         
@@ -440,15 +497,24 @@
                     <div class="form-group"><label>Контактний Email</label><input type="text" id="f-email" placeholder="example@gmail.com"></div>
                     
                     <div class="form-group full-width">
-                        <label>Соціальні мережі (Повні посилання)</label>
-                        <div class="social-grid">
-                            <input type="text" id="s-tg" placeholder="Telegram URL">
-                            <input type="text" id="s-gh" placeholder="GitHub URL">
-                            <input type="text" id="s-wa" placeholder="WhatsApp URL">
-                            <input type="text" id="s-ds" placeholder="Discord URL">
-                            <input type="text" id="s-be" placeholder="Behance URL">
-                            <input type="text" id="s-fb" placeholder="Facebook URL">
+                        <label>Менеджер Соціальних Мереж</label>
+                        <div class="social-add-row">
+                            <select id="new-social-platform" style="flex: 0 0 150px;">
+                                <option value="telegram">Telegram</option>
+                                <option value="whatsapp">WhatsApp</option>
+                                <option value="github">GitHub</option>
+                                <option value="discord">Discord</option>
+                                <option value="behance">Behance</option>
+                                <option value="facebook">Facebook</option>
+                                <option value="instagram">Instagram</option>
+                                <option value="linkedin">LinkedIn</option>
+                                <option value="fiverr">Fiverr</option>
+                                <option value="link">Other Link</option>
+                            </select>
+                            <input type="text" id="new-social-url" placeholder="Вставте URL (https://...)" style="flex: 1;">
+                            <button class="btn" id="btn-add-social" onclick="addSocialLink()" style="padding: 12px 25px; margin: 0; height: auto; border-radius: 15px;"><i class="fa-solid fa-plus"></i></button>
                         </div>
+                        <div id="social-links-list" class="social-manager-list"></div>
                     </div>
                 </div>
                 <button class="btn" onclick="saveFooter()" data-t="btn_update">Оновити Глобальні Налаштування</button>
@@ -468,6 +534,28 @@
         let currentLang = 'ua';
         let selectedCategories = [];
         let allCategories = [];
+        let activeSocials = [];
+        let editingSocialIndex = null;
+        
+        // Ефект світіння (як на Index)
+        const glow = document.getElementById('glow');
+        document.addEventListener('mousemove', (e) => {
+            glow.style.left = e.clientX + 'px';
+            glow.style.top = e.clientY + 'px';
+        });
+
+        const iconMap = {
+            telegram: 'fa-brands fa-telegram',
+            whatsapp: 'fa-brands fa-whatsapp',
+            github: 'fa-brands fa-github',
+            discord: 'fa-brands fa-discord',
+            behance: 'fa-brands fa-behance',
+            facebook: 'fa-brands fa-facebook',
+            instagram: 'fa-brands fa-instagram',
+            linkedin: 'fa-brands fa-linkedin',
+            fiverr: 'fa-solid fa-f',
+            link: 'fa-solid fa-link'
+        };
 
         const translations = {
             ua: {
@@ -671,6 +759,61 @@
         });
 
         // --- FOOTER & GLOBAL ---
+        window.addSocialLink = () => {
+            const platform = document.getElementById('new-social-platform').value;
+            const url = document.getElementById('new-social-url').value.trim();
+            if(!url) return alert("Введіть посилання");
+            
+            // Ініціалізація якщо масив ще не завантажився
+            if (!activeSocials) activeSocials = [];
+
+            if (editingSocialIndex !== null) {
+                activeSocials[editingSocialIndex] = { platform, url };
+                editingSocialIndex = null;
+                document.querySelector('#btn-add-social i').className = 'fa-solid fa-plus';
+                // Скидаємо стиль кнопки
+                document.getElementById('btn-add-social').style.background = '';
+            } else {
+                activeSocials.push({ platform, url });
+            }
+            
+            document.getElementById('new-social-url').value = "";
+            document.getElementById('new-social-platform').value = "telegram";
+            renderSocialManager();
+        };
+
+        window.deleteSocial = (index) => {
+            activeSocials.splice(index, 1);
+            renderSocialManager();
+        };
+
+        window.editSocial = (index) => {
+            const item = activeSocials[index];
+            document.getElementById('new-social-platform').value = item.platform;
+            document.getElementById('new-social-url').value = item.url;
+            editingSocialIndex = index;
+            document.querySelector('#btn-add-social i').className = 'fa-solid fa-check';
+            document.getElementById('btn-add-social').style.background = 'var(--success)';
+        };
+
+        function renderSocialManager() {
+            const list = document.getElementById('social-links-list');
+            if (!activeSocials || activeSocials.length === 0) {
+                list.innerHTML = '<div style="text-align:center; opacity:0.5; padding:10px;">Список соцмереж порожній</div>';
+                return;
+            }
+            list.innerHTML = activeSocials.map((s, index) => `
+                <div class="project-item" style="margin-bottom: 8px;">
+                    <span><i class="${iconMap[s.platform] || 'fa-solid fa-link'}"></i> ${s.platform.toUpperCase()}</span>
+                    <div style="display:flex; align-items:center; gap:15px;">
+                        <span style="font-size:0.8rem; opacity:0.6;">${s.url}</span>
+                        <button class="btn-icon btn-edit" onclick="editSocial(${index})"><i class="fa-solid fa-pen"></i></button>
+                        <button class="btn-icon btn-delete" onclick="deleteSocial(${index})"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
         window.saveFooter = () => {
             const data = {
                 logoText: document.getElementById('f-logo').value,
@@ -679,14 +822,8 @@
                 email: document.getElementById('f-email').value,
                 roleUa: document.getElementById('f-role-ua').value,
                 roleEn: document.getElementById('f-role-en').value,
-                socials: {
-                    tg: document.getElementById('s-tg').value,
-                    gh: document.getElementById('s-gh').value,
-                    wa: document.getElementById('s-wa').value,
-                    ds: document.getElementById('s-ds').value,
-                    be: document.getElementById('s-be').value,
-                    fb: document.getElementById('s-fb').value
-                }
+                // Гарантуємо, що це завжди масив, навіть якщо він порожній
+                socials: activeSocials || []
             };
             set(ref(db, 'settings/global'), data).then(() => alert("Систему оновлено успішно!"));
         };
@@ -700,12 +837,10 @@
             document.getElementById('f-email').value = d.email || "";
             document.getElementById('f-role-ua').value = d.roleUa || "";
             document.getElementById('f-role-en').value = d.roleEn || "";
-            if(d.socials) {
-                for(let s in d.socials) {
-                    const el = document.getElementById('s-' + s);
-                    if(el) el.value = d.socials[s];
-                }
-            }
+            
+            // Безпечне отримання масиву
+            activeSocials = d.socials ? Object.values(d.socials) : [];
+            renderSocialManager();
         });
 
         window.deleteItem = (path) => {

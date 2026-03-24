@@ -341,12 +341,6 @@
                 <a href="mailto:Destro729@gmail.com" class="footer-email" id="f-email-link">Destro729@gmail.com</a>
                 <div class="social-icons" id="f-socials">
                     <!-- Заповнюється з Firebase -->
-                    <a href="#" target="_blank" id="f-wa"><i class="fa-brands fa-whatsapp"></i></a>
-                    <a href="#" target="_blank" id="f-tg"><i class="fa-brands fa-telegram"></i></a>
-                    <a href="#" target="_blank" id="f-gh"><i class="fa-brands fa-github"></i></a>
-                    <a href="#" id="f-ds"><i class="fa-brands fa-discord"></i></a>
-                    <a href="#" id="f-be"><i class="fa-brands fa-behance"></i></a>
-                    <a href="#" id="f-fb"><i class="fa-brands fa-facebook"></i></a>
                 </div>
             </div>
             <div style="text-align: right;">
@@ -490,15 +484,31 @@
                 if (g.roleUa) document.getElementById('f-role-ua').innerText = g.roleUa;
                 if (g.roleEn) document.getElementById('f-role-en').innerText = g.roleEn;
                 
-                // Соцмережі з settings/global/socials
-                if (g.socials) {
-                    const s = g.socials;
-                    if (s.tg) document.getElementById('f-tg').href = s.tg;
-                    if (s.wa) document.getElementById('f-wa').href = s.wa;
-                    if (s.gh) document.getElementById('f-gh').href = s.gh;
-                    if (s.ds) document.getElementById('f-ds').href = s.ds;
-                    if (s.be) document.getElementById('f-be').href = s.be;
-                    if (s.fb) document.getElementById('f-fb').href = s.fb;
+                // Соцмережі з settings/global/socials (Адаптовано під масив з Admin 3.8)
+                if (g.socials && Array.isArray(g.socials)) {
+                    const container = document.getElementById('f-socials');
+                    container.innerHTML = "";
+                    
+                    const iconMap = {
+                        telegram: 'fa-brands fa-telegram',
+                        whatsapp: 'fa-brands fa-whatsapp',
+                        github: 'fa-brands fa-github',
+                        discord: 'fa-brands fa-discord',
+                        behance: 'fa-brands fa-behance',
+                        facebook: 'fa-brands fa-facebook',
+                        instagram: 'fa-brands fa-instagram',
+                        linkedin: 'fa-brands fa-linkedin',
+                        fiverr: 'fa-solid fa-f',
+                        link: 'fa-solid fa-link'
+                    };
+
+                    g.socials.forEach(s => {
+                        const a = document.createElement('a');
+                        a.href = s.url;
+                        a.target = '_blank';
+                        a.innerHTML = `<i class="${iconMap[s.platform] || 'fa-solid fa-link'}"></i>`;
+                        container.appendChild(a);
+                    });
                 }
             }
         });
