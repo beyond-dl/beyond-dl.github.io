@@ -402,6 +402,12 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
+        
+        // Expose to global for form access
+        window.db = db;
+        window.fbRef = ref;
+        window.fbPush = push;
+        
         const grid = document.getElementById('projects-grid');
         let projectsData = null;
 
@@ -671,8 +677,12 @@
             };
 
             try {
-                // 1. Save to Firebase 
-                await push(ref(db, 'messages'), formData);
+                // 1. Save to Firebase (Using global or local ref)
+                const targetDb = window.db || db;
+                const targetRef = window.fbRef || ref;
+                const targetPush = window.fbPush || push;
+                
+                await targetPush(targetRef(targetDb, 'messages'), formData);
 
                 // 2. Send via EmailJS (Optional/If keys provided)
                 const SERVICE_ID = "service_default"; 
@@ -696,7 +706,7 @@
                 briefForm.reset();
                 setTimeout(closeModal, 2000);
             } catch (err) {
-                console.error("Submission error:", err);
+                console.error("Submission error details:", err);
                 alert(currentLang === 'ua' ? "Помилка бази даних. Перевірте з'єднання." : "Database error. Check your connection.");
             } finally {
                 btn.innerHTML = originalText;
