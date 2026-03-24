@@ -301,6 +301,9 @@
         #toast { position: fixed; top: -150px; left: 50%; transform: translateX(-50%); background: #fff; color: #000; padding: 18px 40px; border-radius: 100px; font-weight: 800; z-index: 4000; transition: 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28); font-family: var(--font-main); white-space: nowrap; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         #toast.show { top: 40px; }
 
+        /* Button loading state */
+        .btn-loading { opacity: 0.7; cursor: not-allowed; }
+
         .cooperation-banner {
             max-width: 1200px;
             margin: 120px auto 0;
@@ -419,6 +422,7 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script src="translator.js"></script>
 
     <script type="module">
@@ -465,13 +469,67 @@
             }
         };
         
-        document.getElementById('briefForm').onsubmit = (e) => {
+        const showToast = (msg) => {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
+        };
+
+        document.getElementById('briefForm').onsubmit = async (e) => {
             e.preventDefault();
-            window.closeModal();
-            const toast = document.getElementById('toast');
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3000);
-            e.target.reset();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerHTML;
+            const currentLang = localStorage.getItem('anor_lang') || 'en';
+            
+            btn.innerHTML = (currentLang === 'ua') ? 'ВІДПРАВЛЯЮ...' : 'SENDING...';
+            btn.disabled = true;
+
+            const formData = {
+                name: document.getElementById('nameInput').value,
+                email: document.getElementById('contactInput').value,
+                message: document.getElementById('descInput').value,
+                date: new Date().toISOString(),
+                isRead: false,
+                isProcessed: false,
+                source: "project-details"
+            };
+
+            try {
+                // 1. Firebase
+                const { push, ref: dbRef } = await import("https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js");
+                await push(dbRef(db, 'messages'), formData);
+
+                // 2. EmailJS (Primary)
+                const PUBLIC_KEY = "cG8T4sXK_NWG_StCG"; // Set via screenshot data
+                const SERVICE_ID = "service_opt71as";
+                
+                if (PUBLIC_KEY !== "YOUR_PUBLIC_KEY") {
+                    await emailjs.send(SERVICE_ID, "template_default", {
+                        from_name: formData.name,
+                        reply_to: formData.email,
+                        message: formData.message,
+                        to_email: "Destro729@gmail.com"
+                    }, PUBLIC_KEY);
+
+                    // 3. Auto-Reply (Client) - Using your template tags {{name}}, {{email}}
+                    await emailjs.send(SERVICE_ID, "template_autoreply", {
+                        name: formData.name,
+                        email: formData.email,
+                        title: "Project Request / Запит на проект"
+                    }, PUBLIC_KEY);
+                }
+
+                showToast(currentLang === 'ua' ? "✅ УСПІХ! БРИФ ВІДПРАВЛЕНО." : "✅ SUCCESS! BRIEF SENT.");
+                e.target.reset();
+                setTimeout(closeModal, 2000);
+            } catch (err) {
+                console.error(err);
+                alert("Error! Please check your connection.");
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
         };
 
         function updateUI() {

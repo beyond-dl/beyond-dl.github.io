@@ -638,6 +638,10 @@
                 .btn-sm.btn-del { color: #ff4757; border-color: rgba(255,71,87,0.3); }
                 .btn-sm.btn-del:hover { background: #ff4757; color: #fff; }
                 
+                .btn-processed { background: transparent; border: 2px solid rgba(255,255,255,0.1); width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; color: transparent; }
+                .btn-processed.active { background: #2ecc71; border-color: #2ecc71; color: #000; }
+                .btn-processed:hover:not(.active) { border-color: var(--accent); }
+
                 .chevron { transition: 0.3s; font-size: 0.8rem; opacity: 0.5; }
                 .msg-card.expanded .chevron { transform: rotate(180deg); opacity: 1; color: var(--accent); }
 
@@ -1322,9 +1326,17 @@
                                     <span>ID: ${m.id}</span>
                                 </div>
                                 <div class="msg-body">${m.message}</div>
-                                <div class="msg-actions">
-                                    <a href="mailto:${m.email}?subject=Spectral Project: ${m.name}" class="btn-sm btn-reply" onclick="event.stopPropagation()" style="text-decoration:none;">ВІДПОВІСТИ</a>
-                                    <button class="btn-sm btn-del" onclick="event.stopPropagation(); deleteMessage('${m.id}')">ВИДАЛИТИ</button>
+                                <div class="msg-actions" style="display:flex; justify-content:space-between; align-items:center;">
+                                    <div style="display:flex; gap:10px;">
+                                        <a href="mailto:${m.email}?subject=Spectral Project: ${m.name}" class="btn-sm btn-reply" onclick="event.stopPropagation()" style="text-decoration:none;">ВІДПОВІСТИ</a>
+                                        <button class="btn-sm btn-del" onclick="event.stopPropagation(); deleteMessage('${m.id}')">ВИДАЛИТИ</button>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:10px; font-family:var(--font-hd); font-size:0.6rem; opacity:0.8;">
+                                        <span>ОПРАЦЬОВАНО</span>
+                                        <div class="btn-processed ${m.isProcessed ? 'active' : ''}" onclick="event.stopPropagation(); toggleProcessed('${m.id}', ${m.isProcessed})">
+                                            <i class="fa-solid fa-check"></i>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

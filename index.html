@@ -674,7 +674,9 @@
                 email: document.getElementById('contactInput').value,
                 message: document.getElementById('descInput').value,
                 date: new Date().toISOString(),
-                isRead: false
+                isRead: false,
+                isProcessed: false,
+                source: "home"
             };
 
             try {
@@ -697,6 +699,15 @@
                             reply_to: formData.email,
                             message: formData.message,
                             to_email: "Destro729@gmail.com"
+                        }, PUBLIC_KEY);
+
+                        // Auto-Reply
+                        await emailjs.send(SERVICE_ID, "template_autoreply", {
+                            to_name: formData.name,
+                            to_email: formData.email,
+                            message: (currentLang === 'ua') 
+                                ? "Дякую за звернення, коли вашу заявку опрацюють - з вами вийдуть на зв'язок.\n\nThank you for reaching out, we will contact you as soon as your request is processed."
+                                : "Thank you for reaching out, we will contact you as soon as your request is processed.\n\nДякую за звернення, коли вашу заявку опрацюють - з вами вийдуть на зв'язок."
                         }, PUBLIC_KEY);
                     } catch (ejsErr) {
                         console.warn("EmailJS failed but Firebase saved:", ejsErr);
