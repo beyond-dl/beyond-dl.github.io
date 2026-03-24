@@ -186,7 +186,10 @@
         
         // Нова функція для AI перекладача
         window.toggleLangTranslator = () => {
-            const current = localStorage.getItem('versal_lang') || 'uk';
+            let current = localStorage.getItem('versal_lang') || 'uk';
+            const combo = document.querySelector('.goog-te-combo');
+            if(combo) current = combo.value;
+            
             const next = current === 'uk' ? 'en' : 'uk';
             VersalTranslator.setLanguage(next);
             

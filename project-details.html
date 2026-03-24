@@ -12,6 +12,7 @@
             --text: #ffffff;
             --text-secondary: #a1a1a6;
             --accent: #0071e3;
+            --accent-hover: #005bbd;
             --border: rgba(255, 255, 255, 0.1);
             --card: rgba(255, 255, 255, 0.05);
             --font-hd: 'Unbounded', sans-serif;
@@ -252,7 +253,7 @@
         .cooperation-banner p { font-size: 1.2rem; color: var(--text-secondary); line-height: 1.5; }
         .brief-trigger { color: var(--accent); cursor: pointer; font-weight: 800; text-decoration: underline; }
 
-        footer { padding: 80px 8%; border-top: 1px solid var(--border); margin-top: 100px; }
+        footer { padding: 100px 8%; border-top: 1px solid var(--border); margin-top: 100px; }
         .footer-grid { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 40px; }
         .footer-contacts { display: flex; flex-direction: column; gap: 10px; }
         .footer-contacts a { 
@@ -368,7 +369,11 @@
 
         // Розумний перекладач
         window.toggleLangTranslator = () => {
-            const current = localStorage.getItem('versal_lang') || 'uk';
+            // Отримуємо актуальний стан прямо з селектора Google (якщо є) або localStorage
+            let current = localStorage.getItem('versal_lang') || 'uk';
+            const combo = document.querySelector('.goog-te-combo');
+            if(combo) current = combo.value;
+
             const next = current === 'uk' ? 'en' : 'uk';
             VersalTranslator.setLanguage(next);
             

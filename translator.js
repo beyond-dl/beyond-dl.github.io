@@ -6,7 +6,7 @@
 function googleTranslateElementInit() {
     new google.translate.TranslateElement({
         pageLanguage: 'uk',
-        includedLanguages: 'uk,en,pl,de',
+        includedLanguages: 'uk,en',
         layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
         autoDisplay: false
     }, 'google_translate_element');
@@ -46,10 +46,24 @@ function googleTranslateElementInit() {
                 select.dispatchEvent(new Event('change'));
                 localStorage.setItem('versal_lang', langCode);
                 this.currentLang = langCode;
-                // Використання ChrW для дотримання заповіді про кирилицю в логічних рядках
-                console.log(ChrW(86) + ChrW(101) + ChrW(114) + ChrW(115) + ChrW(97) + ChrW(108) + ": OK");
+                // Примусово оновлюємо DOM для перекладача
+                document.body.classList.toggle('ua', langCode === 'uk');
             } else {
-                setTimeout(() => this.setLanguage(langCode), 500);
+                // Якщо Google ще не завантажився, чекаємо
+                let attempts = 0;
+                const interval = setInterval(() => {
+                    const s = document.querySelector('.goog-te-combo');
+                    if(s) {
+                        s.value = langCode;
+                        s.dispatchEvent(new Event('change'));
+                        localStorage.setItem('versal_lang', langCode);
+                        this.currentLang = langCode;
+                        document.body.classList.toggle('ua', langCode === 'uk');
+                        clearInterval(interval);
+                    }
+                    attempts++;
+                    if(attempts > 20) clearInterval(interval); // Timeout 10s
+                }, 500);
             }
         },
 
