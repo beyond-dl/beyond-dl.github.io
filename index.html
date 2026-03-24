@@ -644,28 +644,23 @@
             }
         }
 
+        // --- FORM MODAL LOGIC ---
         function openModal() { document.getElementById('briefModal').style.display = 'flex'; }
         function closeModal() { document.getElementById('briefModal').style.display = 'none'; }
-
-        document.getElementById('briefForm').onsubmit = (e) => {
-            e.preventDefault();
-            closeModal();
-            const toast = document.getElementById('toast');
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3000);
-            e.target.reset();
-        };
 
         const closeBtn = document.getElementById('closeModalBtn');
         closeBtn.onmouseover = () => closeBtn.style.color = 'var(--accent)';
         closeBtn.onmouseleave = () => closeBtn.style.color = 'var(--text)';
-        // --- FORM LOGIC (EMAILJS + FIREBASE) ---
+
+        // --- FORM SUBMISSION (EMAILJS + FIREBASE) ---
         const briefForm = document.getElementById('briefForm');
         briefForm.onsubmit = async (e) => {
             e.preventDefault();
             const btn = briefForm.querySelector('button');
             const originalText = btn.innerHTML;
-            btn.innerHTML = (localStorage.getItem('anor_lang') === 'ua') ? 'ВІДПРАВЛЯЮ...' : 'SENDING...';
+            const currentLang = localStorage.getItem('anor_lang') || 'en';
+            
+            btn.innerHTML = (currentLang === 'ua') ? 'ВІДПРАВЛЯЮ...' : 'SENDING...';
             btn.disabled = true;
 
             const formData = {
@@ -676,31 +671,34 @@
             };
 
             try {
-                // 1. Save to Firebase Messaging
+                // 1. Save to Firebase 
                 const { push, ref: dbRef } = await import("https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js");
                 await push(dbRef(db, 'messages'), formData);
 
-                // 2. Send via EmailJS
-                // ПРИМІТКА ДЛЯ VERSO: Заміни ці значення своїми з EmailJS
+                // 2. Send via EmailJS (Optional/If keys provided)
                 const SERVICE_ID = "service_default"; 
                 const TEMPLATE_ID = "template_default"; 
                 const PUBLIC_KEY = "YOUR_PUBLIC_KEY"; 
 
-                if (PUBLIC_KEY !== "YOUR_PUBLIC_KEY") {
-                    await emailjs.send(SERVICE_ID, TEMPLATE_ID, {
-                        from_name: formData.name,
-                        reply_to: formData.email,
-                        message: formData.message,
-                        to_email: "Destro729@gmail.com"
-                    }, PUBLIC_KEY);
+                if (PUBLIC_KEY !== "YOUR_PUBLIC_KEY" && PUBLIC_KEY.trim() !== "") {
+                    try {
+                        await emailjs.send(SERVICE_ID, TEMPLATE_ID, {
+                            from_name: formData.name,
+                            reply_to: formData.email,
+                            message: formData.message,
+                            to_email: "Destro729@gmail.com"
+                        }, PUBLIC_KEY);
+                    } catch (ejsErr) {
+                        console.warn("EmailJS failed but Firebase saved:", ejsErr);
+                    }
                 }
 
-                showToast(localStorage.getItem('anor_lang') === 'ua' ? "✅ УСПІХ! БРИФ ВІДПРАВЛЕНО." : "✅ SUCCESS! BRIEF SENT.");
+                showToast(currentLang === 'ua' ? "✅ УСПІХ! БРИФ ВІДПРАВЛЕНО." : "✅ SUCCESS! BRIEF SENT.");
                 briefForm.reset();
                 setTimeout(closeModal, 2000);
             } catch (err) {
                 console.error("Submission error:", err);
-                alert("Помилка відправки. Спробуйте ще раз.");
+                alert(currentLang === 'ua' ? "Помилка бази даних. Перевірте з'єднання." : "Database error. Check your connection.");
             } finally {
                 btn.innerHTML = originalText;
                 btn.disabled = false;
