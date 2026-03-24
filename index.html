@@ -388,7 +388,7 @@
     
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+        import { getDatabase, ref, onValue, push } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDwQpDnT4_o1fiVDKuWI7VAYeal9nh6dRQ",
@@ -626,8 +626,8 @@
         });
 
         function toggleLangPlaceholders(isUa) { 
-            document.getElementById('nameInput').placeholder = isUa ? "Ваше ім'я" : "Your Name";
-            document.getElementById('contactInput').placeholder = isUa ? "Контакти (TG / Email)" : "Contact Details (TG / Email)";
+            document.getElementById('nameInput').placeholder = isUa ? "Ваше ім'я / Your Name" : "Your Name";
+            document.getElementById('contactInput').placeholder = isUa ? "Ваш Email / Your Email" : "Your Email";
             document.getElementById('descInput').placeholder = isUa ? "Опишіть завдання (макс 300 симв)..." : "Describe your task (max 300 symbols)...";
             document.getElementById('toast').innerText = isUa ? "✅ УСПІШНО! БРИФ ВІДПРАВЛЕНО." : "✅ SUCCESS! BRIEF SENT.";
         }
@@ -672,8 +672,7 @@
 
             try {
                 // 1. Save to Firebase 
-                const { push, ref: dbRef } = await import("https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js");
-                await push(dbRef(db, 'messages'), formData);
+                await push(ref(db, 'messages'), formData);
 
                 // 2. Send via EmailJS (Optional/If keys provided)
                 const SERVICE_ID = "service_default"; 
