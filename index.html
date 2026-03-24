@@ -426,29 +426,39 @@
                     card.className = 'project-card';
                     card.onclick = () => { window.location.href = `project-details.html?id=${p.id}`; };
                     
-                    // STATIC TRANSLATION LOGIC
-                    let title = currentLang === 'ua' ? p.titleUa : p.titleEn;
-                    let desc = currentLang === 'ua' ? p.shortDescUa : p.shortDescEn;
-
-                    // Fallback for old data
-                    if (!title) title = p.title ? (p.title.includes(' / ') ? p.title.split(' / ')[currentLang === 'ua' ? 0 : 1] : p.title) : 'Untitled';
-                    if (!desc) desc = p.shortDesc ? (p.shortDesc.includes(' / ') ? p.shortDesc.split(' / ')[currentLang === 'ua' ? 0 : 1] : p.shortDesc) : '';
+                    // CSS-Based Translation Logic
+                    const titleUa = p.titleUa || (p.title ? (p.title.includes(' / ') ? p.title.split(' / ')[0] : p.title) : 'Untitled');
+                    const titleEn = p.titleEn || (p.title ? (p.title.includes(' / ') ? p.title.split(' / ')[1] || p.title : p.title) : 'Untitled');
+                    
+                    let descUa = p.shortDescUa || (p.shortDesc ? (p.shortDesc.includes(' / ') ? p.shortDesc.split(' / ')[0] : p.shortDesc) : '');
+                    let descEn = p.shortDescEn || (p.shortDesc ? (p.shortDesc.includes(' / ') ? p.shortDesc.split(' / ')[1] || p.shortDesc : p.shortDesc) : '');
 
                     const projectImg = p.mainImage || p.image || 'img/default.jpg';
                     
-                    let displayCat = "Artifact";
+                    let categoriesHtml = '';
                     if (p.categories && Array.isArray(p.categories)) {
-                        displayCat = p.categories[0];
+                        categoriesHtml = p.categories.map(c => `<span class="project-tag">${c}</span>`).join('');
                     } else if (p.category) {
-                        displayCat = typeof p.category === 'object' ? Object.values(p.category)[0] : p.category;
+                        const c = typeof p.category === 'object' ? Object.values(p.category)[0] : p.category;
+                        categoriesHtml = `<span class="project-tag">${c}</span>`;
                     }
 
+                    // Trim descriptions to ~60 chars nicely
+                    descUa = descUa ? descUa.substring(0, 60) + '...' : '';
+                    descEn = descEn ? descEn.substring(0, 60) + '...' : '';
+
                     card.innerHTML = `
-                        <img src="${projectImg}" alt="${p.title || 'Project'}">
+                        <img src="${projectImg}" alt="${titleEn}">
                         <div class="project-info">
-                            <span class="project-tag">${displayCat}</span>
-                            <h3>${title}</h3>
-                            <p>${desc ? desc.substring(0, 60) + '...' : ''}</p>
+                            <div class="tags-wrapper" style="margin-bottom: 5px;">${categoriesHtml}</div>
+                            <h3>
+                                <span class="lang-ua">${titleUa}</span>
+                                <span class="lang-en">${titleEn}</span>
+                            </h3>
+                            <p>
+                                <span class="lang-ua">${descUa}</span>
+                                <span class="lang-en">${descEn}</span>
+                            </p>
                         </div>
                     `;
                     
