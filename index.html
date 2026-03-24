@@ -231,10 +231,12 @@
     <div id="toast">✅ SUCCESS! BRIEF SENT.</div>
 
     <nav>
-        <div class="logo">MAKSYM RIZUN</div>
+        <div class="logo" id="nav-logo">MAKSYM RIZUN</div>
         <div class="controls">
-            <div class="lang-switch" onclick="toggleLang()">
-                <span class="lang-en">УКРАЇНСЬКА</span><span class="lang-ua">ENGLISH</span>
+            <!-- Інтеграція перекладача через data-lang кнопки -->
+            <div class="lang-switch">
+                <span class="lang-en" data-lang="uk">УКРАЇНСЬКА</span>
+                <span class="lang-ua" data-lang="en">ENGLISH</span>
             </div>
             <div class="theme-switch" onclick="toggleTheme()">
                 <div class="toggle"></div>
@@ -294,10 +296,7 @@
     <section id="portfolio">
         <h2 class="about-heading lang-en">Portfolio</h2>
         <h2 class="about-heading lang-ua">Портфоліо</h2>
-        
-        <div class="portfolio-grid" id="projects-grid">
-             </div>
-
+        <div class="portfolio-grid" id="projects-grid"></div>
         <div class="more-projects-container">
             <a href="all-projects.html" class="btn-outline lang-en">SEE ALL PROJECTS</a>
             <a href="all-projects.html" class="btn-outline lang-ua">БІЛЬШЕ ПРОЕКТІВ</a>
@@ -340,21 +339,22 @@
             <div class="footer-contacts">
                 <a href="tel:+380932097079" id="f-phone-link">+380 93 209 70 79</a>
                 <a href="mailto:Destro729@gmail.com" class="footer-email" id="f-email-link">Destro729@gmail.com</a>
-                <div class="social-icons">
-                    <a href="https://wa.me/380932097079" target="_blank" title="WhatsApp" id="f-wa"><i class="fa-brands fa-whatsapp"></i></a>
-                    <a href="https://t.me/your_tg_username" target="_blank" title="Telegram" id="f-tg"><i class="fa-brands fa-telegram"></i></a>
-                    <a href="https://github.com/beyond-dl" target="_blank" title="GitHub" id="f-gh"><i class="fa-brands fa-github"></i></a>
-                    <a href="#" title="Discord" id="f-ds"><i class="fa-brands fa-discord"></i></a>
-                    <a href="#" title="Behance" id="f-bh"><i class="fa-brands fa-behance"></i></a>
-                    <a href="#" title="Fiverr" id="f-fv"><i class="fa-solid fa-f"></i></a>
+                <div class="social-icons" id="f-socials">
+                    <!-- Заповнюється з Firebase -->
+                    <a href="#" target="_blank" id="f-wa"><i class="fa-brands fa-whatsapp"></i></a>
+                    <a href="#" target="_blank" id="f-tg"><i class="fa-brands fa-telegram"></i></a>
+                    <a href="#" target="_blank" id="f-gh"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" id="f-ds"><i class="fa-brands fa-discord"></i></a>
+                    <a href="#" id="f-be"><i class="fa-brands fa-behance"></i></a>
+                    <a href="#" id="f-fb"><i class="fa-brands fa-facebook"></i></a>
                 </div>
             </div>
             <div style="text-align: right;">
-                <p style="font-weight: 800; color: var(--text); font-family: var(--font-hd); text-transform: uppercase;">MAKSYM RIZUN</p>
+                <p id="footer-logo-text" style="font-weight: 800; color: var(--text); font-family: var(--font-hd); text-transform: uppercase;">MAKSYM RIZUN</p>
                 <p style="color: var(--text-secondary); margin-top: 5px;" class="lang-en" id="f-role-en">Designer & AI Engineer 2026</p>
                 <p style="color: var(--text-secondary); margin-top: 5px;" class="lang-ua" id="f-role-ua">Дизайнер та AI Інженер 2026</p>
-                <p style="color: var(--text-secondary); opacity: 0.5; font-size: 0.8rem; margin-top: 15px;" class="lang-en">&copy; All Rights Reserved.</p>
-                <p style="color: var(--text-secondary); opacity: 0.5; font-size: 0.8rem; margin-top: 15px;" class="lang-ua">&copy; Всі права захищено.</p>
+                <p id="footer-copy" style="color: var(--text-secondary); opacity: 0.5; font-size: 0.8rem; margin-top: 15px;" class="lang-en">&copy; All Rights Reserved.</p>
+                <p id="footer-copy-ua" style="color: var(--text-secondary); opacity: 0.5; font-size: 0.8rem; margin-top: 15px;" class="lang-ua">&copy; Всі права захищено.</p>
             </div>
         </div>
     </footer>
@@ -390,6 +390,8 @@
         </div>
     </div>
 
+    <!-- Завантаження перекладача Версаля -->
+    <script src="translator.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     
     <script type="module">
@@ -428,8 +430,6 @@
                     
                     const projectImg = p.mainImage || p.image || 'img/default.jpg';
                     
-                    // --- ЛОГІКА КАТЕГОРІЇ (ФІКС ДЛЯ ВЕРСО) ---
-                    // Тепер беремо саме те, що ти ввів у адмінці
                     let displayCat = "Artifact";
                     if (p.categories && Array.isArray(p.categories)) {
                         displayCat = p.categories[0];
@@ -464,28 +464,42 @@
             }
         });
 
-        // --- ПОВНІСТЮ ДИНАМІЧНИЙ ФУТЕР ---
-        onValue(ref(db, 'settings/footer'), (snap) => {
-            const f = snap.val();
-            if (f) {
-                if (f.phone) {
+        // --- ПОВНІСТЮ ДИНАМІЧНИЙ ФУТЕР ТА ГЛОБАЛЬНІ НАЛАШТУВАННЯ ---
+        onValue(ref(db, 'settings/global'), (snap) => {
+            const g = snap.val();
+            if (g) {
+                if (g.logoText) {
+                    document.getElementById('nav-logo').innerText = g.logoText;
+                    document.getElementById('footer-logo-text').innerText = g.logoText;
+                }
+                if (g.copyright) {
+                    document.getElementById('footer-copy').innerText = g.copyright;
+                    const copyUa = document.getElementById('footer-copy-ua');
+                    if(copyUa) copyUa.innerText = g.copyright;
+                }
+                if (g.phone) {
                     const phoneEl = document.getElementById('f-phone-link');
-                    phoneEl.innerText = f.phone;
-                    phoneEl.href = `tel:${f.phone.replace(/\s/g, '')}`;
+                    phoneEl.innerText = g.phone;
+                    phoneEl.href = `tel:${g.phone.replace(/\s/g, '')}`;
                 }
-                if (f.email) {
+                if (g.email) {
                     const emailEl = document.getElementById('f-email-link');
-                    emailEl.innerText = f.email;
-                    emailEl.href = `mailto:${f.email}`;
+                    emailEl.innerText = g.email;
+                    emailEl.href = `mailto:${g.email}`;
                 }
-                if (f.roleUa) document.getElementById('f-role-ua').innerText = f.roleUa;
-                if (f.roleEn) document.getElementById('f-role-en').innerText = f.roleEn;
-                if (f.tg) document.getElementById('f-tg').href = f.tg;
-                if (f.wa) document.getElementById('f-wa').href = f.wa;
-                if (f.gh) document.getElementById('f-gh').href = f.gh;
-                if (f.ds) document.getElementById('f-ds').href = f.ds;
-                if (f.bh) document.getElementById('f-bh').href = f.bh;
-                if (f.fv) document.getElementById('f-fv').href = f.fv;
+                if (g.roleUa) document.getElementById('f-role-ua').innerText = g.roleUa;
+                if (g.roleEn) document.getElementById('f-role-en').innerText = g.roleEn;
+                
+                // Соцмережі з settings/global/socials
+                if (g.socials) {
+                    const s = g.socials;
+                    if (s.tg) document.getElementById('f-tg').href = s.tg;
+                    if (s.wa) document.getElementById('f-wa').href = s.wa;
+                    if (s.gh) document.getElementById('f-gh').href = s.gh;
+                    if (s.ds) document.getElementById('f-ds').href = s.ds;
+                    if (s.be) document.getElementById('f-be').href = s.be;
+                    if (s.fb) document.getElementById('f-fb').href = s.fb;
+                }
             }
         });
     </script>
@@ -506,9 +520,17 @@
             body.setAttribute('data-theme', body.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
         }
 
-        function toggleLang() { 
-            document.body.classList.toggle('ua'); 
-            const isUa = document.body.classList.contains('ua');
+        // Ми залишили логіку перемикання класів для візуальних Lang-UA/EN елементів, 
+        // але тепер translator.js підхоплює data-lang атрибути для Google Translate.
+        document.querySelectorAll('.lang-switch span').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const lang = btn.getAttribute('data-lang');
+                document.body.classList.toggle('ua', lang === 'uk');
+                toggleLangPlaceholders(lang === 'uk');
+            });
+        });
+
+        function toggleLangPlaceholders(isUa) { 
             document.getElementById('nameInput').placeholder = isUa ? "Ваше ім'я" : "Your Name";
             document.getElementById('contactInput').placeholder = isUa ? "Контакти (TG / Email)" : "Contact Details (TG / Email)";
             document.getElementById('descInput').placeholder = isUa ? "Опишіть завдання (макс 300 симв)..." : "Describe your task (max 300 symbols)...";
