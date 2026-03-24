@@ -6,6 +6,7 @@
     <title>Maksym Rizun | Designer & AI Engineer</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Unbounded:wght@700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="translator.js"></script>
     <style>
         :root {
             --bg: #050505;
@@ -209,6 +210,14 @@
         .social-icons a { width: 50px; height: 50px; background: var(--card); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: var(--text); border: 1px solid var(--border); transition: 0.3s; }
         .social-icons a:hover { background: var(--accent); color: #fff; transform: translateY(-5px); border-color: var(--accent); }
 
+        /* Кнопка Вгору */
+        .btn-up {
+            cursor: pointer; font-weight: 800; color: var(--accent); font-family: var(--font-hd); 
+            text-transform: uppercase; font-size: 0.8rem; margin-top: 10px; display: inline-block;
+            transition: var(--transition);
+        }
+        .btn-up:hover { letter-spacing: 2px; color: var(--text); }
+
         .lang-ua { display: none; }
         body.ua .lang-en { display: none; }
         body.ua .lang-ua { display: block; }
@@ -233,8 +242,9 @@
     <nav>
         <div class="logo">MAKSYM RIZUN</div>
         <div class="controls">
-            <div class="lang-switch" onclick="toggleLang()">
-                <span class="lang-en">УКРАЇНСЬКА</span><span class="lang-ua">ENGLISH</span>
+            <div class="lang-switch">
+                <span class="lang-en" onclick="toggleLang(); VersalTranslator.setLanguage('uk')" data-lang="uk">УКРАЇНСЬКА</span>
+                <span class="lang-ua" onclick="toggleLang(); VersalTranslator.setLanguage('en')" data-lang="en">ENGLISH</span>
             </div>
             <div class="theme-switch" onclick="toggleTheme()">
                 <div class="toggle"></div>
@@ -354,7 +364,11 @@
                 <p style="color: var(--text-secondary); margin-top: 5px;" class="lang-en" id="f-role-en">Designer & AI Engineer 2026</p>
                 <p style="color: var(--text-secondary); margin-top: 5px;" class="lang-ua" id="f-role-ua">Дизайнер та AI Інженер 2026</p>
                 <p style="color: var(--text-secondary); opacity: 0.5; font-size: 0.8rem; margin-top: 15px;" class="lang-en">&copy; All Rights Reserved.</p>
-                <p style="color: var(--text-secondary); opacity: 0.5; font-size: 0.8rem; margin-top: 15px;" class="lang-ua">&copy; Всі права захищено.</p>
+                <p style="color: var(--text-secondary); opacity: 0.5; font-size: 0.8rem; margin-top: 15px;" class="lang-ua">&copy; Всі права застережено.</p>
+                <div class="btn-up" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                    <span class="lang-en">UP</span>
+                    <span class="lang-ua">ВГОРУ</span>
+                </div>
             </div>
         </div>
     </footer>
@@ -428,8 +442,6 @@
                     
                     const projectImg = p.mainImage || p.image || 'img/default.jpg';
                     
-                    // --- ЛОГІКА КАТЕГОРІЇ (ФІКС ДЛЯ ВЕРСО) ---
-                    // Тепер беремо саме те, що ти ввів у адмінці
                     let displayCat = "Artifact";
                     if (p.categories && Array.isArray(p.categories)) {
                         displayCat = p.categories[0];
