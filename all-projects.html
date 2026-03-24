@@ -87,7 +87,8 @@
             to { opacity: 1; transform: translateY(0); }
         }
         .project-card:hover { transform: translateY(-10px); border-color: var(--accent); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
-        .project-img { height: 260px; width: 100%; background: #111; overflow: hidden; background-size: cover !important; background-position: center !important; }
+        .project-img { height: 260px; width: 100%; background: #111; overflow: hidden; background-size: cover !important; background-position: center !important; transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        .project-card:hover .project-img { transform: scale(1.12); }
         .project-content { padding: 40px; flex-grow: 1; display: flex; flex-direction: column; }
         
         .project-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; }
@@ -102,7 +103,7 @@
         .like-btn:hover { color: var(--text); transform: scale(1.05); }
         .like-btn.liked { color: #ff3b30; }
 
-        footer { padding: 100px 8%; border-top: 1px solid var(--border); margin-top: 100px; margin-left: -8.7%; margin-right: -8.7%; background: var(--bg); }
+        footer { padding: 100px 8%; border-top: 1px solid var(--border); margin-top: 100px; background: var(--bg); }
         .footer-grid { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 40px; }
         .footer-contacts { display: flex; flex-direction: column; gap: 10px; }
         .footer-contacts a { font-family: var(--font-hd); font-size: clamp(1.2rem, 3vw, 2rem); color: var(--text); text-decoration: none; font-weight: 900; transition: var(--transition); }
@@ -128,7 +129,7 @@
         </a>
         <div class="nav-controls">
             <button class="control-btn" onclick="toggleTheme()"><i class="fa-solid fa-circle-half-stroke"></i></button>
-            <button class="control-btn" onclick="toggleLang()" style="min-width: 80px;">UA / EN</button>
+            <button class="control-btn" onclick="toggleLangTranslator()" style="min-width: 80px;">UA / EN</button>
         </div>
     </header>
 
@@ -148,24 +149,22 @@
             <div class="footer-contacts">
                 <a href="tel:+380932097079" id="f-phone-link">+380 93 209 70 79</a>
                 <a href="mailto:Destro729@gmail.com" class="footer-email" id="f-email-link">Destro729@gmail.com</a>
-                <div class="social-icons">
-                    <a href="#" target="_blank" title="WhatsApp" id="f-wa"><i class="fa-brands fa-whatsapp"></i></a>
-                    <a href="#" target="_blank" title="Telegram" id="f-tg"><i class="fa-brands fa-telegram"></i></a>
-                    <a href="#" target="_blank" title="GitHub" id="f-gh"><i class="fa-brands fa-github"></i></a>
-                    <a href="#" title="Discord" id="f-ds"><i class="fa-brands fa-discord"></i></a>
-                    <a href="#" title="Behance" id="f-bh"><i class="fa-brands fa-behance"></i></a>
-                    <a href="#" title="Fiverr" id="f-fv"><i class="fa-solid fa-f"></i></a>
+                <div class="social-icons" id="f-socials">
+                    <!-- Динамічно з Firebase -->
                 </div>
             </div>
             <div style="text-align: right;">
-                <p id="footer-logo-text" style="font-weight: 800; color: var(--text); font-family: var(--font-hd); text-transform: uppercase;">ANOR CORE</p>
+                <p id="footer-logo-text" style="font-weight: 800; color: var(--text); font-family: var(--font-hd); text-transform: uppercase;">MAKSYM RIZUN</p>
                 <p style="color: var(--text-secondary); margin-top: 5px;" class="lang-en" id="f-role-en">Designer & AI Engineer 2026</p>
                 <p style="color: var(--text-secondary); margin-top: 5px; display:none;" class="lang-ua" id="f-role-ua">Дизайнер та AI Інженер 2026</p>
                 <p id="footer-copy" style="color: var(--text-secondary); opacity: 0.5; font-size: 0.8rem; margin-top: 15px;" class="lang-en">&copy; All Rights Reserved.</p>
-                <p style="color: var(--text-secondary); opacity: 0.5; font-size: 0.8rem; margin-top: 15px; display:none;" class="lang-ua">&copy; Всі права захищено.</p>
+                <p id="footer-copy-ua" style="color: var(--text-secondary); opacity: 0.5; font-size: 0.8rem; margin-top: 15px; display:none;" class="lang-ua">&copy; Всі права захищено.</p>
             </div>
         </div>
     </footer>
+
+    <!-- Підключення AI перекладача -->
+    <script src="translator.js"></script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
@@ -186,11 +185,18 @@
             document.body.classList.toggle('light-theme');
         };
         
-        window.toggleLang = () => {
-            currentLang = currentLang === 'en' ? 'ua' : 'en';
-            localStorage.setItem('anor_lang', currentLang);
-            updateUILanguage();
-            renderProjects(currentFilter);
+        // Нова функція для AI перекладача
+        window.toggleLangTranslator = () => {
+            const current = localStorage.getItem('versal_lang') || 'uk';
+            const next = current === 'uk' ? 'en' : 'uk';
+            VersalTranslator.setLanguage(next);
+            
+            // Оновлюємо інтерфейс для сумісності з рендером
+            currentLang = next === 'en' ? 'en' : 'ua';
+            setTimeout(() => {
+                updateUILanguage();
+                renderProjects(currentFilter);
+            }, 100);
         };
 
         function updateUILanguage() {
@@ -309,8 +315,30 @@
         onValue(ref(db, 'settings/global'), (snapshot) => {
             const d = snapshot.val();
             if(!d) return;
-            document.getElementById('footer-logo-text').innerText = d.logoText || "ANOR CORE";
+            document.getElementById('footer-logo-text').innerText = d.logoText || "MAKSYM RIZUN";
             document.getElementById('footer-copy').innerText = d.copyright || "© 2026";
+            if(document.getElementById('footer-copy-ua')) document.getElementById('footer-copy-ua').innerText = d.copyright || "© 2026";
+            
+            // Рендер соцмереж (Оптимізовано)
+            if (d.socials) {
+                const container = document.getElementById('f-socials');
+                const socialsArray = Array.isArray(d.socials) ? d.socials : Object.values(d.socials);
+                
+                const iconMap = {
+                    telegram: 'fa-brands fa-telegram', whatsapp: 'fa-brands fa-whatsapp',
+                    github: 'fa-brands fa-github', discord: 'fa-brands fa-discord',
+                    behance: 'fa-brands fa-behance', facebook: 'fa-brands fa-facebook',
+                    instagram: 'fa-brands fa-instagram', linkedin: 'fa-brands fa-linkedin',
+                    fiverr: 'fa-solid fa-f', link: 'fa-solid fa-link'
+                };
+
+                // Використовуємо map+join для швидкого рендерингу (швидше ніж appendChild у циклі)
+                container.innerHTML = socialsArray.map(s => `
+                    <a href="${s.url}" target="_blank" title="${s.platform}">
+                        <i class="${iconMap[s.platform] || 'fa-solid fa-link'}"></i>
+                    </a>
+                `).join('');
+            }
         });
 
         onValue(ref(db, 'settings/footer'), (snapshot) => {
@@ -326,12 +354,6 @@
             }
             if (f.roleUa) document.getElementById('f-role-ua').innerText = f.roleUa;
             if (f.roleEn) document.getElementById('f-role-en').innerText = f.roleEn;
-            if (f.tg) document.getElementById('f-tg').href = f.tg;
-            if (f.wa) document.getElementById('f-wa').href = f.wa;
-            if (f.gh) document.getElementById('f-gh').href = f.gh;
-            if (f.ds) document.getElementById('f-ds').href = f.ds;
-            if (f.bh) document.getElementById('f-bh').href = f.bh;
-            if (f.fv) document.getElementById('f-fv').href = f.fv;
         });
 
         // Ініціалізація мови при старті

@@ -183,6 +183,11 @@
             transition: var(--transition);
         }
 
+        select option {
+            background-color: var(--bg);
+            color: var(--text);
+        }
+
         input:focus, textarea:focus, select:focus { 
             border-color: var(--accent); 
             background: rgba(255,255,255,0.08);
@@ -773,6 +778,7 @@
                 document.querySelector('#btn-add-social i').className = 'fa-solid fa-plus';
                 // Скидаємо стиль кнопки
                 document.getElementById('btn-add-social').style.background = '';
+                updateSocialBtnState(false);
             } else {
                 activeSocials.push({ platform, url });
             }
@@ -784,6 +790,12 @@
 
         window.deleteSocial = (index) => {
             activeSocials.splice(index, 1);
+            // Якщо видалили елемент, який редагували - скидаємо режим редагування
+            if (editingSocialIndex === index) {
+                editingSocialIndex = null;
+                updateSocialBtnState(false);
+                document.getElementById('new-social-url').value = "";
+            }
             renderSocialManager();
         };
 
@@ -794,19 +806,36 @@
             editingSocialIndex = index;
             document.querySelector('#btn-add-social i').className = 'fa-solid fa-check';
             document.getElementById('btn-add-social').style.background = 'var(--success)';
+            updateSocialBtnState(true);
         };
+
+        function updateSocialBtnState(isEditing) {
+            const btn = document.getElementById('btn-add-social');
+            if (!btn) return;
+            const icon = btn.querySelector('i');
+            
+            if (isEditing) {
+                icon.className = 'fa-solid fa-check';
+                btn.style.background = 'var(--success)';
+            } else {
+                icon.className = 'fa-solid fa-plus';
+                btn.style.background = '';
+            }
+        }
 
         function renderSocialManager() {
             const list = document.getElementById('social-links-list');
-            if (!activeSocials || activeSocials.length === 0) {
+            if (!list) return;
+            
+            if (!activeSocials || !Array.isArray(activeSocials) || activeSocials.length === 0) {
                 list.innerHTML = '<div style="text-align:center; opacity:0.5; padding:10px;">Список соцмереж порожній</div>';
                 return;
             }
             list.innerHTML = activeSocials.map((s, index) => `
                 <div class="project-item" style="margin-bottom: 8px;">
-                    <span><i class="${iconMap[s.platform] || 'fa-solid fa-link'}"></i> ${s.platform.toUpperCase()}</span>
-                    <div style="display:flex; align-items:center; gap:15px;">
-                        <span style="font-size:0.8rem; opacity:0.6;">${s.url}</span>
+                    <span style="display:flex; align-items:center; gap:10px;"><i class="${iconMap[s.platform] || 'fa-solid fa-link'}"></i> ${s.platform.toUpperCase()}</span>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <span style="font-size:0.8rem; opacity:0.6; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${s.url}</span>
                         <button class="btn-icon btn-edit" onclick="editSocial(${index})"><i class="fa-solid fa-pen"></i></button>
                         <button class="btn-icon btn-delete" onclick="deleteSocial(${index})"><i class="fa-solid fa-trash-can"></i></button>
                     </div>
@@ -839,7 +868,8 @@
             document.getElementById('f-role-en').value = d.roleEn || "";
             
             // Безпечне отримання масиву
-            activeSocials = d.socials ? Object.values(d.socials) : [];
+            // Фільтруємо null/undefined, щоб уникнути помилок
+            activeSocials = d.socials ? Object.values(d.socials).filter(item => item) : [];
             renderSocialManager();
         });
 
