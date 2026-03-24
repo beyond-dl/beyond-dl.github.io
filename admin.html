@@ -475,7 +475,7 @@
                 </div>
                 
                 <button class="btn" id="btn-save-project" onclick="saveProject()">
-                    <i class="fa-solid fa-sparkles"></i> <span id="btn-text" data-t="btn_save">Зберегти в Спектраль</span>
+                    <i class="fa-solid fa-sparkles"></i> <span id="btn-text" data-t="btn_save">Зберегти зміни</span>
                 </button>
                 <button class="btn hidden" id="btn-cancel-edit" onclick="cancelEdit()" style="background: var(--danger); margin-left: 10px;">
                     <span data-t="btn_cancel">Скасувати</span>
@@ -587,7 +587,7 @@
                 h_projects: "Управління Артефактами", l_title: "Назва проєкту", l_meta: "Мета-тег",
                 l_cat: "Категорії", l_short: "Короткий опис", l_desc: "Повний опис",
                 l_img: "Зображення URL", l_link: "GitHub Link", l_gallery: "Галерея URL",
-                l_main: "На головну", btn_save: "Зберегти в Спектраль", l_existing: "Існуючі Проєкти",
+                l_main: "На головну", btn_save: "Зберегти зміни", l_existing: "Існуючі Проєкти",
                 h_cats: "Матриця Категорій", btn_add_cat: "Додати", btn_cancel: "Скасувати", btn_update: "Оновити",
                 l_title_ua: "Назва (UA)", l_title_en: "Назва (EN)", ph_title_ua: "Назва українською", ph_title_en: "English Title", ph_meta: "Приклад: AUTOMATION, 2026",
                 l_short_ua: "Короткий опис (UA)", l_short_en: "Короткий опис (EN)", ph_short_ua: "Для картки (UA)", ph_short_en: "For card (EN)",
@@ -607,7 +607,7 @@
                 h_projects: "Artifact Management", l_title: "Project Title", l_meta: "Meta-tag",
                 l_cat: "Categories", l_short: "Short Desc", l_desc: "Full Logic",
                 l_img: "Image URL", l_link: "GitHub Link", l_gallery: "Gallery URLs",
-                l_main: "Show on Main", btn_save: "Save to Spectral", l_existing: "Existing Projects",
+                l_main: "Show on Main", btn_save: "Save Changes", l_existing: "Existing Projects",
                 h_cats: "Category Matrix", btn_add_cat: "Add", btn_cancel: "Cancel", btn_update: "Update",
                 l_title_ua: "Title (UA)", l_title_en: "Title (EN)", ph_title_ua: "Ukrainian Title", ph_title_en: "English Title", ph_meta: "Example: AUTOMATION, 2026",
                 l_short_ua: "Short Desc (UA)", l_short_en: "Short Desc (EN)", ph_short_ua: "For card (UA)", ph_short_en: "For card (EN)",
@@ -737,23 +737,28 @@
                 mainImage: document.getElementById('p-img').value,
                 gallery: document.getElementById('p-gallery').value.split(',').map(s => s.trim()).filter(s => s),
                 link: document.getElementById('p-link').value,
-                onMain: document.getElementById('p-on-main').checked,
-                time: editingProjectId ? undefined : Date.now() // Keep original time if editing
+                onMain: document.getElementById('p-on-main').checked
             };
 
-            if(!data.titleEn) return alert("Title (EN) is required!");
+            if(!data.titleEn) return alert(currentLang === 'ua' ? "Обов'язкове поле: Title (EN)!" : "Title (EN) is required!");
 
             if(editingProjectId) {
-                // Preserve creation time
+                // Зберігаємо існуючий час створення - Firebase не приймає undefined!
                 update(ref(db, `projects/${editingProjectId}`), data).then(() => {
-                    alert("Артефакт оновлено!");
+                    alert(currentLang === 'ua' ? "Зміни успішно збережено!" : "Changes saved successfully!");
                     cancelEdit();
+                }).catch(err => {
+                    console.error("Firebase update error:", err);
+                    alert("Помилка збереження. Перевірте консоль.");
                 });
             } else {
-                data.time = Date.now();
+                data.time = Date.now(); // Додаємо час тільки при створенні
                 push(ref(db, 'projects'), data).then(() => {
-                    alert("Артефакт створено!");
+                    alert(currentLang === 'ua' ? "Новий артефакт підключено!" : "New artifact created!");
                     clearForm();
+                }).catch(err => {
+                    console.error("Firebase push error:", err);
+                    alert("Помилка створення. Перевірте консоль.");
                 });
             }
         };
@@ -786,7 +791,7 @@
                 document.getElementById('p-gallery').value = d.gallery ? d.gallery.join(', ') : "";
                 document.getElementById('p-on-main').checked = d.onMain || false;
                 
-                document.getElementById('btn-text').innerText = "Оновити Артефакт";
+                document.getElementById('btn-text').innerText = translations[currentLang].btn_save;
                 document.getElementById('btn-cancel-edit').classList.remove('hidden');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }, { onlyOnce: true });
