@@ -831,8 +831,21 @@
         });
 
         // --- CMS ARRAY EDITORS ---
-        let globalSkills = [];
-        let globalFaq = [];
+        const defaultSkills = [
+            { icon: "fa-brands fa-python", wide: true, titleEn: "AI & Python", titleUa: "AI та Python", descEn: "Developing neural networks, scrapers (TikTok/IG), and complex automation systems using Python & C++.", descUa: "Розробка нейромереж, скраперів (TikTok/IG) та складних систем автоматизації на Python та C++." },
+            { icon: "fa-solid fa-wand-magic-sparkles", wide: false, titleEn: "UI/UX Design", titleUa: "UI/UX Дизайн", descEn: "Apple-style aesthetics and user behavior analysis for maximum conversion.", descUa: "Естетика в стилі Apple та аналіз поведінки користувачів для максимальної конверсії." },
+            { icon: "fa-solid fa-code", wide: false, titleEn: "Full-stack Web", titleUa: "Web Розробка", descEn: "Building modern websites from scratch. Clean, performant HTML/CSS/JS architecture.", descUa: "Створення сайтів з нуля. Чиста та продуктивна архітектура HTML/CSS/JS." },
+            { icon: "fa-solid fa-database", wide: true, titleEn: "Data Mining", titleUa: "Видобуток даних", descEn: "Deep extraction and structuring of data from social media and complex web sources.", descUa: "Глибоке вилучення та структурування даних із соцмереж та складних веб-ресурсів." },
+            { icon: "fa-solid fa-bolt", wide: false, titleEn: "Performance", titleUa: "Продуктивність", descEn: "Optimizing logic and visual speed to 100/100 standards.", descUa: "Оптимізація логіки та швидкості завантаження до стандартів 100/100." }
+        ];
+        const defaultFaq = [
+            { qEn: "What projects do you accept?", qUa: "Які проекти ви приймаєте?", aEn: "I specialize in high-load automation, AI-driven scrapers, and premium UI/UX design for tech startups.", aUa: "Я спеціалізуюся на високонавантаженій автоматизації, AI-скраперах та преміальному UI/UX дизайні." },
+            { qEn: "What is the typical project timeline?", qUa: "Які терміни розробки?", aEn: "A standard UI/UX or Python automation project takes between 2 to 4 weeks.", aUa: "Стандартний проект з дизайну або автоматизації займає від 2 до 4 тижнів." },
+            { qEn: "How do you handle project payments?", qUa: "Як відбувається оплата?", aEn: "I work via milestones or full prepayments through secure platforms like Fiverr or direct crypto/wire transfer.", aUa: "Я працюю через етапи або повну передоплату через Fiverr, крипту або банківський переказ." }
+        ];
+
+        let globalSkills = [...defaultSkills];
+        let globalFaq = [...defaultFaq];
 
         window.renderSkillsList = () => {
             const c = document.getElementById('cms-skills-list');
@@ -959,27 +972,11 @@
                 if(d.index.faq) {
                     document.getElementById('ci-faq-h-ua').value = d.index.faq.headingUa || "";
                     document.getElementById('ci-faq-h-en').value = d.index.faq.headingEn || "";
-                    globalFaq = d.index.faq.items || [];
-                } else { globalFaq = []; }
+                    globalFaq = (d.index.faq.items && d.index.faq.items.length > 0) ? d.index.faq.items : [...defaultFaq];
+                } else { globalFaq = [...defaultFaq]; }
                 
-                if (globalFaq.length === 0) {
-                    globalFaq = [
-                        { qEn: "What projects do you accept?", qUa: "Які проекти ви приймаєте?", aEn: "I specialize in high-load automation, AI-driven scrapers, and premium UI/UX design for tech startups.", aUa: "Я спеціалізуюся на високонавантаженій автоматизації, AI-скраперах та преміальному UI/UX дизайні." },
-                        { qEn: "What is the typical project timeline?", qUa: "Які терміни розробки?", aEn: "A standard UI/UX or Python automation project takes between 2 to 4 weeks.", aUa: "Стандартний проект з дизайну або автоматизації займає від 2 до 4 тижнів." },
-                        { qEn: "How do you handle project payments?", qUa: "Як відбувається оплата?", aEn: "I work via milestones or full prepayments through secure platforms like Fiverr or direct crypto/wire transfer.", aUa: "Я працюю через етапи або повну передоплату через Fiverr, крипту або банківський переказ." }
-                    ];
-                }
+                globalSkills = (d.index.skills && d.index.skills.length > 0) ? d.index.skills : [...defaultSkills];
                 
-                globalSkills = d.index.skills || [];
-                if (globalSkills.length === 0) {
-                    globalSkills = [
-                        { icon: "fa-brands fa-python", wide: true, titleEn: "AI & Python", titleUa: "AI та Python", descEn: "Developing neural networks, scrapers (TikTok/IG), and complex automation systems using Python & C++.", descUa: "Розробка нейромереж, скраперів (TikTok/IG) та складних систем автоматизації на Python та C++." },
-                        { icon: "fa-solid fa-wand-magic-sparkles", wide: false, titleEn: "UI/UX Design", titleUa: "UI/UX Дизайн", descEn: "Apple-style aesthetics and user behavior analysis for maximum conversion.", descUa: "Естетика в стилі Apple та аналіз поведінки користувачів для максимальної конверсії." },
-                        { icon: "fa-solid fa-code", wide: false, titleEn: "Full-stack Web", titleUa: "Web Розробка", descEn: "Building modern websites from scratch. Clean, performant HTML/CSS/JS architecture.", descUa: "Створення сайтів з нуля. Чиста та продуктивна архітектура HTML/CSS/JS." },
-                        { icon: "fa-solid fa-database", wide: true, titleEn: "Data Mining", titleUa: "Видобуток даних", descEn: "Deep extraction and structuring of data from social media and complex web sources.", descUa: "Глибоке вилучення та структурування даних із соцмереж та складних веб-ресурсів." },
-                        { icon: "fa-solid fa-bolt", wide: false, titleEn: "Performance", titleUa: "Продуктивність", descEn: "Optimizing logic and visual speed to 100/100 standards.", descUa: "Оптимізація логіки та швидкості завантаження до стандартів 100/100." }
-                    ];
-                }
                 renderSkillsList();
                 renderFaqList();
             }
