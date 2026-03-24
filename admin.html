@@ -614,18 +614,35 @@
             </div>
 
             <style>
-                .msg-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 15px; padding: 20px; position: relative; transition: var(--transition); }
-                .msg-card:hover { border-color: var(--accent); background: rgba(255,255,255,0.05); }
-                .msg-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px; }
-                .msg-client { font-family: var(--font-hd); font-weight: 700; color: var(--text); }
-                .msg-date { font-size: 0.75rem; opacity: 0.5; }
-                .msg-body { font-size: 0.9rem; line-height: 1.5; color: var(--text-secondary); margin: 15px 0; white-space: pre-wrap; }
-                .msg-actions { display: flex; gap: 10px; margin-top: 15px; }
+                .msg-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 12px; position: relative; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; overflow: hidden; }
+                .msg-card:hover { border-color: var(--accent); background: rgba(255,255,255,0.04); }
+                .msg-card.expanded { background: rgba(255,255,255,0.05); border-color: var(--accent); margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+                
+                .msg-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; user-select: none; }
+                .msg-client { font-family: var(--font-hd); font-weight: 700; color: var(--text); font-size: 0.95rem; }
+                .msg-preview-info { display: flex; align-items: center; gap: 15px; }
+                
+                .badge-new { background: #ff7f50; color: #000; font-size: 0.65rem; font-weight: 800; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; display: inline-block; vertical-align: middle; }
+                
+                .msg-body-wrapper { max-height: 0; transition: max-height 0.3s ease-out; background: rgba(0,0,0,0.2); }
+                .msg-card.expanded .msg-body-wrapper { max-height: 1000px; }
+                
+                .msg-content { padding: 20px; border-top: 1px solid rgba(255,255,255,0.05); }
+                .msg-body { font-size: 0.9rem; line-height: 1.6; color: var(--text-secondary); white-space: pre-wrap; margin-bottom: 20px; }
+                
+                .msg-meta { display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; opacity: 0.5; margin-bottom: 15px; }
+                .msg-actions { display: flex; gap: 10px; }
                 .btn-sm { padding: 8px 15px; font-size: 0.7rem; border-radius: 8px; cursor: pointer; border: 1px solid var(--border); background: var(--card); color: var(--text); font-family: var(--font-hd); text-transform: uppercase; transition: 0.3s; }
                 .btn-sm.btn-reply { border-color: var(--accent); color: var(--accent); }
                 .btn-sm.btn-reply:hover { background: var(--accent); color: #fff; }
                 .btn-sm.btn-del { color: #ff4757; border-color: rgba(255,71,87,0.3); }
                 .btn-sm.btn-del:hover { background: #ff4757; color: #fff; }
+                
+                .chevron { transition: 0.3s; font-size: 0.8rem; opacity: 0.5; }
+                .msg-card.expanded .chevron { transform: rotate(180deg); opacity: 1; color: var(--accent); }
+
+                @keyframes slideIn { from { transform: translateX(100%); opacity:0; } to { transform: translateX(0); opacity:1; } }
+                @keyframes slideOut { from { transform: translateX(0); opacity:1; } to { transform: translateX(100%); opacity:0; } }
             </style>
 
             <button class="btn btn-save-cms" onclick="saveCMSContent()" style="margin-top:20px; width:100%; display: flex; justify-content: center; align-items: center;"><i class="fa-solid fa-save" style="margin-right: 10px;"></i> ОПЕРУВАТИ (ЗБЕРЕГТИ ВЕСЬ КОНТЕНТ)</button>
@@ -1245,39 +1262,132 @@
         };
 
         // --- CRM LOGIC ---
+        let initialLoadDone = false;
+        const notificationAudio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+        let unreadCount = 0;
+        const originalTitle = document.title;
+        let titleInterval = null;
+
+        function startTitleBlink() {
+            if (titleInterval) return;
+            titleInterval = setInterval(() => {
+                document.title = document.title === originalTitle ? "🔔 НОВА ЗАЯВКА!" : originalTitle;
+            }, 1000);
+        }
+
+        function stopTitleBlink() {
+            clearInterval(titleInterval);
+            titleInterval = null;
+            document.title = originalTitle;
+        }
+
+        window.addEventListener('focus', () => {
+            if(unreadCount > 0) stopTitleBlink();
+        });
+
         function loadMessages() {
+            // First load
             onValue(ref(db, 'messages'), (snap) => {
                 const msgs = snap.val();
                 const container = document.getElementById('crm-messages-list');
                 if(!container) return;
+                
                 if(!msgs) {
                     container.innerHTML = '<p style="text-align:center; opacity:0.5; padding:40px;">Скринька порожня.</p>';
+                    initialLoadDone = true;
                     return;
                 }
                 
                 const sorted = Object.keys(msgs).map(key => ({ id: key, ...msgs[key] })).reverse();
-                container.innerHTML = sorted.map(m => `
-                    <div class="msg-card">
+                container.innerHTML = sorted.map(m => {
+                    const isNew = m.isRead === false;
+                    return `
+                    <div class="msg-card ${isNew ? 'unread' : ''}" id="msg-${m.id}" onclick="toggleMessage('${m.id}')">
                         <div class="msg-header">
-                            <div>
-                                <div class="msg-client">${m.name}</div>
-                                <div style="font-size: 0.8rem; color: var(--accent);">${m.email}</div>
+                            <div class="msg-preview-info">
+                                <i class="fa-solid fa-envelope" style="opacity:0.3;"></i>
+                                <span class="msg-client">${m.name}</span>
+                                <span style="font-size: 0.8rem; opacity: 0.6;">&lt;${m.email}&gt;</span>
+                                ${isNew ? '<span class="badge-new">NEW</span>' : ''}
                             </div>
-                            <div class="msg-date">${new Date(m.date).toLocaleString()}</div>
+                            <div style="display:flex; align-items:center; gap:15px;">
+                                <span class="msg-date">${new Date(m.date).toLocaleDateString()}</span>
+                                <i class="fa-solid fa-chevron-down chevron"></i>
+                            </div>
                         </div>
-                        <div class="msg-body">${m.message}</div>
-                        <div class="msg-actions">
-                            <a href="mailto:${m.email}?subject=Spectral Project: ${m.name}" class="btn-sm btn-reply" style="text-decoration:none;">ВІДПОВІСТИ</a>
-                            <button class="btn-sm btn-del" onclick="deleteMessage('${m.id}')">ВИДАЛИТИ</button>
+                        <div class="msg-body-wrapper">
+                            <div class="msg-content">
+                                <div class="msg-meta">
+                                    <span><i class="fa-regular fa-clock"></i> ${new Date(m.date).toLocaleString()}</span>
+                                    <span>ID: ${m.id}</span>
+                                </div>
+                                <div class="msg-body">${m.message}</div>
+                                <div class="msg-actions">
+                                    <a href="mailto:${m.email}?subject=Spectral Project: ${m.name}" class="btn-sm btn-reply" onclick="event.stopPropagation()" style="text-decoration:none;">ВІДПОВІСТИ</a>
+                                    <button class="btn-sm btn-del" onclick="event.stopPropagation(); deleteMessage('${m.id}')">ВИДАЛИТИ</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                `).join('');
+                `}).join('');
+                initialLoadDone = true;
+            });
+
+            // Listen for NEW additions after load
+            import("https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js").then(({ onChildAdded, ref: dbRef }) => {
+                onChildAdded(dbRef(db, 'messages'), (snap) => {
+                    if(!initialLoadDone) return;
+                    const m = snap.val();
+                    
+                    // Play Sound
+                    notificationAudio.play().catch(e => console.log("Audio blocked until interaction"));
+                    
+                    // Show Notification
+                    unreadCount++;
+                    startTitleBlink();
+                    
+                    // Custom Toast
+                    const toast = document.createElement('div');
+                    toast.style.cssText = "position:fixed; bottom:20px; right:20px; background:var(--accent); color:#000; padding:15px 25px; border-radius:10px; font-family:var(--font-hd); font-weight:bold; box-shadow:0 10px 30px rgba(0,0,0,0.5); z-index:10000; animation:slideIn 0.5s ease-out;";
+                    toast.innerHTML = `🔔 НОВА ЗАЯВКА: ${m.name}`;
+                    document.body.appendChild(toast);
+                    setTimeout(() => {
+                        toast.style.animation = "slideOut 0.5s ease-in";
+                        setTimeout(() => toast.remove(), 500);
+                    }, 5000);
+                });
             });
         }
 
+        window.toggleMessage = async (id) => {
+            const el = document.getElementById('msg-' + id);
+            if(!el) return;
+            
+            const isExpanding = !el.classList.contains('expanded');
+            
+            document.querySelectorAll('.msg-card.expanded').forEach(card => {
+                if(card.id !== 'msg-' + id) card.classList.remove('expanded');
+            });
+
+            if(isExpanding) {
+                el.classList.add('expanded');
+                if(el.classList.contains('unread')) {
+                    import("https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js").then(({ update, ref: dbRef }) => {
+                        update(dbRef(db, 'messages/' + id), { isRead: true });
+                    });
+                    unreadCount = Math.max(0, unreadCount - 1);
+                    if(unreadCount === 0) stopTitleBlink();
+                }
+            } else {
+                el.classList.remove('expanded');
+            }
+        };
+
         window.deleteMessage = (id) => {
             if(confirm(localStorage.getItem('admin_lang') === 'ua' ? "Видалити це повідомлення?" : "Delete this message?")) {
-                remove(ref(db, 'messages/' + id));
+                import("https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js").then(({ remove, ref: dbRef }) => {
+                    remove(dbRef(db, 'messages/' + id));
+                });
             }
         };
 
